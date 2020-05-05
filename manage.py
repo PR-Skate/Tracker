@@ -19,5 +19,5 @@ def main():
 
 
 if __name__ == '__main__':
-    dependencies.get_dependencies(file_path="dependencies/dependencies.txt")
+    dependencies.get_dependencies(file_path=os.path.join("dependencies", "dependencies.txt"))
     main()
