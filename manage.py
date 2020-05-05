@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from dependencies import get_dependencies as dependencies
 
 
 def main():
@@ -18,4 +19,5 @@ def main():
 
 
 if __name__ == '__main__':
+    dependencies.get_dependencies(file_path="dependencies/dependencies.txt")
     main()
