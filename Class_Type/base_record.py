@@ -5,50 +5,50 @@ from typing import Final
 class BaseRecord(object):
     def __init__(self, created_user, created_timestamp=t.time(), last_modified_user="",
                  last_modified_timestamp=t.time()):
-        self.created_user = created_user
-        self.created_timestamp = created_timestamp
+        self.createdUser = created_user
+        self.createdTimestamp = created_timestamp
         if last_modified_user != "":
-            self.last_modified_user = last_modified_user
+            self.lastModifiedUser = last_modified_user
         else:
-            self.last_modified_user = created_user
-        self.last_modified_timestamp = last_modified_timestamp
+            self.lastModifiedUser = created_user
+        self.lastModifiedTimestamp = last_modified_timestamp
 
     # getters
-    def get_created_user(self):
-        return self._created_user
+    def _get_created_user(self):
+        return self.createdUser
 
-    def get_created_timestamp(self):
-        return self._created_timestamp
+    def _get_created_timestamp(self):
+        return self.createdTimestamp
 
-    def get_last_modified_user(self):
-        return self._last_modified_user
+    def _get_last_modified_user(self):
+        return self.lastModifiedUser
 
-    def get_last_modified_timestamp(self):
-        return self._last_modified_timestamp
+    def _get_last_modified_timestamp(self):
+        return self.lastModifiedTimestamp
 
     # setters
-    def set_created_user(self, username):
+    def _set_created_user(self, username):
         if username == "":
             raise ValueError("username must have value. username: {0}".format(username))
-        self._created_user = username
+        self.createdUser = username
 
-    def set_created_timestamp(self, time):
+    def _set_created_timestamp(self, time):
         if not isinstance(time, t.time().__class__):
             raise ValueError("time must have value. username: {0}".format(time))
-        self._created_timestamp = time
+        self.createdTimestamp = time
 
-    def set_last_modified_user(self, username):
+    def _set_last_modified_user(self, username):
         if username == "":
             raise ValueError("username must have value. username: {0}".format(username))
-        self._last_modified_user = username
+        self.lastModifiedUser = username
 
-    def set_last_modified_timestamp(self, time):
+    def _set_last_modified_timestamp(self, time):
         if not isinstance(time, t.time().__class__):
             raise ValueError("time must have value. username: {0}".format(time))
-        self._last_modified_timestamp = time
+        self.lastModifiedTimestamp = time
 
     # creating a property objects
-    created_user : Final = property(get_created_user, set_created_user)
-    created_timestamp : Final = property(get_created_timestamp, set_created_timestamp)
-    last_modified_user = property(get_last_modified_user, set_last_modified_user)
-    last_modified_timestamp = property(get_last_modified_timestamp, set_last_modified_timestamp)
+    created_user: Final = property(_get_created_user, _set_created_user)
+    created_timestamp: Final = property(_get_created_timestamp, _set_created_timestamp)
+    last_modified_user = property(_get_last_modified_user, _set_last_modified_user)
+    last_modified_timestamp = property(_get_last_modified_timestamp, _set_last_modified_timestamp)

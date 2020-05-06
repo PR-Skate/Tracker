@@ -5,100 +5,100 @@ class Employee(BaseRecord):
     # constructor:
     def __init__(self, userName, firstName, lastName, birthDate, address, email, phone, pin, rateOfPay, active,
                  password):
-        self.user_name = userName
-        self.first_name = firstName
-        self.last_name = lastName
+        self.userName = userName
+        self.firstName = firstName
+        self.lastName = lastName
         self.birthDate = birthDate
         self.address = address
         self.email = email
         self.phone = phone
         self.pin = pin
-        self.rate_of_pay = rateOfPay
+        self.rateOfPay = rateOfPay
         self.active = active
-        self.password = password
+        self.passwordHash = password
         BaseRecord.__init__(self, 'Alex')
 
     # getters:
-    def get_user_name(self):
-        return self._user_name
+    def _get_user_name(self):
+        return self.userName
 
-    def get_first_name(self):
-        return self._first_name
+    def _get_first_name(self):
+        return self.firstName
 
-    def get_last_name(self):
-        return self._last_name
+    def _get_last_name(self):
+        return self.lastName
 
-    def get_birth_date(self):
-        return self._birth_date
+    def _get_birth_date(self):
+        return self.birthDate
 
-    def get_address(self):
-        return self._address
+    def _get_address(self):
+        return self.address
 
-    def get_email(self):
-        return self._email
+    def _get_email(self):
+        return self.email
 
-    def get_phone(self):
-        return self._phone
+    def _get_phone(self):
+        return self.phone
 
-    def get_pin(self):
-        return self._pin
+    def _get_pin(self):
+        return self.pin
 
-    def get_rate_of_pay(self):
-        return self._rate_of_pay
+    def _get_rate_of_pay(self):
+        return self.rateOfPay
 
-    def get_active(self):
-        return self._active
+    def _get_active(self):
+        return self.active
 
-    def get_password(self):
-        return self._password
+    def _get_password(self):
+        return self.passwordHash
 
     # setters:
-    def set_user_name(self, user_name):
-        self._user_name = user_name
+    def _set_user_name(self, user_name):
+        self.userName = user_name
 
-    def set_first_name(self, first_name):
-        self._first_name = first_name
+    def _set_first_name(self, first_name):
+        self.firstName = first_name
 
-    def set_last_name(self, last_name):
-        self._last_name = last_name
+    def _set_last_name(self, last_name):
+        self.lastName = last_name
 
-    def set_birth_date(self, birth_date):
-        self._birth_date = birth_date
+    def _set_birth_date(self, birth_date):
+        self.birthDate = birth_date
 
-    def set_address(self, address):
-        self._address = address
+    def _set_address(self, address):
+        self.address.addressLineOne = address.get("addressLineOne")
+        self.address.addressLineTwo = address.get("addressLineOTwo")
+        self.address.city = address.get("city")
+        self.address.state = address.get("state")
+        self.address.zip = address.get("zip")
+        self.address.country = address.get("country")
 
-    def set_email(self, email):
-        self._email = email
+    def _set_email(self, email):
+        self.email = email
 
-    def set_phone(self, phone):
-        self._phone = phone
+    def _set_phone(self, phone):
+        self.phone = phone
 
-    def set_pin(self, pin):
-        self._pin = pin
+    def _set_pin(self, pin):
+        self.pin = pin
 
-    def set_rate_of_pay(self, rate_of_pay):
-        self._rate_of_pay = rate_of_pay
+    def _set_rate_of_pay(self, rate_of_pay):
+        self.rateOfPay = rate_of_pay
 
-    def set_active(self, active):
-        self._active = active
+    def _set_active(self, active):
+        self.active = active
 
-    def set_password(self, password):
-        self._password = password
+    def _set_password(self, password):
+        self.passwordHash = password
 
-    user_name = property(get_user_name, set_user_name)
-    first_name = property(get_first_name, set_first_name)
-    last_name = property(get_last_name, set_last_name)
-    birth_date = property(get_birth_date, set_birth_date)
-    address = property(get_address, set_address)
-    email = property(get_email, set_email)
-    phone = property(get_phone, set_phone)
-    pin = property(get_pin, set_pin)
-    rate_of_pay = property(get_rate_of_pay, set_rate_of_pay)
-    active = property(get_active, set_active)
-    user_passwordname = property(get_password, set_password)
-
-
-e = Employee('Alex', 'Alex', 'Alex', '', '', '', '', '', '', '', '')
-
-print(e.created_timestamp)
+    _user_name = property(_get_user_name, _set_user_name)
+    _first_name = property(_get_first_name, _set_first_name)
+    _last_name = property(_get_last_name, _set_last_name)
+    _birth_date = property(_get_birth_date, _set_birth_date)
+    _address = property(_get_address, _set_address)
+    _email = property(_get_email, _set_email)
+    _phone = property(_get_phone, _set_phone)
+    _pin = property(_get_pin, _set_pin)
+    _rate_of_pay = property(_get_rate_of_pay, _set_rate_of_pay)
+    _active = property(_get_active, _set_active)
+    _password_hash = property(_get_password, _set_password)
