@@ -1,6 +1,6 @@
 /venv
 /.idea
-/__pycache__
+*/__pycache__
 /Tracker/__pycache__
 /PR_Skate/__pycache__
 /dependencies/__pycache__

@@ -48,7 +48,7 @@ class BaseRecord(object):
         self._last_modified_timestamp = time
 
     # creating a property objects
-    created_user = property(get_created_user, set_created_user)
-    created_timestamp = property(get_created_timestamp, set_created_timestamp)
+    created_user : Final = property(get_created_user, set_created_user)
+    created_timestamp : Final = property(get_created_timestamp, set_created_timestamp)
     last_modified_user = property(get_last_modified_user, set_last_modified_user)
     last_modified_timestamp = property(get_last_modified_timestamp, set_last_modified_timestamp)
