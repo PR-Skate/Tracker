@@ -12,10 +12,7 @@ class ArticleNumberState(BaseRecord):
         self._state = state
         self._price = price
         self._fkArticleNumber = fkArticleNumber
-        if not lastModifiedUser:
-            BaseRecord.__init__(self, createdUser)
-        else:
-            BaseRecord.__init__(self, createdUser, createdTimestamp, lastModifiedUser, lastModifiedTimestamp, objectId)
+        BaseRecord.__init__(self, createdUser, createdTimestamp, lastModifiedUser, lastModifiedTimestamp, objectId)
 
     # getters
     def get_state(self):

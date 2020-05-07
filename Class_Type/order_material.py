@@ -6,11 +6,11 @@ from bson import ObjectId as objectID
 import time as t
 
 
-class LaborItem(BaseRecord):
-    def __init__(self, quantity, fkArticleNumberState, createdUser, createdTimestamp=t.time(), lastModifiedUser="",
+class OrderMaterial(BaseRecord):
+    def __init__(self, quantity, fkMaterialArticleNumber, createdUser, createdTimestamp=t.time(), lastModifiedUser="",
                  lastModifiedTimestamp=t.time(), objectId=""):
         self._quantity = quantity
-        self._fkArticleNumberState = fkArticleNumberState
+        self._fkMaterialArticleNumber = fkMaterialArticleNumber
         BaseRecord.__init__(self, createdUser, createdTimestamp, lastModifiedUser, lastModifiedTimestamp, objectId)
 
     # getters
@@ -18,7 +18,7 @@ class LaborItem(BaseRecord):
         return self.quantity
 
     def get_fk_article_number_state(self):
-        return self.fkArticleNumberState
+        return self.fkMaterialArticleNumber
 
     # setters
 
@@ -27,12 +27,12 @@ class LaborItem(BaseRecord):
             raise ValueError("Quantity must be bigger than 0.0, Quantity: {0}".format(quantity))
         self.quantity = quantity
 
-    def set_fk_article_number_state(self, fkArticleNumberState):
-        if not fkArticleNumberState:
-            raise ValueError("FK Article Number State must have value, FK Article Number State: {0}".format(fkArticleNumberState))
-        self.fkArticleNumberState = objectID(fkArticleNumberState)
+    def set_fk_article_number_state(self, fkMaterialArticleNumber):
+        if not fkMaterialArticleNumber:
+            raise ValueError("FK Material Article Number State must have value, FK Article Number State: {0}".format(fkMaterialArticleNumber))
+        self.fkMaterialArticleNumber = objectID(fkMaterialArticleNumber)
 
     # creating a property objects
     _quantity = property(get_quantity, set_quantity)
-    _fkArticleNumberState = property(get_fk_article_number_state, set_fk_article_number_state)
+    _fkMaterialArticleNumber = property(get_fk_article_number_state, set_fk_article_number_state)
 

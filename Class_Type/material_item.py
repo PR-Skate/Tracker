@@ -2,37 +2,37 @@
 # Created On: 05/07/2020
 
 from Class_Type.base_record import BaseRecord
-from bson import ObjectId as objectID
 import time as t
 
 
-class LaborItem(BaseRecord):
-    def __init__(self, quantity, fkArticleNumberState, createdUser, createdTimestamp=t.time(), lastModifiedUser="",
+class MaterialItem(BaseRecord):
+    def __init__(self, materialArticleNumber, description, createdUser, createdTimestamp=t.time(), lastModifiedUser="",
                  lastModifiedTimestamp=t.time(), objectId=""):
-        self._quantity = quantity
-        self._fkArticleNumberState = fkArticleNumberState
+
+        self._materialArticleNumber = materialArticleNumber
+        self._description = description
+
         BaseRecord.__init__(self, createdUser, createdTimestamp, lastModifiedUser, lastModifiedTimestamp, objectId)
 
     # getters
-    def get_quantity(self):
-        return self.quantity
+    def get_material_article_number(self):
+        return self.materialArticleNumber
 
-    def get_fk_article_number_state(self):
-        return self.fkArticleNumberState
+    def get_description(self):
+        return self.description
 
     # setters
+    def set_material_article_number(self, materialArticleNumber):
+        if not materialArticleNumber:
+            raise ValueError("Article Number must have value. Article Number: {0}".format(materialArticleNumber))
+        self.materialArticleNumber = materialArticleNumber
 
-    def set_quantity(self, quantity):
-        if quantity < 0:
-            raise ValueError("Quantity must be bigger than 0.0, Quantity: {0}".format(quantity))
-        self.quantity = quantity
+    def set_description(self, description):
+        if not description:
+            raise ValueError("description must have a length of at least 1. description: {0}".format(description))
+        self.description = description
 
-    def set_fk_article_number_state(self, fkArticleNumberState):
-        if not fkArticleNumberState:
-            raise ValueError("FK Article Number State must have value, FK Article Number State: {0}".format(fkArticleNumberState))
-        self.fkArticleNumberState = objectID(fkArticleNumberState)
+        # creating a property objects
 
-    # creating a property objects
-    _quantity = property(get_quantity, set_quantity)
-    _fkArticleNumberState = property(get_fk_article_number_state, set_fk_article_number_state)
-
+    _materialArticleNumber = property(get_material_article_number, set_material_article_number)
+    _description = property(get_description, set_description)
