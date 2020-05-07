@@ -1,3 +1,6 @@
+# Created By: Chase Crossley
+# Created On: 05/07/2020
+
 import time as t
 from typing import Final
 from bson import ObjectId as ObjectID

@@ -1,3 +1,6 @@
+# Created By: Chase Crossley
+# Created On: 05/07/2020
+
 from Class_Type.base_record import BaseRecord
 import time as t
 
