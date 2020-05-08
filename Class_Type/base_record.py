@@ -4,6 +4,7 @@
 import time as t
 from typing import Final
 from bson import ObjectId as ObjectID
+from pymongo import MongoClient
 
 
 class BaseRecord(object):
@@ -34,7 +35,7 @@ class BaseRecord(object):
 
     def get_object_id(self):
         if hasattr(self, 'objectId'):
-            return self._objectId
+            return self.objectId
         return None
 
     # setters
@@ -59,8 +60,7 @@ class BaseRecord(object):
         self.lastModifiedTimestamp = time
 
     def set_object_id(self, objectId):
-        if hasattr(self, 'objectId'):
-            self.objectId = ObjectID(objectId)
+        self.objectId = ObjectID(objectId)
 
     # creating a property objects
     _createdUser: Final = property(get_created_user, set_created_user)
@@ -68,4 +68,40 @@ class BaseRecord(object):
     _lastModifiedUser = property(get_last_modified_user, set_last_modified_user)
     _lastModifiedTimestamp = property(get_last_modified_timestamp, set_last_modified_timestamp)
     _objectId: Final = property(get_object_id, set_object_id)
+
+    def insert_to_col(self):
+        if self._objectId is not None:
+            raise Exception("The object has an objectId, this means it was  inserted into the database already.")
+        else:
+            col = self._connect_to_col()
+            result = col.insert_one(self.__dict__)
+            self._objectId = result.inserted_id
+
+    def update_to_col(self):
+        if self._objectId is None:
+            raise Exception("The object does not have an objectId, this means it was  inserted into the database already.")
+        else:
+            col = self._connect_to_col()
+            query = {"_id": self._objectId}
+            new_values = {"$set" : self.__dict__ }
+            col.update_one(query, new_values)
+
+            print(col.find_one(filter=query))
+
+    def delete_from_col(self):
+        if self._objectId is None:
+            raise Exception("The object does not have an objectId, this means it was  inserted into the database already.")
+        else:
+            col = self._connect_to_col()
+            query = {"_id": self._objectId}
+            col.delete_one(filter=query)
+
+            print(col.find_one(filter=query))
+
+
+    def _connect_to_col(self):
+        client = MongoClient(
+            'mongodb://root:6iskvVzSpjcGjOcB8Qfm7htg1@138.68.22.230:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false')
+        col = client["Tracker"][self.__class__.__name__]
+        return col
 

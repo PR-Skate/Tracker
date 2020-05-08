@@ -8,9 +8,8 @@ import time as t
 
 class LocationInStore(BaseRecord):
     def __init__(self, department, aisle, bay, tower, plumbingInLocation, electricalInLocation, fkStoreNumber,
-                createdUser, level=0, plumbingPicturePath='', electricalPicturePath='', fkMaterialList=None,
+                 createdUser, level=None, plumbingPicturePath='', electricalPicturePath='', fkMaterialList=None,
                  createdTimestamp=t.time(), lastModifiedUser="", lastModifiedTimestamp=t.time(), objectId=""):
-
         self._department = department
         self._aisle = aisle
         self._bay = bay
@@ -60,64 +59,41 @@ class LocationInStore(BaseRecord):
 
     # setters
     def set_department(self, department):
-        if not department:
-            raise ValueError("department must have value. department: {0}".format(department))
         self.department = department
 
     def set_aisle(self, aisle):
-        if aisle < 0:
-            raise ValueError("aisle must be bigger than 0, aisle: {0}".format(aisle))
         self.aisle = aisle
 
     def set_bay(self, bay):
-        if not bay:
-            raise ValueError("bay must be bigger than 0, bay: {0}".format(bay))
         self.bay = bay
 
     def set_tower(self, tower):
-        if tower < 0:
-            raise ValueError("tower must be bigger than 0, tower: {0}".format(tower))
         self.tower = tower
 
     def set_level(self, level):
-        if level < 0:
-            raise ValueError("level must be bigger than 0, level: {0}".format(level))
         self.level = level
 
     def set_electrical_in_location(self, electricalInLocation):
-        if isinstance(electricalInLocation, bool):
-            self.electricalInLocation = electricalInLocation
-        else:
-            self.electricalInLocation = False
+        self.electricalInLocation = electricalInLocation
 
     def set_electrical_picture_path(self, electricalPicturePath):
-        if self._electricalInLocation and not electricalPicturePath:
-            raise ValueError("electricalPicturePath must be bigger than 0, electricalPicturePath: {0}".format(electricalPicturePath))
-        elif self._electricalInLocation:
-            self.electricalPicturePath = electricalPicturePath
+        self.electricalPicturePath = electricalPicturePath
 
     def set_plumbing_in_location(self, plumbingInLocation):
-        if isinstance(plumbingInLocation, bool):
-            self.plumbingInLocation = plumbingInLocation
-        else:
-            self.plumbingInLocation = False
+        self.plumbingInLocation = plumbingInLocation
 
     def set_plumbing_picture_path(self, plumbingPicturePath):
-        if self._plumbingInLocation and not plumbingPicturePath:
-            raise ValueError("plumbingPicturePath must be bigger than 0, plumbingPicturePath: {0}".format(plumbingPicturePath))
-        elif self._plumbingInLocation:
-            self.electricalPicturePath = plumbingPicturePath
+        self.plumbingPicturePath = plumbingPicturePath
 
     def set_fk_material_list(self, fkMaterialList):
-        self.fkMaterialList = []
-        if not fkMaterialList:
+        if fkMaterialList is None:
+            self.fkMaterialList = None
             return
+        self.fkMaterialList = []
         for material in fkMaterialList:
             self.fkMaterialList.append(objectID(material))
 
     def set_fk_store_number(self, fkStoreNumber):
-        if not fkStoreNumber:
-            raise ValueError("FK Article Number must have value, FK Article Number: {0}".format(fkStoreNumber))
         self.fkStoreNumber = objectID(fkStoreNumber)
 
     # creating a property objects
