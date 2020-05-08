@@ -1,20 +1,17 @@
 # Created By: Alex Peterson
 # Created On: 05/07/2020
 #
-
-from Tracker.Class_Type.base_record import BaseRecord
-
+from Class_Types.base_record import BaseRecord
 
 class Customer(BaseRecord):
     def __init__(self, customerName):
-        self.customerName = customerName
+        self._customerName = customerName
         BaseRecord.__init__(self, 'CREATED USER')
 
     def get_customerName(self):
-        return self._customerName
+        return self.customerName
 
     def set_customerName(self, customer_name):
         self.customerName = customer_name
 
-    customer_name = property(get_customerName, set_customerName)
-    # test
+    _customerName = property(get_customerName, set_customerName)

@@ -4,7 +4,7 @@
 
 import time as t
 from bson import ObjectId as objectID
-from Tracker.Class_Type.base_record import BaseRecord
+from Class_Types.base_record import BaseRecord
 
 
 class Store(BaseRecord):

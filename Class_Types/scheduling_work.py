@@ -6,15 +6,15 @@ from bson import ObjectId as objectID
 import time as t
 
 
-class ScopeOfWork(BaseRecord):
-    def __init__(self, fkInitialLaborID, SOWPicturePath, fkLocationInStoreID, fkStatusID, createdUser, GB_Counter=0,
+class SchedulingWork(BaseRecord):
+    def __init__(self, dateScheduled, duration, fkInstallerID, fkStatusID, createdUser, GB_Counter=0,
                  GB_CounterBillable=0, WrongLocation=False, fkRightSOWID=None, ConcretePatchNeeded=False,
                  completedPicturePath='', dateFieldEditedStatus='', timeFieldEditedStatus='', approvedBilling='',
-                 fkRequireMaterials='', fkInstallerID='', fkWorkOrderID='', fkExtraLaborID=None, fkCorrectLaborID='',
+                 fkRequireMaterials='', fkSecondInstaller=None, fkWorkOrderID='', fkExtraLaborID=None, fkCorrectLaborID='',
                  createdTimestamp=t.time(), lastModifiedUser="", lastModifiedTimestamp=t.time(), objectId=""):
         self._GB_Counter = GB_Counter
         self._GB_CounterBillable = GB_CounterBillable
-        self._SOWPicturePath = SOWPicturePath
+        self._duration = duration
         self._WrongLocation = WrongLocation
         self._ConcretePatchNeeded = ConcretePatchNeeded
         self._fkRightSOWID = fkRightSOWID
@@ -25,9 +25,9 @@ class ScopeOfWork(BaseRecord):
         self._approvedBilling = approvedBilling
         self._fkInstallerID = fkInstallerID
         self._fkRequireMaterials = fkRequireMaterials
-        self._fkLocationInStoreID = fkLocationInStoreID
+        self._fkInstallerID = fkInstallerID
         self._fkWorkOrderID = fkWorkOrderID
-        self._fkInitialLaborID = fkInitialLaborID
+        self._dateScheduled = dateScheduled
         self._fkExtraLaborID = fkExtraLaborID
         self._fkCorrectLaborID = fkCorrectLaborID
         BaseRecord.__init__(self, createdUser, createdTimestamp, lastModifiedUser, lastModifiedTimestamp, objectId)
@@ -40,7 +40,7 @@ class ScopeOfWork(BaseRecord):
         return self.GB_CounterBillable
 
     def get_sow_picture_path(self):
-        return self.SOWPicturePath
+        return self.duration
 
     def get_wrong_location(self):
         return self.WrongLocation
@@ -64,13 +64,13 @@ class ScopeOfWork(BaseRecord):
         return self.fkRequireMaterials
 
     def get_fk_location_in_store_id(self):
-        return self.fkLocationInStoreID
+        return self.fkInstallerID
 
     def get_work_order_id(self):
         return self.fkWorkOrderID
 
     def get_initial_labor_id(self):
-        return self.fkInitialLaborID
+        return self.dateScheduled
 
     def get_extra_labor_id(self):
         return self.fkExtraLaborID
@@ -94,8 +94,8 @@ class ScopeOfWork(BaseRecord):
     def set_gb_counter_billable(self, GB_CounterBillable):
         self.GB_CounterBillable = GB_CounterBillable
 
-    def set_sow_picture_path(self, SOWPicturePath):
-        self.SOWPicturePath = SOWPicturePath
+    def set_sow_picture_path(self, duration):
+        self.duration = duration
 
     def set_wrong_location(self, WrongLocation):
         self.WrongLocation = WrongLocation
@@ -115,19 +115,19 @@ class ScopeOfWork(BaseRecord):
     def set_fk_required_materials_id(self, fkRequireMaterials):
         self.fkRequireMaterials = objectID(fkRequireMaterials)
 
-    def set_fk_location_in_store_id(self, fkLocationInStoreID):
-        self.fkLocationInStoreID = objectID(fkLocationInStoreID)
+    def set_fk_location_in_store_id(self, fkInstallerID):
+        self.fkInstallerID = objectID(fkInstallerID)
 
     def set_fk_work_order_id(self, fkWorkOrderID):
         self.fkWorkOrderID = objectID(fkWorkOrderID)
 
-    def set_fk_initial_labor_id(self, fkInitialLaborID):
-        if fkInitialLaborID is None:
-            self.fkInitialLaborID = None
+    def set_fk_initial_labor_id(self, dateScheduled):
+        if dateScheduled is None:
+            self.dateScheduled = None
             return
-        self.fkInitialLaborID = []
-        for laborID in fkInitialLaborID:
-            self.fkInitialLaborID.append(objectID(laborID))
+        self.dateScheduled = []
+        for laborID in dateScheduled:
+            self.dateScheduled.append(objectID(laborID))
 
     def set_fk_extra_labor_id(self, fkExtraLaborID):
         if fkExtraLaborID is None:
@@ -160,7 +160,7 @@ class ScopeOfWork(BaseRecord):
     # creating a property objects
     _GB_Counter = property(get_gb_counter, set_gb_counter)
     _GB_CounterBillable = property(get_gb_counter_billable, set_gb_counter_billable)
-    _SOWPicturePath = property(get_sow_picture_path, set_sow_picture_path)
+    _duration = property(get_sow_picture_path, set_sow_picture_path)
     _WrongLocation = property(get_wrong_location, set_wrong_location)
     _ConcretePatchNeeded = property(get_concrete_patch_needed, set_concrete_patch_needed)
     _fkRightSOWID = property(get_fk_right_sow_id, set_fk_right_sow_id)
@@ -171,8 +171,8 @@ class ScopeOfWork(BaseRecord):
     _approvedBilling = property(get_approved_billing, set_approved_billing)
     _fkInstallerID = property(get_fk_installer_id, set_fk_installer_id)
     _fkRequireMaterials = property(get_fk_required_materials_id, set_fk_required_materials_id)
-    _fkLocationInStoreID = property(get_fk_location_in_store_id, set_fk_location_in_store_id)
+    _fkInstallerID = property(get_fk_location_in_store_id, set_fk_location_in_store_id)
     _fkWorkOrderID = property(get_work_order_id, set_fk_work_order_id)
-    _fkInitialLaborID = property(get_initial_labor_id, set_fk_initial_labor_id)
+    _dateScheduled = property(get_initial_labor_id, set_fk_initial_labor_id)
     _fkExtraLaborID = property(get_extra_labor_id, set_fk_extra_labor_id)
     _fkCorrectLaborID = property(get_correct_labor_id, set_fk_correct_labor_id)

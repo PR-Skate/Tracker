@@ -1,5 +1,5 @@
 import os
-from Tracker.Class_Type.base_record import BaseRecord
+from Class_Types.base_record import BaseRecord
 
 
 class MicroRegionCode(BaseRecord):
