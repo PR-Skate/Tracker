@@ -2,18 +2,21 @@
 # Created On: 05/07/2020
 #
 
-import os
 import time as t
 from bson import ObjectId as objectID
 from Tracker.Class_Type.base_record import BaseRecord
 
+
 class Store(BaseRecord):
     # constructor:
-    def __init__(self, storeNumber, fkCustomer, address, phoneNumber,   country, region, division, awardedVendor, storeManagerName, storeManagerEmail, 
-        opsManagerName, opsManagerEmail, managerName, managerEmail, overnightManagerName, overnightManagerEmail, overnightCrew, overnightAccess, noiseOrdinance, 
-        timeCuttOff, fkRegionCode, fkMicroRegionCode, longitude, latitude, active, installationDueDates, fiscalWeek, fkCreatedUser ="", createdTimeStamp = t.time(),fkLastModifiedUser ="", 
-        lastModifiedTimeStamp = t.time()
-    ):
+    def __init__(self, storeNumber, fkCustomer, address, phoneNumber, country, region, division, awardedVendor,
+                 storeManagerName, storeManagerEmail,
+                 opsManagerName, opsManagerEmail, managerName, managerEmail, overnightManagerName,
+                 overnightManagerEmail, overnightCrew, overnightAccess, noiseOrdinance,
+                 timeCuttOff, fkRegionCode, fkMicroRegionCode, longitude, latitude, active, installationDueDates,
+                 fiscalWeek, fkCreatedUser="", createdTimeStamp=t.time(), fkLastModifiedUser="",
+                 lastModifiedTimeStamp=t.time()
+                 ):
 
         self.storeNumber = storeNumber
         self.fkCustomer = fkCustomer
@@ -49,7 +52,7 @@ class Store(BaseRecord):
         self.fiscalWeek = fiscalWeek
         BaseRecord.__init__(self, fkCreatedUser, createdTimeStamp, fkLastModifiedUser, lastModifiedTimeStamp)
 
-    #getters:
+    # getters:
     def get_store_number(self):
         return self._storeNumber
 
@@ -64,8 +67,6 @@ class Store(BaseRecord):
 
     def get_country(self):
         return self._country
-
-
 
     def get_region(self):
         return self._region
@@ -82,8 +83,6 @@ class Store(BaseRecord):
     def get_store_manager_email(self):
         return self._storeManagerEmail
 
-
-
     def get_ops_manager_name(self):
         return self._opsManagerName
 
@@ -98,8 +97,6 @@ class Store(BaseRecord):
 
     def get_overnight_manager_name(self):
         return self._overnightManagerName
-
-
 
     def get_overnight_manager_email(self):
         return self._overnightManagerEmail
@@ -116,8 +113,6 @@ class Store(BaseRecord):
     def get_time_cut_off(self):
         return self._timeCutOff
 
-
-
     def get_fk_region_code(self):
         return self._fkRegionCode
 
@@ -133,115 +128,103 @@ class Store(BaseRecord):
     def get_active(self):
         return self._active
 
-
-
     def get_installation_due_dates(self):
         return self._installationDueDates
 
     def get_fiscal_week(self):
         return self._fiscalWeek
 
-    
-    #setters:
-    def set_store_number(self, __store_number ):
+    # setters:
+    def set_store_number(self, __store_number):
         self.storeNumber = __store_number
 
-    def set_fk_customer(self, __fk_customer ):
+    def set_fk_customer(self, __fk_customer):
         if not __fk_customer:
-           raise ValueError("Customer must have value. Customer: {customer}".format(customer= __fk_customer)) 
+            raise ValueError("Customer must have value. Customer: {customer}".format(customer=__fk_customer))
         self.fkCustomer = objectID(__fk_customer)
 
-    def set_address(self, __address ):
+    def set_address(self, __address):
         self._address = __address
 
-    def set_phone_number(self, __phone_number ):
+    def set_phone_number(self, __phone_number):
         self.phoneNumber = __phone_number
 
-    def set_country(self, __country ):
+    def set_country(self, __country):
         self._country = __country
 
-
-
-    def set_region(self, __region ):
+    def set_region(self, __region):
         self._region = __region
 
-    def set_division(self, __division ):
+    def set_division(self, __division):
         self._division = __division
 
-    def set_store_awarded_vendor(self, __awarded_vendor ):
+    def set_store_awarded_vendor(self, __awarded_vendor):
         self.awardedVendor = __awarded_vendor
 
-    def set_store_manager_name(self, __store_manager_name ):
+    def set_store_manager_name(self, __store_manager_name):
         self.storeManagerName = __store_manager_name
 
-    def set_store_manager_email(self, __store_manager_email ):
+    def set_store_manager_email(self, __store_manager_email):
         self.storeManagerEmail = __store_manager_email
 
-
-
-    def set_ops_manager_name(self, __ops_manager_name ):
+    def set_ops_manager_name(self, __ops_manager_name):
         self.opsManagerName = __ops_manager_name
 
-    def set_ops_manager_email(self, __ops_manager_email ):
+    def set_ops_manager_email(self, __ops_manager_email):
         self.opsManagerEmail = __ops_manager_email
 
-    def set_manager_name(self, __manager_name ):
+    def set_manager_name(self, __manager_name):
         self.managerName = __manager_name
 
-    def set_manager_email(self, __manager_email ):
+    def set_manager_email(self, __manager_email):
         self.managerEmail = __manager_email
 
-    def set_overnight_manager_name(self, __overnight_manager_name ):
+    def set_overnight_manager_name(self, __overnight_manager_name):
         self.overnightManagerName = __overnight_manager_name
 
-
-
-    def set_overnight_manager_email(self, __overnight_manager_email ):
+    def set_overnight_manager_email(self, __overnight_manager_email):
         self.overnightManagerEmail = __overnight_manager_email
 
-    def set_overnight_crew(self, __overnight_crew ):
+    def set_overnight_crew(self, __overnight_crew):
         self.overnightCrew = __overnight_crew
 
-    def set_overnight_access(self, __overnight_access ):
+    def set_overnight_access(self, __overnight_access):
         self.overnightAccess = __overnight_access
 
-    def set_noise_ordinance(self, __noise_ordinance ):
+    def set_noise_ordinance(self, __noise_ordinance):
         self.noiseOrdinance = __noise_ordinance
 
-    def set_time_cut_off(self, __time_cut_off ):
+    def set_time_cut_off(self, __time_cut_off):
         self.timeCuttOff = __time_cut_off
 
-
-
-    def set_fk_region_code(self, __fk_region_code ):
+    def set_fk_region_code(self, __fk_region_code):
         if not _Store__fk_region_code:
-            raise ValueError("Region code must have value. Region Code: {region_code}".format(region_code= __fk_region_code)) 
+            raise ValueError(
+                "Region code must have value. Region Code: {region_code}".format(region_code=__fk_region_code))
         self.fkRegionCode = objectID(__fk_region_code)
 
-    def set_fk_micro_region_code(self, __fk_micro_region_code ):
+    def set_fk_micro_region_code(self, __fk_micro_region_code):
         if not _Store__fk_micro_region_code:
-            raise ValueError("Micro region code must have value. Micro region Code: {micro_region_code}".format(micro_region_code= __fk_micro_region_code))
+            raise ValueError("Micro region code must have value. Micro region Code: {micro_region_code}".format(
+                micro_region_code=__fk_micro_region_code))
         self.fkMicroRegionCode = objectID(__fk_micro_region_code)
 
-    def set_longitude(self, __longitude ):
+    def set_longitude(self, __longitude):
         self._longitude = __longitude
 
-    def set_latitude(self, __latitude ):
+    def set_latitude(self, __latitude):
         self._latitude = __latitude
 
-    def set_active(self, __active ):
+    def set_active(self, __active):
         self._active = __active
 
-
-
-    def set_installation_due_dates(self, __installation_due_dates ):
+    def set_installation_due_dates(self, __installation_due_dates):
         self.isntallationDueDates = __installation_due_dates
 
-    def set_fiscal_week(self, __fiscal_week ):
+    def set_fiscal_week(self, __fiscal_week):
         self.fiscalWeek = __fiscal_week
 
-
-    #properties:
+    # properties:
     store_number = property(get_store_number, set_store_number)
     fk_customer = property(get_fk_customer, set_fk_customer)
     address_ = property(get_address, set_address)
@@ -258,7 +241,7 @@ class Store(BaseRecord):
     ops_manager_email = property(get_ops_manager_email, set_ops_manager_email)
     manager_name = property(get_manager_name, set_manager_name)
     manager_email = property(get_manager_email, set_manager_email)
-    overnight_manager_name= property(get_overnight_manager_name, set_overnight_manager_name)
+    overnight_manager_name = property(get_overnight_manager_name, set_overnight_manager_name)
 
     overnight_manager_email = property(get_overnight_manager_email, set_overnight_manager_email)
     overnight_crew = property(get_overnight_crew, set_overnight_crew)
@@ -266,8 +249,8 @@ class Store(BaseRecord):
     noise_ordinance = property(get_noise_ordinance, set_noise_ordinance)
     time_cutt_off = property(get_time_cut_off, set_time_cut_off)
 
-    fk_region_code= property(get_fk_region_code, set_fk_region_code)
-    fk_micro_region_code= property(get_fk_micro_region_code, set_fk_micro_region_code)
+    fk_region_code = property(get_fk_region_code, set_fk_region_code)
+    fk_micro_region_code = property(get_fk_micro_region_code, set_fk_micro_region_code)
     longitude_ = property(get_longitude, set_longitude)
     latitude_ = property(get_latitude, set_latitude)
     active_ = property(get_active, set_active)
@@ -275,7 +258,6 @@ class Store(BaseRecord):
     installation_due_dates = property(get_installation_due_dates, set_installation_due_dates)
     fiscal_week = property(get_fiscal_week, set_fiscal_week)
 
-
-    #Still to do:
+    # Still to do:
     # format cordinates
     # Fixing Store
