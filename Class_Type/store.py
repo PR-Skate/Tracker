@@ -5,7 +5,6 @@
 import os
 import time as t
 from bson import ObjectId as objectID
-from bson import I
 from Tracker.Class_Type.base_record import BaseRecord
 
 class Store(BaseRecord):
@@ -279,3 +278,4 @@ class Store(BaseRecord):
 
     #Still to do:
     # format cordinates
+    # Fixing Store
