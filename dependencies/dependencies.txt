@@ -4,8 +4,9 @@ django        # Web Framework we will be using, see: https://pypi.org/project/Dj
 pandas        # Reads .csv .xlsx .json, does much more in the way oh handling data, see: https://pypi.org/project/pandas/
 pylint        # Makes sure our code is being built to standards offPEP8, see: https://pypi.org/project/pylint/
 Sphinx        # Builds documentation based off of code we push, see: https://pypi.org/project/Sphinx/
-recommonmark  # Helps with sphinx markdown
+recommonmark  # Helps with sphinx markdown, see: https://pypi.org/project/recommonmark/
 pymongo       # is a native Python driver for MongoDB, see: https://pypi.org/project/pymongo/
+mongoengine   # give structure to MongoDB and provides validation, see: https://pypi.org/project/mongoengine/
 
 #
 ###### Requirements with Version Specifiers ######
