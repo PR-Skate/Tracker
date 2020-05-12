@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Tracker.apps.TrackerConfig',
+    'rest_framework',
+    'REST_API.apps.RestApiConfig'
+    'frontend',
 ]
 
 MIDDLEWARE = [
