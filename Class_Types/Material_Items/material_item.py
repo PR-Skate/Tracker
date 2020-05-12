@@ -8,3 +8,4 @@ from Class_Types.base_record import BaseRecord
 class MaterialItem(BaseRecord):
     materialArticleNumber = StringField(required=True)
     description = ListField(StringField(required=True), max_length=7, required=True)
+    meta = {'collection': 'MaterialItem'}

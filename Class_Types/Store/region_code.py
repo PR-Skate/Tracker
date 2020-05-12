@@ -2,9 +2,8 @@
 # Created On: 05/07/2020
 #
 
-from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, EmbeddedDocumentField, Document
-from Tracker.Class_Types.base_record import BaseRecord
-import re
+from Class_Types.base_record import BaseRecord
+from mongoengine import StringField
 
 
 class RegionCode(BaseRecord):

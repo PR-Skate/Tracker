@@ -2,16 +2,16 @@
 # Created On: 05/07/2020
 #
 
-from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
-    EmbeddedDocumentField, Document, DateField, StringField, FileField, ReferenceField
+import datetime as dt
+
+from mongoengine import DateField, StringField, FileField, ReferenceField
 
 from Class_Types.base_record import BaseRecord
-from Class_Types.Embeded_Documents.embeded_classes import Address
-import re
-import  datetime as dt
+
+
 class WorkOrder(BaseRecord):
     # constructor:
-    workOrderName = StringField(max_length=75, required = True)
+    workOrderName = StringField(max_length=15, required=True, unique=True)
     dateReceived = DateField(required=True, default=dt.datetime.now())
     detail = StringField(defualt='', required=True)
     requestingContact = StringField(required=True)
@@ -21,9 +21,9 @@ class WorkOrder(BaseRecord):
     inspectForStorePath = FileField()
     detailedReceiptPath = FileField()
     signageMapPath = FileField()
-    partsArrivalDate = DateField(required=True)
+    partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)
-    fkWorkOrderStatus = ReferenceField('WorkOrderStatus')
-    fkStoreNumber = ReferenceField('Store')
+    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True)
+    fkStoreNumber = ReferenceField('Store', required=True)
     meta = {'collection': 'WorkOrder'}

@@ -8,3 +8,4 @@ import time as t
 
 class MaterialList(BaseRecord):
     fkMaterialItem = ListField(ReferenceField('MaterialItem'))
+    meta = {'collection': 'MaterialList'}

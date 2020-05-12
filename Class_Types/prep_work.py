@@ -19,5 +19,5 @@ class PrepWork(BaseRecord):
     inspectionDueDates = DateTimeField()
     lastDateChecked = DateTimeField(default=datetime.utcnow)
     fkWorkOrderNames = ReferenceField('WorkOrder', required=True)
-    meta = {'collection': 'SchedulingWork'}
+    meta = {'collection': 'PrepWork'}
 

@@ -6,3 +6,4 @@ from Class_Types.base_record import BaseRecord
 
 class ScopeOfWorkStatus(BaseRecord):
     status = StringField(required=True, unique=True)
+    meta = {'collection': 'ScopeOfWorkStatus'}

@@ -1,10 +1,6 @@
-from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
-    EmbeddedDocumentField, Document
+from mongoengine import StringField
 
 from Class_Types.base_record import BaseRecord
-from Class_Types.Embeded_Documents.embeded_classes import Address
-import re
-
 
 
 class MicroRegionCode(BaseRecord):

@@ -8,7 +8,7 @@ import time as t
 
 
 class LocationInStore(BaseRecord):
-    department = StringField(required=True, unique_with=['aisle', 'bay', 'tower'])
+    department = StringField(required=True, unique_with=['aisle', 'bay', 'tower', 'fkStoreNumber'])
     aisle = StringField(required=True)
     bay = StringField(required=True)
     tower = StringField(required=True)
@@ -19,3 +19,5 @@ class LocationInStore(BaseRecord):
     electricalPicturePath = ImageField(default=None)
     fkMaterialList = ReferenceField('MaterialList')
     fkStoreNumber = ReferenceField('Store', required=True)
+    meta = {'collection': 'LocationInStore'}
+
