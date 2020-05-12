@@ -3,6 +3,7 @@
 import os
 import sys
 from dependencies import get_dependencies as dependencies
+import numpy
 
 
 def main():
@@ -19,5 +20,5 @@ def main():
 
 
 if __name__ == '__main__':
-    dependencies.get_dependencies(file_path=os.path.abspath(os.path.join("dependencies", "dependencies.txt")))
+    dependencies.get_dependencies(file_path=os.path.abspath(os.path.join("dependencies", "requirements.txt")))
     main()

@@ -2,7 +2,7 @@
 # Created On: 05/11/2020
 #
 from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
-    EmbeddedDocumentField, Document
+    EmbeddedDocumentField
 
 from Class_Types.base_record import BaseRecord
 from Class_Types.Embeded_Documents.embeded_classes import Address
@@ -10,7 +10,6 @@ import re
 
 
 class Employee(BaseRecord):
-    # constructor:
     userName = StringField(max_length=50, required=True, unique=True)
     firstName = StringField(max_length=50, required=True)
     lastName = StringField(max_length=50, required=True)
