@@ -2,27 +2,12 @@
 # Created On: 05/07/2020
 #
 
-import os
-from Class_Types.base_record import BaseRecord
+from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, EmbeddedDocumentField, Document
+from Tracker.Class_Types.base_record import BaseRecord
+import re
 
 
 class RegionCode(BaseRecord):
-    def __init__(self, regionCodeID, name):
-        self.regionCodeID = regionCodeID
-        self.name = name
-        BaseRecord.__init__(self, 'CrEaTeD uSeR')
-
-    def get_regionCodeID(self):
-        return self._regionCodeID
-
-    def get_name(self):
-        return self._name
-
-    def set_regionCodeID(self, region_code_id):
-        self.regionCodeID = region_code_id
-
-    def set_name(self, __name):
-        self.regionCodeID = __name
-
-    region_code = property(get_regionCodeID, set_regionCodeID)
-    name_ = property(get_name, set_name)
+    regionCodeID = StringField(max_length=12, required=True, unique=True)
+    name = StringField(max_length=50, required=True, unique=True)
+    meta = {'collection': 'RegionCode'}

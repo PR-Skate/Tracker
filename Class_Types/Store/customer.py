@@ -1,17 +1,12 @@
 # Created By: Alex Peterson
 # Created On: 05/07/2020
 #
+from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
+    EmbeddedDocumentField, Document, ReferenceField
 from Class_Types.base_record import BaseRecord
+import re
+import re
 
 class Customer(BaseRecord):
-    def __init__(self, customerName):
-        self._customerName = customerName
-        BaseRecord.__init__(self, 'CREATED USER')
-
-    def get_customerName(self):
-        return self.customerName
-
-    def set_customerName(self, customer_name):
-        self.customerName = customer_name
-
-    _customerName = property(get_customerName, set_customerName)
+    customerName = StringField(max_length=50, required=True, unique=True)
+    meta = {'collection': 'Customer'}

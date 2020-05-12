@@ -1,24 +1,13 @@
-import os
+from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
+    EmbeddedDocumentField, Document
+
 from Class_Types.base_record import BaseRecord
+from Class_Types.Embeded_Documents.embeded_classes import Address
+import re
+
 
 
 class MicroRegionCode(BaseRecord):
-    def __init__(self, microRegionCodeID, name):
-        self.microRegionCodeID = microRegionCodeID
-        self.name = name
-        BaseRecord.__init__(self, 'CrEaTeD uSeR')
-
-    def get_microRegionCodeID(self):
-        return self._microRegionCodeID
-
-    def get_name(self):
-        return self._name
-
-    def set_microRegionCodeID(self, micro_region_code_id):
-        self.microRegionCodeID = micro_region_code_id
-
-    def set_name(self, __name):
-        self.microRegionCodeID = __name
-
-    region_code = property(get_microRegionCodeID, set_microRegionCodeID)
-    name_ = property(get_name, set_name)
+    regionCode = StringField(max_length=12, required=True, unique=True)
+    name = StringField(max_length=50, required=True, unique=True)
+    meta = {'collection': 'MicroRegionCode'}

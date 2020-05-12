@@ -2,32 +2,15 @@
 # Created On: 05/07/2020
 #
 
-import os
-import time as t
-from bson import ObjectId as objectID
-from Tracker.Class_Type.base_record import BaseRecord
+from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
+    EmbeddedDocumentField, Document
+
+from Class_Types.base_record import BaseRecord
+from Class_Types.Embeded_Documents.embeded_classes import Address
+import re
 
 class WorkOrderStatus(BaseRecord):
     # constructor:
-    def __init__(self, workOrderStatusID, name, createdUser, createdTimestamp=t.time(), lastModifiedUser="", lastModifiedTimestamp=t.time(), objectId=""):
-        self._workOrderStatusID = workOrderStatusID
-        self._name = name
-        BaseRecord.__init__(self, createdUser, createdTimestamp, lastModifiedUser, lastModifiedTimestamp)
-
-    
-    #getters:
-    def get_work_order_status_id(self):
-        return self._workOrderStatusID
-
-    def get_name(self):
-        return self._name
-
-
-    #setters:
-    def set_work_order_status_id (self, workOrderStatusID ):
-        self.workOrderStatusID = workOrderStatusID
-    def set_name (self, name):
-        self.name = name
-
-    _workOrderStatusID = property(get_work_order_status_id, set_work_order_status_id)
-    _name = property(get_name, set_name)
+    workOrderStatusID = StringField(unique=True, max_length=30)
+    name = StringField(max_length=75)
+    meta = {'collection': 'WorkOrderStatus'}
