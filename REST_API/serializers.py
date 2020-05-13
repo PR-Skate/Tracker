@@ -1,132 +1,160 @@
+from rest_framework import serializers
 from rest_framework_mongoengine.serializers import DocumentSerializer, EmbeddedDocumentSerializer
-from .models import *
+from Class_Types import *
 
 
-class LocationInStoreSerializer(DocumentSerializer):
+class BaseSerializer(DocumentSerializer):
+    createdUser = serializers.CharField(required=True)
+
+
+class LocationInStoreSerializer(BaseSerializer):
     class Meta:
-        model = ModelLocationInStore
+        model = LocationInStore
+        fields = model.get_fields()
         depth = 1
 
 
-class ScopeOfWorkSerializer(DocumentSerializer):
+class ScopeOfWorkSerializer(BaseSerializer):
     class Meta:
-        model = ModelScopeOfWork
+        model = ScopeOfWork
+        fields = model.get_fields()
         depth = 1
 
 
-class ScopeOfWorkStatusSerializer(DocumentSerializer):
+class ScopeOfWorkStatusSerializer(BaseSerializer):
     class Meta:
-        model = ModelScopeOfWorkStatus
+        model = ScopeOfWorkStatus
+        fields = model.get_fields()
         depth = 1
 
 
 class AddressSerializer(EmbeddedDocumentSerializer):
     class Meta:
-        model = ModelAddress
+        model = Address
+        fields = '__all__'
         depth = 1
 
 
 class NameSerializer(EmbeddedDocumentSerializer):
     class Meta:
-        model = ModelName
+        model = Name
+        fields = '__all__'
         depth = 1
 
 
-class SchedulingWorkSerializer(DocumentSerializer):
+class SchedulingWorkSerializer(BaseSerializer):
     weekOneNameOfContact = NameSerializer(many=False)
     weekFourNameOfContact = NameSerializer(many=False)
 
     class Meta:
-        model = ModelSchedulingWork
+        model = SchedulingWork
+        fields = model.get_fields()
         depth = 2
 
 
-class OrderMaterialSerializer(DocumentSerializer):
+class OrderMaterialSerializer(BaseSerializer):
     class Meta:
-        model = ModelOrderMaterial
+        model = OrderMaterial
+        fields = model.get_fields()
         depth = 1
 
 
-class MaterialListSerializer(DocumentSerializer):
+class MaterialListSerializer(BaseSerializer):
     class Meta:
-        model = ModelMaterialList
+        model = MaterialList
+        fields = model.get_fields()
         depth = 1
 
 
-class MaterialItemSerializer(DocumentSerializer):
+class MaterialItemSerializer(BaseSerializer):
     class Meta:
-        model = ModelMaterialItem
+        model = MaterialItem
+        fields = model.get_fields()
         depth = 1
 
 
-class WorkOrderStatusSerializer(DocumentSerializer):
+class WorkOrderStatusSerializer(BaseSerializer):
+    createdUser = serializers.CharField(required=True)
+
     class Meta:
-        model = ModelWorkOrderStatus
+        model = WorkOrderStatus
+        fields = model.get_fields()
         depth = 1
 
 
-class WorkOrderSerializer(DocumentSerializer):
+class WorkOrderSerializer(BaseSerializer):
     class Meta:
-        model = ModelWorkOrder
+        model = WorkOrder
+        fields = model.get_fields()
         depth = 1
 
 
-class EmployeeSerializer(DocumentSerializer):
+class EmployeeSerializer(BaseSerializer):
     address = AddressSerializer(many=False)
 
     class Meta:
-        model = ModelEmployee
+        model = Employee
+        fields = model.get_fields()
         depth = 2
 
 
-class ArticleNumberSerializer(DocumentSerializer):
+class ArticleNumberSerializer(BaseSerializer):
     class Meta:
-        model = ModelArticleNumber
+        model = ArticleNumber
+        fields = model.get_fields()
         depth = 1
 
 
-class LaborItemSerializer(DocumentSerializer):
+class LaborItemSerializer(BaseSerializer):
     class Meta:
-        model = ModelLaborItem
+        model = LaborItem
+        fields = model.get_fields()
         depth = 1
 
 
-class ArticleNumberStateSerializer(DocumentSerializer):
+class ArticleNumberStateSerializer(BaseSerializer):
     class Meta:
-        model = ModelArticleNumberState
+        model = ArticleNumberState
+        fields = model.get_fields()
         depth = 1
 
 
-class StoreSerializer(DocumentSerializer):
+class StoreSerializer(BaseSerializer):
     address = AddressSerializer()
     storeManagerName = NameSerializer()
     opsManagerName = NameSerializer()
     managerName = NameSerializer()
     overnightManagerName = NameSerializer()
+
     class Meta:
-        model = ModelStore
+        model = Store
+        fields = model.get_fields()
         depth = 2
 
 
-class RegionCodeSerializer(DocumentSerializer):
+class RegionCodeSerializer(BaseSerializer):
     class Meta:
-        model = ModelRegionCode
+        model = RegionCode
+        fields = model.get_fields()
         depth = 1
 
 
-class CustomerSerializer(DocumentSerializer):
+class CustomerSerializer(BaseSerializer):
     class Meta:
-        model = ModelCustomer
+        model = Customer
+        fields = model.get_fields()
         depth = 1
 
 
-class MicroRegionCodeSerializer(DocumentSerializer):
+class MicroRegionCodeSerializer(BaseSerializer):
     class Meta:
-        model = ModelMicroRegionCode
+        model = MicroRegionCode
+        fields = model.get_fields()
         depth = 1
 
 
-class PrepWorkSerializer(DocumentSerializer):
+class PrepWorkSerializer(BaseSerializer):
     class Meta:
-        model = ModelPrepWork
+        model = PrepWork
+        fields = model.get_fields()
         depth = 1

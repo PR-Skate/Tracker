@@ -16,6 +16,7 @@ class Name(EmbeddedDocument):
     _lastName = StringField(max_length=150, default='', db_field='lastName')
     fullName = StringField(max_length=300, required=True)
 
+
     @property
     def firstName(self):
         return self._firstName

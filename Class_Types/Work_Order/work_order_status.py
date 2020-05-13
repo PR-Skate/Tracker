@@ -9,5 +9,5 @@ from Class_Types.base_record import BaseRecord
 
 class WorkOrderStatus(BaseRecord):
     # constructor:
-    name = StringField(unique=True, max_length=50)
+    status = StringField(unique=True, max_length=50)
     meta = {'collection': 'WorkOrderStatus'}

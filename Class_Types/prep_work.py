@@ -4,7 +4,7 @@
 from datetime import datetime
 from mongoengine import DateTimeField, BooleanField, StringField, ReferenceField
 
-from Class_Types.base_record import BaseRecord
+from Class_Types import BaseRecord
 
 
 class PrepWork(BaseRecord):
