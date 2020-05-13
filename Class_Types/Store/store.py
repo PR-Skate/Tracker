@@ -32,7 +32,7 @@ class Store(BaseRecord):
 
     overnightManagerEmail = EmailField()
     overnightCrew = StringField(max_length=25)
-    overnightAccess = SortedListField(StringField())
+    overnightAccess = ListField(StringField())
     noiseOrdinance = BooleanField(default=False)
     timeCutOff = DateTimeField()
 

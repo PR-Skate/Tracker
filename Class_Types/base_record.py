@@ -2,10 +2,10 @@
 # Created On: 05/11/2020
 
 from datetime import datetime
-from mongoengine import connect, DynamicDocument, StringField, DateTimeField
+from mongoengine import connect, Document, StringField, DateTimeField
 
 
-class BaseRecord(DynamicDocument):
+class BaseRecord(Document):
     _createdUser = StringField(max_length=50, required=True, db_field='createdUser')
     createdTimestamp = DateTimeField(default=datetime.utcnow)
     lastModifiedUser = StringField(max_length=50)

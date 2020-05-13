@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Tracker.apps.TrackerConfig',
     'rest_framework',
-    'REST_API.apps.RestApiConfig'
+    'rest_framework_mongoengine',
+    'REST_API.apps.RestApiConfig',
     'frontend',
 ]
 
