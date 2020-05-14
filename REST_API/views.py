@@ -7,3 +7,4 @@ from Class_Types import *
 class WorkOrderStatusCreate(drfme_generics.ListCreateAPIView):
     queryset = WorkOrderStatus.objects.all()
     serializer_class = WorkOrderStatusSerializer
+
