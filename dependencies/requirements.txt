@@ -1,25 +1,48 @@
-#
-###### Requirements without Version Specifiers ######
-django        # Web Framework we will be using, see: https://pypi.org/project/Django/
-pandas        # Reads .csv .xlsx .json, does much more in the way oh handling data, see: https://pypi.org/project/pandas/
-pylint        # Makes sure our code is being built to standards offPEP8, see: https://pypi.org/project/pylint/
-Sphinx        # Builds documentation based off of code we push, see: https://pypi.org/project/Sphinx/
-recommonmark  # Helps with sphinx markdown, see
-pymongo       # is a native Python driver for MongoDB, see: https://pypi.org/project/pymongo/
-mongoengine   # give structure to MongoDB and provides validation, see: https://pypi.org/project/mongoengine/
-
-#
-###### Requirements with Version Specifiers ######
-#   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
-
-#
-###### Refer to other requirements files ######
-
-#
-#
-###### A particular file ######
-
-#
-###### Additional Requirements without Version Specifiers ######
-#   Same as 1st section, just here to show that you can put things in any order.
-#
+Django                             #Web Framework we will be using, see: https://pypi.org/project/Django/
+pandas                             #Reads .csv .xlsx .json, does much more in the way oh handling data, see: https://pypi.org/project/pandas/
+pylint                             #Makes sure our code is being built to standards offPEP8, see: https://pypi.org/project/pylint/
+Sphinx                             #Builds documentation based off of code we push, see: https://pypi.org/project/Sphinx/
+recommonmark                       #Helps with sphinx markdown, see
+pymongo                            #is a native Python driver for MongoDB, see: https://pypi.org/project/pymongo/
+mongoengine                        #give structure to MongoDB and provides validation, see: https://pypi.org/project/mongoengine/
+alabaster                          #TODO add comment
+asgiref                            #TODO add comment
+astroid                            #TODO add comment
+Babel                              #TODO add comment
+certifi                            #TODO add comment
+chardet                            #TODO add comment
+commonmark                         #TODO add comment
+coverage                           #TODO add comment
+django-rest                        #TODO add comment
+django-rest-framework              #TODO add comment
+django-rest-framework-mongoengine  #TODO add comment
+djangorestframework                #TODO add comment
+docutils                           #TODO add comment
+idna                               #TODO add comment
+imagesize                          #TODO add comment
+isort                              #TODO add comment
+Jinja2                             #TODO add comment
+lazy-object-proxy                  #TODO add comment
+MarkupSafe                         #TODO add comment
+mccabe                             #TODO add comment
+numpy                              #TODO add comment
+packaging                          #TODO add comment
+Pillow                             #TODO add comment
+Pygments                           #TODO add comment
+pyparsing                          #TODO add comment
+python-dateutil                    #TODO add comment
+pytz                               #TODO add comment
+requests                           #TODO add comment
+six                                #TODO add comment
+snowballstemmer                    #TODO add comment
+sphinxcontrib-applehelp            #TODO add comment
+sphinxcontrib-devhelp              #TODO add comment
+sphinxcontrib-htmlhelp             #TODO add comment
+sphinxcontrib-jsmath               #TODO add comment
+sphinxcontrib-qthelp               #TODO add comment
+sphinxcontrib-serializinghtml      #TODO add comment
+sqlparse                           #TODO add comment
+toml                               #TODO add comment
+urllib3                            #TODO add comment
+wrapt                              #TODO add comment
+Django                             #TODO add comment
