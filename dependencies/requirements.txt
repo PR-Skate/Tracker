@@ -44,6 +44,10 @@ sphinxcontrib-serializinghtml      #TODO add comment
 sqlparse                           #TODO add comment
 toml                               #TODO add comment
 urllib3                            #TODO add comment
+<<<<<<< HEAD
 wrapt                              #TODO add comment
 bson                               #TODO add comment
 colorama                           #TODO add comment
+=======
+wrapt                              #TODO add comment
+>>>>>>> 86efc0ef188cb75bcb64b8baca37f897f34921fe

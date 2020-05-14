@@ -4,8 +4,7 @@ import re
 import subprocess
 import sys
 
-PATH = '{}/requirements.txt'.format(pathlib.Path(__file__).parent.absolute())
-
+PATH = '{path}{directory_sep}requirements.txt'.format(path=pathlib.Path(__file__).parent.absolute(), directory_sep=os.path.sep)
 
 def install_dependencies(file_path):
     subprocess.check_call([sys.executable, '-m', "pip", "install", "-r", file_path], stdout=open(os.devnull, 'w'))
@@ -71,7 +70,7 @@ def main(add_comments=False):
             if k not in local_dependencies:
                 print(k, end='\n')
     elif len(local_dependencies) < len(project_dependencies.keys()):
-        print('Installing dependencies from project requirements ...', end='\n')
+        print('Installing dependencies from project requirements...', end='\n')
         install_dependencies(file_path=PATH)
     else:
         print('All required dependencies are installed.')
