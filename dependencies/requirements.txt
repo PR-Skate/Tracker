@@ -45,4 +45,3 @@ sqlparse                           #TODO add comment
 toml                               #TODO add comment
 urllib3                            #TODO add comment
 wrapt                              #TODO add comment
-Django                             #TODO add comment
