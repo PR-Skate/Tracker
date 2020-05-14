@@ -1,4 +1,4 @@
-Django                             #Web Framework we will be using, see: https://pypi.org/project/Django/
+Django                             #TODO add comment
 pandas                             #Reads .csv .xlsx .json, does much more in the way oh handling data, see: https://pypi.org/project/pandas/
 pylint                             #Makes sure our code is being built to standards offPEP8, see: https://pypi.org/project/pylint/
 Sphinx                             #Builds documentation based off of code we push, see: https://pypi.org/project/Sphinx/
@@ -45,4 +45,5 @@ sqlparse                           #TODO add comment
 toml                               #TODO add comment
 urllib3                            #TODO add comment
 wrapt                              #TODO add comment
-Django                             #TODO add comment
+bson                               #TODO add comment
+colorama                           #TODO add comment

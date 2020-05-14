@@ -3,6 +3,7 @@
 import os
 import sys
 from dependencies import main as check_dependencies
+import numpy
 
 
 def main():
@@ -19,5 +20,6 @@ def main():
 
 
 if __name__ == '__main__':
+    
     check_dependencies()
     main()
