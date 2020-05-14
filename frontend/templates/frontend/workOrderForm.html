@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Order Form</title>
+</head>
+
+<body>
+<h2>Work Order Form</h2><br><br><br>
+
+<form method="POST">
+    <div>
+        <label for="">Refual of Service- POSITION</label>
+        <select name="" id="">
+            <option value="" selected>Select a position</option>
+            <option value="">Me</option>
+            <option value=""> OR Me</option>
+        </select><br><br>
+
+        <label for="">Work Order</label>
+        <input type="text"><br><br>
+
+        <label for="">Date</label>
+        <input type="date" name="" id=""><br><br>
+
+        <label for="">Store Number</label>
+        <input type="text"><br><br>
+
+        <label for="">Request Code</label>
+        <select name="" id="">
+            <option value="">Me</option>
+            <option value="">Or me</option>
+        </select><br><br>
+
+        <label for="">Detail</label><br>
+        <textarea name="message" rows="10" cols="30" placeholder="Enter a description here. . ."></textarea><br><br>
+
+        <label for="">Requesting Contact</label>
+        <input type="text"><br><br>
+
+        <label for="">Priority</label>
+        <input type="text"><br><br>
+
+        <label for="">Status Code</label>
+        <select name="" id="">
+            <option value="" selected>Select a status code</option>
+            <option value="">Me</option>
+            <option value="">Or me</option>
+        </select><br><br>
+
+        <label for="">Target Start Date</label>
+        <input type="date"><br><br>
+
+        <label for="">Status</label><br>
+        <input type="radio" name="Status" value="Billing">
+        <label for="">Billing</label><br>
+        <input type="radio" name="Status" value="Closed">
+        <label for="">Closed/Non-Billable</label><br>
+        <input type="radio" name="Status" value="Complete">
+        <label for="">Complete</label><br>
+        <input type="radio" name="Status" value="GB">
+        <label for="">GB</label><br>
+        <input type="radio" name="Status" value="GB Scheduled Queue">
+        <label for="">GB Scheduled Queue</label><br>
+        <input type="radio" name="Status" value="In Progress">
+        <label for="">In Progress</label><br>
+        <input type="radio" name="Status" value="Pending" checked>
+        <label for="">Pending</label><br>
+        <input type="radio" name="Status" value="Rescheduled">
+        <label for="">Rescheduled</label><br>
+        <input type="radio" name="Status" value="Scheduled Queuue">
+        <label for="">Scheduled Queuue</label><br>
+        <input type="radio" name="Status" value="Scheduled">
+        <label for="">Scheduled</label><br>
+
+        <label for="">Date Completed</label>
+        <input type="date" name="" id=""><br><br>
+
+        <label for="">Inspect For Store Upload</label>
+        <input type="file"><br><br>
+
+        <label for="">Detailed Reciept Upload</label>
+        <input type="file"><br><br>
+
+        <label for="">Questionnaire</label>
+        <input type="file"><br><br>
+
+        <label for="">Signage Map</label>
+        <input type="file"><br><br>
+
+        <label for="">Parts Arrival Date</label>
+        <input type="date"><br><br>
+
+        <hr>
+        <h2>SOW Acknowledgement</h2><br>
+        <h4>I acknowledge that one or more SOW line items are marked "complete" for this Work Order and hitting submit
+            will mark those SOW line items as "Closed / Non-Billable" and will not be billed for this Work Order.</h4>
+        <br>
+        <label for="">SOW Acknowledgement</label>
+        <input type="checkbox" value="True" required>
+        <label for="">I acknowledge</label><br><br>
+    </div>
+
+</form>
+</body>
+
+</html>

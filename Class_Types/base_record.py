@@ -30,8 +30,23 @@ class BaseRecord(DynamicDocument):
     @classmethod
     def get_fields(cls):
         temp = list(cls._db_field_map.values())
-        temp.remove('_id')
-        temp.remove('_cls')
+        if '_id' in temp:
+            temp.remove('_id')
+        if '_cls' in temp:
+            temp.remove('_cls')
+        return temp
+
+    @classmethod
+    def get_required_fields(cls):
+        temp = list()
+        if not cls._meta.get('abstract'):
+            for field, object in cls._fields.items():
+                if object.__getattribute__('required'):
+                    temp.append(object.__getattribute__('db_field'))
+        if '_id' in temp:
+            temp.remove('id')
+        if '_cls' in temp:
+            temp.remove('_cls')
         return temp
 
     @classmethod
@@ -40,8 +55,9 @@ class BaseRecord(DynamicDocument):
         if not cls._meta.get('abstract'):
             for field, object in cls._fields.items():
                 if not object.__getattribute__('required'):
-                    # temp.append()
-                    temp.append(field)
-        temp.remove('id')
-        temp.remove('_cls')
+                    temp.append(object.__getattribute__('db_field'))
+        if '_id' in temp:
+            temp.remove('_id')
+        if '_cls' in temp:
+            temp.remove('_cls')
         return temp
