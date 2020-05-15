@@ -47,3 +47,5 @@ urllib3                            #TODO add comment
 wrapt                              #TODO add comment
 bson                               #TODO add comment
 colorama                           #TODO add comment
+pycrypto                           #TODO add comment
+SecureMongoEngine                  #TODO add comment

@@ -19,3 +19,8 @@ class StoreCreate(drfme_generics.ListCreateAPIView):
 class CustomerCreate(drfme_generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+
+class EmployeeCreate(drfme_generics.ListCreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
