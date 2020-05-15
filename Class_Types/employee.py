@@ -1,23 +1,21 @@
 # Created By: Alex Peterson
 # Created On: 05/11/2020
 #
-import bcrypt as bcrypt
-from mongoengine import StringField, DateTimeField, EmailField, DecimalField, BooleanField, \
-    EmbeddedDocumentField, DynamicField
-
-from Class_Types.base_record import BaseRecord
-from Class_Types.Embeded_Documents.embeded_classes import Address
 import re
-import hashlib
-import os
 
+import bcrypt as bcrypt
+from mongoengine import StringField, EmailField, DecimalField, BooleanField, \
+    EmbeddedDocumentField, DynamicField, DateField
+
+from Class_Types.Embeded_Documents.embeded_classes import Address
+from Class_Types.base_record import BaseRecord
 
 
 class Employee(BaseRecord):
     userName = StringField(max_length=50, required=True, unique=True)
     firstName = StringField(max_length=50, required=True)
     lastName = StringField(max_length=50, required=True)
-    birthDate = DateTimeField(required=True)
+    birthDate = DateField(required=True)
     address = EmbeddedDocumentField(Address, required=True)
     email = EmailField(required=True, unique=True)
     phone = StringField(max_length=20, required=True)
