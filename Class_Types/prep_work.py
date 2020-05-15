@@ -4,7 +4,7 @@
 from datetime import datetime
 from mongoengine import DateTimeField, BooleanField, StringField, ReferenceField
 
-from Class_Types import BaseRecord
+from Class_Types import BaseRecord, WorkOrder
 
 
 class PrepWork(BaseRecord):
@@ -18,6 +18,6 @@ class PrepWork(BaseRecord):
     cpn_eta = DateTimeField()
     inspectionDueDates = DateTimeField()
     lastDateChecked = DateTimeField(default=datetime.utcnow)
-    fkWorkOrderNames = ReferenceField('WorkOrder', required=True)
+    fkWorkOrderNames = ReferenceField(WorkOrder, required=True)
     meta = {'collection': 'PrepWork'}
 

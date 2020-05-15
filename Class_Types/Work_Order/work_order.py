@@ -6,6 +6,7 @@ import datetime as dt
 
 from mongoengine import DateField, StringField, FileField, ReferenceField
 
+from Class_Types import WorkOrderStatus, Store
 from Class_Types.base_record import BaseRecord
 
 
@@ -24,6 +25,6 @@ class WorkOrder(BaseRecord):
     partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)
-    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True)
-    fkStoreNumber = ReferenceField('Store', required=True)
+    fkWorkOrderStatus = ReferenceField(WorkOrderStatus, required=True)
+    fkStoreNumber = ReferenceField(Store, required=True)
     meta = {'collection': 'WorkOrder'}
