@@ -49,3 +49,6 @@ bson                               #TODO add comment
 colorama                           #TODO add comment
 pycrypto                           #TODO add comment
 SecureMongoEngine                  #TODO add comment
+bcrypt                             #TODO add comment
+cffi                               #TODO add comment
+pycparser                          #TODO add comment
