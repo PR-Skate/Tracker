@@ -148,8 +148,6 @@ class WorkOrderStatusSerializer(BaseSerializer):
 
 
 class WorkOrderSerializer(BaseSerializer):
-    address = AddressSerializer(many=False)
-
     class Meta:
         model = WorkOrder
         fields = model.get_fields()
@@ -165,6 +163,7 @@ class WorkOrderSerializer(BaseSerializer):
 
 class EmployeeSerializer(BaseSerializer):
     passwordHash = serializers.CharField(required=True)
+
     class Meta:
         model = Employee
         fields = model.get_fields()
