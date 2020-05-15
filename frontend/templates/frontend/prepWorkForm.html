@@ -5,6 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prep Work Form</title>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('form').submit(function() {
+                var formdata = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "/api/PrepWork/",
+                    data: formdata,
+                    success: function(response) {
+                        document.getElementById('form').reset();
+                        $('#success').show();
+
+                        setTimeout(function() {
+                            $("#success").hide();
+                        }, 5000);
+                    },
+                    error: function(response) {
+                        $('#fail').show();
+
+                        setTimeout(function() {
+                            $("#fail").hide();
+                        }, 5000);
+                    },
+
+                });
+
+                return false;
+            });
+        });
+    </script>
 </head>
 
 <body>

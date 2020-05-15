@@ -43,32 +43,35 @@
 
     <!-- General info -->
     <form action="#" method="POST" name='form' id='form'>{% csrf_token %}
+        <label for="">Created User:</label>
+        <input type="text" name='createdUser'><br><br>
+
         <label for="">User Name:</label>
         <input type="text" name="userName"><br><br>
 
         <label for="">First Name:</label>
-        <input type="text" name="name"><br><br>
+        <input type="text" name="firstName"><br><br>
 
         <label for="">Last Name:</label>
-        <input type="text"><br><br>
+        <input type="text" name='lastName'><br><br>
 
         <label for="">Birth Date:</label>
-        <input type="date"><br><br>
+        <input type="date" name='birthDate'><br><br>
 
 
 
 
         <label for="Store">Address</label>
-        <input type="text" id="AddressLineOne" name="addressLineOne" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 1" required><br>
+        <input type="text" id="AddressLineOne" name="address.addressLineOne" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 1" required><br>
 
 
-        <input type="text" id="AddressLineTwo" name="addressLineTwo" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 2"><br>
+        <input type="text" id="AddressLineTwo" name="address.addressLineTwo" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 2"><br>
 
 
-        <input type="text" id="City" name="city" maxlength="20" size="10" style="margin-left: 4em" placeholder="City" required><br><br>
+        <input type="text" id="City" name="address.city" maxlength="20" size="10" style="margin-left: 4em" placeholder="City" required><br><br>
 
         <label for="State">State</label>
-        <select name="state" id="state" required>
+        <select name="address.state" id="state" required>
         <option value="" selected="selected">Select a State</option>
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
@@ -124,11 +127,11 @@
       </select><br><br>
 
 
-        <label for="PostalCode">Postal Code</label>
-        <input type="text" id="PostalCode" name="PostalCode" maxlength="10" size="10" style="margin-left: 4em" placeholder="Postal Code" required><br><br>
+        <label for="address.zip">Postal Code</label>
+        <input type="text" id="address.zip" name="address.zip" maxlength="10" size="10" style="margin-left: 4em" placeholder="Postal Code" required><br><br>
 
-        <label for="Country">Country</label>
-        <select id="country" name="Country" style="margin-left: 4em" required>
+        <label for="address.country">Country</label>
+        <select id="address.country" name="address.country" style="margin-left: 4em" required>
         <option value="" selected>Select a Country</option>
         <option value="Afganistan">Afghanistan</option>
         <option value="Albania">Albania</option>
@@ -393,21 +396,24 @@
         <input type="text" name="rateOfPay"><br><br>
 
 
-        <label for="">Is Active: </label><br>
-        <input type="radio" style="margin-left: 4em" id="active" name="active" value="True" required>
-        <label for="">Yes</label><br><br>
+        <label for="">Active</label>
+        <input type="checkbox" style="margin-left: 4em" id="active" name="active" value='true' checked=''><br><br>
 
-        <input type="radio" style="margin-left: 4em" id="active" name="active" value="False" required>
-        <label for="">No</label><br><br>
+
 
 
         <label for="">Type: </label>
         <input type="text" name="type"><br><br>
 
+        <label for="">Password: </label>
+        <input type="text" name="passwordHash"><br><br>
+
         <input type="submit">
 
+        <p id='success' style="display:none">Successfully Added</p>
+        <p id='fail' style="display:none">ERROR</p>
     </form>
-    <!-- Address/Contact info -->
+
 </body>
 
 </html>
