@@ -3,13 +3,14 @@
 #
 
 from mongoengine import StringField, DateTimeField, BooleanField, \
-    EmbeddedDocumentField, ReferenceField, EmailField, SortedListField, PointField, DateField, \
+    EmbeddedDocumentField, ReferenceField, EmailField, PointField, DateField, \
     ListField, IntField
 
-from Class_Types import Customer, MicroRegionCode, RegionCode
-from Class_Types.Embeded_Documents.embeded_classes import Address
-from Class_Types.Embeded_Documents.embeded_classes import Name
-from Class_Types.base_record import BaseRecord
+from .micro_region_code import MicroRegionCode
+from .region_code import RegionCode
+from .customer import Customer
+from ..Embeded_Documents.embeded_classes import Address, Name
+from ..base_record import BaseRecord
 
 
 class Store(BaseRecord):
