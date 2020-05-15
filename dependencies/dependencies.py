@@ -50,22 +50,26 @@ def get_comment_for_dependency(dependency, custom=False):
     return text
 
 
-def main(do_user_input=False):
+def main(add_comments=False):
     local_dependencies = get_local_dependencies()
-    prev_project_dependencies = get_project_dependencies()
-    new_project_dependencies = prev_project_dependencies.copy()
+    project_dependencies = get_project_dependencies()
 
     add_dependency = False
     for dependency in local_dependencies:
-        if dependency not in list(prev_project_dependencies.keys()):
+        if dependency not in list(project_dependencies.keys()):
             print('found new dependency', end='\n')
-            new_project_dependencies.update({dependency: get_comment_for_dependency(dependency, do_user_input)})
+            project_dependencies.update({dependency: get_comment_for_dependency(dependency, add_comments)})
             add_dependency = True
 
     if add_dependency:
-        add_dependencies(new_project_dependencies)
+        add_dependencies(project_dependencies)
 
-    if len(new_project_dependencies.keys()) > len(prev_project_dependencies.keys()):
+    if not add_dependency and len(local_dependencies) < len(project_dependencies.keys()):
+        print('All dependencies in requirements.txt that are not installed:', end='\n')
+        for k in project_dependencies.keys():
+            if k not in local_dependencies:
+                print(k, end='\n')
+    elif len(local_dependencies) < len(project_dependencies.keys()):
         print('Installing dependencies from project requirements...', end='\n')
         install_dependencies(file_path=PATH)
     else:
