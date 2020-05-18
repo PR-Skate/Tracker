@@ -2,8 +2,7 @@
 # Created On: 05/07/2020
 from mongoengine import StringField, DecimalField, ReferenceField
 
-from Class_Types import ArticleNumber
-from Class_Types.base_record import BaseRecord
+from .article_number import BaseRecord, ArticleNumber
 
 
 class ArticleNumberState(BaseRecord):
