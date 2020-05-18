@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "devextreme-themebuilder": "20.1-stable"
   }
 }
