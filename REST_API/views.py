@@ -60,7 +60,7 @@ class BasicView(MongoModelViewSet):
         return self.model.objects.filter(**self.request.query_params.dict())
 
 
-class LocationInStoreView(MongoModelViewSet):
+class LocationInStoreView(BasicView):
     look_up = 'id'
     serializer_class = LocationInStoreSerializer
 
@@ -68,7 +68,7 @@ class LocationInStoreView(MongoModelViewSet):
         return LocationInStore.objects.all()
 
 
-class ScopeOfWorkView(MongoModelViewSet):
+class ScopeOfWorkView(BasicView):
     look_up = 'id'
     serializer_class = ScopeOfWorkSerializer
 
@@ -76,7 +76,7 @@ class ScopeOfWorkView(MongoModelViewSet):
         return ScopeOfWork.objects.all()
 
 
-class ScopeOfWorkStatusView(MongoModelViewSet):
+class ScopeOfWorkStatusView(BasicView):
     look_up = 'id'
     serializer_class = ScopeOfWorkStatusSerializer
 
@@ -84,7 +84,7 @@ class ScopeOfWorkStatusView(MongoModelViewSet):
         return ScopeOfWorkStatus.objects.all()
 
 
-class SchedulingWorkView(MongoModelViewSet):
+class SchedulingWorkView(BasicView):
     look_up = 'id'
     serializer_class = SchedulingWorkSerializer
 
@@ -92,7 +92,7 @@ class SchedulingWorkView(MongoModelViewSet):
         return SchedulingWork.objects.all()
 
 
-class OrderMaterialView(MongoModelViewSet):
+class OrderMaterialView(BasicView):
     look_up = 'id'
     serializer_class = OrderMaterialSerializer
 
@@ -100,7 +100,7 @@ class OrderMaterialView(MongoModelViewSet):
         return OrderMaterial.objects.all()
 
 
-class MaterialListView(MongoModelViewSet):
+class MaterialListView(BasicView):
     look_up = 'id'
     serializer_class = MaterialListSerializer
 
@@ -108,7 +108,7 @@ class MaterialListView(MongoModelViewSet):
         return MaterialList.objects.all()
 
 
-class MaterialItemView(MongoModelViewSet):
+class MaterialItemView(BasicView):
     look_up = 'id'
     serializer_class = MaterialItemSerializer
 
@@ -116,7 +116,7 @@ class MaterialItemView(MongoModelViewSet):
         return MaterialItem.objects.all()
 
 
-class WorkOrderStatusView(MongoModelViewSet):
+class WorkOrderStatusView(BasicView):
     look_up = 'id'
     serializer_class = WorkOrderStatusSerializer
 
@@ -124,7 +124,7 @@ class WorkOrderStatusView(MongoModelViewSet):
         return WorkOrderStatus.objects.all()
 
 
-class WorkOrderView(MongoModelViewSet):
+class WorkOrderView(BasicView):
     look_up = 'id'
     serializer_class = WorkOrderSerializer
 
@@ -132,7 +132,7 @@ class WorkOrderView(MongoModelViewSet):
         return WorkOrder.objects.all()
 
 
-class EmployeeView(MongoModelViewSet):
+class EmployeeView(BasicView):
     look_up = 'id'
     serializer_class = EmployeeSerializer
 
@@ -140,7 +140,7 @@ class EmployeeView(MongoModelViewSet):
         return Employee.objects.all()
 
 
-class ArticleNumberView(MongoModelViewSet):
+class ArticleNumberView(BasicView):
     look_up = 'id'
     serializer_class = ArticleNumberSerializer
 
@@ -148,7 +148,7 @@ class ArticleNumberView(MongoModelViewSet):
         return ArticleNumber.objects.all()
 
 
-class LaborItemView(MongoModelViewSet):
+class LaborItemView(BasicView):
     look_up = 'id'
     serializer_class = LaborItemSerializer
 
@@ -156,7 +156,7 @@ class LaborItemView(MongoModelViewSet):
         return LaborItem.objects.all()
 
 
-class ArticleNumberStateView(MongoModelViewSet):
+class ArticleNumberStateView(BasicView):
     look_up = 'id'
     serializer_class = ArticleNumberStateSerializer
 
@@ -164,7 +164,7 @@ class ArticleNumberStateView(MongoModelViewSet):
         return ArticleNumberState.objects.all()
 
 
-class StoreView(MongoModelViewSet):
+class StoreView(BasicView):
     look_up = 'id'
     serializer_class = StoreSerializer
 
@@ -172,7 +172,7 @@ class StoreView(MongoModelViewSet):
         return Store.objects.all()
 
 
-class RegionCodeView(MongoModelViewSet):
+class RegionCodeView(BasicView):
     look_up = 'id'
     serializer_class = RegionCodeSerializer
 
@@ -185,7 +185,7 @@ class CustomerView(BasicView):
     serializer_class = CustomerSerializer
 
 
-class MicroRegionCodeView(MongoModelViewSet):
+class MicroRegionCodeView(BasicView):
     look_up = 'id'
     serializer_class = MicroRegionCodeSerializer
 
@@ -193,7 +193,7 @@ class MicroRegionCodeView(MongoModelViewSet):
         return MicroRegionCode.objects.all()
 
 
-class PrepWorkView(MongoModelViewSet):
+class PrepWorkView(BasicView):
     look_up = 'id'
     serializer_class = PrepWorkSerializer
 
