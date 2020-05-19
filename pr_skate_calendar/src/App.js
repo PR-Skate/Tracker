@@ -41,21 +41,26 @@ export default class App extends React.PureComponent {
 
         return (
             <Paper>
-            <Scheduler data={data} >
-            <AppointmentDragging
-            group={draggingGroupName}
-            onRemove={this.onAppointmentRemove}
-            onAdd={this.onAppointmentAdd}
-            />
+            <Scheduler
+            id="scheduler"
+        data={data}
+        startDayHour={9}
+        editing={true}>
             <ViewState
         defaultCurrentDate="2020-05-27"
         currentViewName={currentViewName}
         onCurrentViewNameChange={this.currentViewNameChange}
         />
+        <AppointmentDragging
+        group={draggingGroupName}
+        onRemove={this.onAppointmentRemove}
+        onAdd={this.onAppointmentAdd}
+        />
 
         <WeekView startDayHour={10} endDayHour={19} />
 
         <MonthView />
+
         <DayView />
 
         <Toolbar />
@@ -73,10 +78,8 @@ export default class App extends React.PureComponent {
 
         if (index >= 0) {
             this.state.appointments.splice(index, 1);
-            this.state.tasks.push(e.itemData);
 
             this.setState({
-                tasks: [...this.state.tasks],
                 appointments: [...this.state.appointments]
             });
         }
@@ -86,11 +89,9 @@ export default class App extends React.PureComponent {
         const index = this.state.tasks.indexOf(e.fromData);
 
         if (index >= 0) {
-            this.state.tasks.splice(index, 1);
             this.state.appointments.push(e.itemData);
 
             this.setState({
-                tasks: [...this.state.tasks],
                 appointments: [...this.state.appointments]
             });
         }
