@@ -3,18 +3,20 @@
 #
 
 from mongoengine import StringField, DateTimeField, BooleanField, \
-    EmbeddedDocumentField, ReferenceField, EmailField, SortedListField, PointField, DateField, \
+    EmbeddedDocumentField, ReferenceField, EmailField, PointField, DateField, \
     ListField, IntField
 
-from Class_Types.Embeded_Documents.embeded_classes import Address
-from Class_Types.Embeded_Documents.embeded_classes import Name
-from Class_Types.base_record import BaseRecord
+from .micro_region_code import MicroRegionCode
+from .region_code import RegionCode
+from .customer import Customer
+from ..Embeded_Documents.embeded_classes import Address, Name
+from ..base_record import BaseRecord
 
 
 class Store(BaseRecord):
     # constructor:
     storeNumber = StringField(max_length=50, required=True)
-    fkCustomer = ReferenceField('Customer', required=True)
+    fkCustomer = ReferenceField(Customer, required=True, dbref=True)
     address = EmbeddedDocumentField(Address, required=True)
     phoneNumber = StringField(max_length=20, required=True)
     region = StringField(max_length=50, required=True)
@@ -36,8 +38,8 @@ class Store(BaseRecord):
     noiseOrdinance = BooleanField(default=False)
     timeCutOff = DateTimeField()
 
-    fkRegionCode = ReferenceField('RegionCode')
-    fkMicroRegionCode = ReferenceField('MicroRegionCode')
+    fkRegionCode = ReferenceField(RegionCode, dbref=True)
+    fkMicroRegionCode = ReferenceField(MicroRegionCode, dbref=True)
     coordinates = PointField()
     active = BooleanField(default=True)
     installationDueDates = ListField(DateField)

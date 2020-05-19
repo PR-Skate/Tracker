@@ -2,6 +2,8 @@
 # Created On: 05/08/2020
 import datetime
 from mongoengine import IntField, DecimalField, DateTimeField, EmbeddedDocumentField, BooleanField, ReferenceField
+
+from Class_Types import Employee, WorkOrder
 from Class_Types.Embeded_Documents.embeded_classes import Name
 from Class_Types.base_record import BaseRecord
 
@@ -20,9 +22,9 @@ class SchedulingWork(BaseRecord):
     weekFourContact = BooleanField(default=False)
     weekFourNameOfContact = EmbeddedDocumentField(Name)
     formComplete = BooleanField()
-    fkInstallerID = ReferenceField('Employee')
-    fkSecondInstallerID = ReferenceField('Employee')
-    fkWorkOrderID = ReferenceField('WorkOrderName', required=True)
+    fkInstallerID = ReferenceField(Employee, dbref=True)
+    fkSecondInstallerID = ReferenceField(Employee, dbref=True)
+    fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
     meta = {'collection': 'SchedulingWork'}
 
     @property

@@ -1,8 +1,12 @@
 # Created By: Chase Crossley
 # Created On: 05/08/2020
-from mongoengine import IntField, ImageField, BooleanField, ReferenceField, DateField, DateTimeField
-
-from Class_Types.base_record import BaseRecord
+from mongoengine import IntField, ImageField, BooleanField, DateField, DateTimeField, ReferenceField
+from .location_in_store import BaseRecord, LocationInStore
+from .scope_of_work_status import ScopeOfWorkStatus
+from ..employee import Employee
+from ..Work_Order import WorkOrder
+from ..Material_Items import OrderMaterial
+from ..Labor_Items import LaborItem
 
 
 class ScopeOfWork(BaseRecord):
@@ -11,18 +15,17 @@ class ScopeOfWork(BaseRecord):
     SOWPicturePath = ImageField(required=True)
     WrongLocation = BooleanField(default=False)
     ConcretePatchNeeded = BooleanField(default=False)
-    fkRightSOWID = ReferenceField('ScopeOfWork', default=None)
-    fkStatusID = ReferenceField('ScopeOfWorkStatus', required=True)
+    fkRightSOWID = ReferenceField('self', default=None, dbref=True)
+    fkStatusID = ReferenceField(ScopeOfWorkStatus, required=True, dbref=True)
     completedPicturePath = ImageField(default=None)
     dateFieldEditedStatus = DateField(default=None)
     timeFieldEditedStatus = DateTimeField(default=None)
     approvedBilling = BooleanField(default=False)
-    fkInstallerID = ReferenceField('Employee', default=None)
-    fkRequireMaterials = ReferenceField('OrderMaterial', default=None)
-    fkLocationInStoreID = ReferenceField('LocationInStore', default=None)
-    fkWorkOrderID = ReferenceField('WorkOrder', required=True)
-    fkInitialLaborID = ReferenceField('LaborItem', required=True)
-    fkExtraLaborID = ReferenceField('LaborItem', default=None)
-    fkCorrectLaborID = ReferenceField('LaborItem', default=None)
+    fkInstallerID = ReferenceField(Employee, default=None, dbref=True)
+    fkRequireMaterials = ReferenceField(OrderMaterial, default=None, dbref=True)
+    fkLocationInStoreID = ReferenceField(LocationInStore, default=None, dbref=True)
+    fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
+    fkInitialLaborID = ReferenceField(LaborItem, required=True, dbref=True)
+    fkExtraLaborID = ReferenceField(LaborItem, default=None, dbref=True)
+    fkCorrectLaborID = ReferenceField(LaborItem, default=None, dbref=True)
     meta = {'collection': 'ScopeOfWork'}
-

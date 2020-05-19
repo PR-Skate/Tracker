@@ -1,95 +1,201 @@
-from rest_framework_mongoengine import generics as drfme_generics
+from __future__ import unicode_literals
+
+from django.http import Http404
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework_mongoengine.generics import GenericAPIView
+from rest_framework_mongoengine.viewsets import ModelViewSet as MongoModelViewSet
 from .serializers import *
-# Create your views here.
 
 
-class LocationInStoreCreate(drfme_generics.ListCreateAPIView):
-    queryset = LocationInStore.objects.all()
+class BasicView(MongoModelViewSet):
+    serializer_class = LocationInStoreSerializer
+    look_up = 'id'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.serializer = self.__class__.serializer_class
+        self.model = self.serializer.Meta.model
+
+    def get(self, request, format=None):
+        model_instances = self.model.objects.all()
+        serializer = self.serializer(model_instances, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = self.serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_object(self, pk):
+        try:
+            return self.model.objects.get(pk=pk)
+        except self.model.DoesNotExist:
+            raise Http404
+
+    def get_object(self):
+        return GenericAPIView.get_object(self)
+
+    def get(self, request, pk, format=None):
+        model_instance = self.get_object(pk)
+        serializer = self.serializer(model_instance)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        model_instance = self.get_object(pk)
+        serializer = self.serializer(model_instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        model_instance = self.get_object(pk)
+        model_instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_queryset(self):
+        return self.model.objects.filter(**self.request.query_params.dict())
+
+
+class LocationInStoreView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = LocationInStoreSerializer
 
+    def get_queryset(self):
+        return LocationInStore.objects.all()
 
-class ScopeOfWorkCreate(drfme_generics.ListCreateAPIView):
-    queryset = ScopeOfWork.objects.all()
+
+class ScopeOfWorkView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = ScopeOfWorkSerializer
 
+    def get_queryset(self):
+        return ScopeOfWork.objects.all()
 
-class ScopeOfWorkStatusCreate(drfme_generics.ListCreateAPIView):
-    queryset = ScopeOfWorkStatus.objects.all()
+
+class ScopeOfWorkStatusView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = ScopeOfWorkStatusSerializer
 
+    def get_queryset(self):
+        return ScopeOfWorkStatus.objects.all()
 
-class SchedulingWorkCreate(drfme_generics.ListCreateAPIView):
-    queryset = SchedulingWork.objects.all()
+
+class SchedulingWorkView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = SchedulingWorkSerializer
 
+    def get_queryset(self):
+        return SchedulingWork.objects.all()
 
-class OrderMaterialCreate(drfme_generics.ListCreateAPIView):
-    queryset = OrderMaterial.objects.all()
+
+class OrderMaterialView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = OrderMaterialSerializer
 
+    def get_queryset(self):
+        return OrderMaterial.objects.all()
 
-class MaterialListCreate(drfme_generics.ListCreateAPIView):
-    queryset = MaterialList.objects.all()
+
+class MaterialListView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = MaterialListSerializer
 
+    def get_queryset(self):
+        return MaterialList.objects.all()
 
-class MaterialItemCreate(drfme_generics.ListCreateAPIView):
-    queryset = MaterialItem.objects.all()
+
+class MaterialItemView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = MaterialItemSerializer
 
+    def get_queryset(self):
+        return MaterialItem.objects.all()
 
-class WorkOrderStatusCreate(drfme_generics.ListCreateAPIView):
-    queryset = WorkOrderStatus.objects.all()
+
+class WorkOrderStatusView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = WorkOrderStatusSerializer
 
+    def get_queryset(self):
+        return WorkOrderStatus.objects.all()
 
-class WorkOrderCreate(drfme_generics.ListCreateAPIView):
-    queryset = WorkOrder.objects.all()
+
+class WorkOrderView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = WorkOrderSerializer
 
+    def get_queryset(self):
+        return WorkOrder.objects.all()
 
-class EmployeeCreate(drfme_generics.ListCreateAPIView):
-    queryset = Employee.objects.all()
+
+class EmployeeView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = EmployeeSerializer
 
+    def get_queryset(self):
+        return Employee.objects.all()
 
-class ArticleNumberCreate(drfme_generics.ListCreateAPIView):
-    queryset = ArticleNumber.objects.all()
+
+class ArticleNumberView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = ArticleNumberSerializer
 
+    def get_queryset(self):
+        return ArticleNumber.objects.all()
 
-class LaborItemCreate(drfme_generics.ListCreateAPIView):
-    queryset = LaborItem.objects.all()
+
+class LaborItemView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = LaborItemSerializer
 
+    def get_queryset(self):
+        return LaborItem.objects.all()
 
-class ArticleNumberStateCreate(drfme_generics.ListCreateAPIView):
-    queryset = ArticleNumberState.objects.all()
+
+class ArticleNumberStateView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = ArticleNumberStateSerializer
 
+    def get_queryset(self):
+        return ArticleNumberState.objects.all()
 
-class StoreCreate(drfme_generics.ListCreateAPIView):
-    queryset = Store.objects.all()
+
+class StoreView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = StoreSerializer
 
+    def get_queryset(self):
+        return Store.objects.all()
 
-class RegionCodeCreate(drfme_generics.ListCreateAPIView):
-    queryset = RegionCode.objects.all()
+
+class RegionCodeView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = RegionCodeSerializer
 
+    def get_queryset(self):
+        return RegionCode.objects.all()
 
-class CustomerCreate(drfme_generics.ListCreateAPIView):
-    queryset = Customer.objects.all()
+
+class CustomerView(BasicView):
+    look_up = 'id'
     serializer_class = CustomerSerializer
 
 
-class MicroRegionCodeCreate(drfme_generics.ListCreateAPIView):
-    queryset = MicroRegionCode.objects.all()
+class MicroRegionCodeView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = MicroRegionCodeSerializer
 
+    def get_queryset(self):
+        return MicroRegionCode.objects.all()
 
-class PrepWorkCreate(drfme_generics.ListCreateAPIView):
-    queryset = PrepWork.objects.all()
+
+class PrepWorkView(MongoModelViewSet):
+    look_up = 'id'
     serializer_class = PrepWorkSerializer
 
-
+    def get_queryset(self):
+        return PrepWork.objects.all()
