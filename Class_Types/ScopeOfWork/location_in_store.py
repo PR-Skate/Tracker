@@ -2,10 +2,9 @@
 # Created On: 05/07/2020
 from mongoengine import StringField, BooleanField, ReferenceField, ImageField
 
-from Class_Types import MaterialList, Store
-from Class_Types.base_record import BaseRecord
-from bson import ObjectId as objectID
-import time as t
+from ..Store import Store
+from ..Material_Items import MaterialList
+from ..base_record import BaseRecord
 
 
 class LocationInStore(BaseRecord):
@@ -18,7 +17,6 @@ class LocationInStore(BaseRecord):
     plumbingPicturePath = ImageField(default=None)
     electricalInLocation = BooleanField(default=False)
     electricalPicturePath = ImageField(default=None)
-    fkMaterialList = ReferenceField(MaterialList)
-    fkStoreNumber = ReferenceField(Store, required=True)
+    fkMaterialList = ReferenceField(MaterialList, dbref=True)
+    fkStoreNumber = ReferenceField(document_type=Store, required=True, dbref=True)
     meta = {'collection': 'LocationInStore'}
-

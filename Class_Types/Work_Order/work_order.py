@@ -6,8 +6,9 @@ import datetime as dt
 
 from mongoengine import DateField, StringField, FileField, ReferenceField
 
-from Class_Types import WorkOrderStatus, Store
-from Class_Types.base_record import BaseRecord
+from .work_order_status import WorkOrderStatus
+from ..Store import Store
+from ..base_record import BaseRecord
 
 
 class WorkOrder(BaseRecord):

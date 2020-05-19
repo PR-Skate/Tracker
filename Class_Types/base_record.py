@@ -3,13 +3,14 @@
 
 from datetime import datetime
 
-from mongoengine import connect, StringField, DateTimeField, DynamicDocument
+import bson as bson
+from mongoengine import connect, DateTimeField, DynamicDocument, ReferenceField
 
 
 class BaseRecord(DynamicDocument):
-    _createdUser = StringField(max_length=50, required=True, db_field='createdUser')  # TODO: MAKE REFFERENCE
+    _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)  # TODO: MAKE REFFERENCE
     createdTimestamp = DateTimeField(default=datetime.now())
-    lastModifiedUser = StringField(max_length=50)
+    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=True)
     lastModifiedTimestamp = DateTimeField(default=datetime.now())
     connection = connect(
         host='mongodb://root:6iskvVzSpjcGjOcB8Qfm7htg1@138.68.22.230:27017/Tracker?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false')
@@ -17,15 +18,24 @@ class BaseRecord(DynamicDocument):
 
     @property
     def createdUser(self):
-        print('hi')
         return self._createdUser
 
     @createdUser.setter
     def createdUser(self, value):
-        print('bye')
+        value = bson.ObjectId(value)
         if not self.lastModifiedUser:
             self.lastModifiedUser = value
         self._createdUser = value
+
+    @property
+    def lastModifiedUser(self):
+        return self._lastModifiedUser
+
+    @lastModifiedUser.setter
+    def lastModifiedUser(self, value):
+        if value:
+            value = bson.ObjectId(value)
+            self._lastModifiedUser = value
 
     @classmethod
     def get_fields(cls):

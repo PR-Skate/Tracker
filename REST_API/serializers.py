@@ -1,11 +1,11 @@
-from rest_framework import serializers
 from rest_framework_mongoengine.serializers import DocumentSerializer, EmbeddedDocumentSerializer
-
+from rest_framework import serializers
 from Class_Types import *
 
 
 class BaseSerializer(DocumentSerializer):
     createdUser = serializers.CharField(required=True)
+    lastModifiedUser = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     def validate(self, attrs):
         model = self.Meta().__getattribute__("model")
@@ -15,13 +15,15 @@ class BaseSerializer(DocumentSerializer):
                     "{field} is required and should contain some value.".format(field=field))
         return attrs
 
+    class Meta:
+        depth = 1
+
 
 class LocationInStoreSerializer(BaseSerializer):
     class Meta:
         model = LocationInStore
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'level': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'plumbingInLocation': {'required': False, 'allow_null': True},
@@ -37,7 +39,6 @@ class ScopeOfWorkSerializer(BaseSerializer):
         model = ScopeOfWork
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'GB_Counter': {'required': False, 'allow_null': True},
                         'GB_CounterBillable': {'required': False, 'allow_null': True},
@@ -61,7 +62,6 @@ class ScopeOfWorkStatusSerializer(BaseSerializer):
         model = ScopeOfWorkStatus
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -86,7 +86,6 @@ class SchedulingWorkSerializer(BaseSerializer):
         model = SchedulingWork
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'GB_Counter': {'required': False, 'allow_null': True},
                         '_truckDate': {'required': False, 'allow_null': True},
@@ -110,7 +109,6 @@ class OrderMaterialSerializer(BaseSerializer):
         model = OrderMaterial
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'fkMaterialItem': {'required': False, 'allow_null': True}}
         depth = 1
@@ -121,7 +119,6 @@ class MaterialListSerializer(BaseSerializer):
         model = MaterialList
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'fkMaterialItem': {'required': False, 'allow_null': True}}
         depth = 1
@@ -132,7 +129,6 @@ class MaterialItemSerializer(BaseSerializer):
         model = MaterialItem
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -142,7 +138,6 @@ class WorkOrderStatusSerializer(BaseSerializer):
         model = WorkOrderStatus
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -152,7 +147,6 @@ class WorkOrderSerializer(BaseSerializer):
         model = WorkOrder
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'inspectForStorePath': {'required': False, 'allow_null': True},
                         'detailedReceiptPath': {'required': False, 'allow_null': True},
@@ -168,9 +162,9 @@ class EmployeeSerializer(BaseSerializer):
         model = Employee
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
-                        'rateOfPay': {'required': False, 'allow_null': True}}
+                        'rateOfPay': {'required': False, 'allow_null': True},
+                        'active': {'required': False, 'allow_null': True}}
         depth = 2
 
 
@@ -179,7 +173,6 @@ class ArticleNumberSerializer(BaseSerializer):
         model = ArticleNumber
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'UsedByInspectionCompanyButNotPrSkate': {'required': False, 'allow_null': True},
                         'Capital': {'required': False, 'allow_null': True}}
@@ -191,7 +184,6 @@ class LaborItemSerializer(BaseSerializer):
         model = LaborItem
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'quantity': {'required': False, 'allow_null': True},
                         'fkArticleNumberState': {'required': False, 'allow_null': True}}
@@ -203,7 +195,6 @@ class ArticleNumberStateSerializer(BaseSerializer):
         model = ArticleNumberState
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -219,7 +210,6 @@ class StoreSerializer(BaseSerializer):
         model = Store
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'storeManagerName': {'required': False, 'allow_null': True},
                         'storeManagerEmail': {'required': False, 'allow_null': True, 'allow_blank': True},
@@ -248,7 +238,6 @@ class RegionCodeSerializer(BaseSerializer):
         model = RegionCode
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -258,7 +247,6 @@ class CustomerSerializer(BaseSerializer):
         model = Customer
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -268,7 +256,6 @@ class MicroRegionCodeSerializer(BaseSerializer):
         model = MicroRegionCode
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True}}
         depth = 1
 
@@ -278,7 +265,6 @@ class PrepWorkSerializer(BaseSerializer):
         model = PrepWork
         fields = model.get_fields()
         extra_kwargs = {'createdTimestamp': {'required': False, 'allow_null': True},
-                        'lastModifiedUser': {'required': False, 'allow_null': True, 'allow_blank': True},
                         'lastModifiedTimestamp': {'required': False, 'allow_null': True},
                         'downloadMLX': {'required': False, 'allow_null': True},
                         'excelInspectUploaded': {'required': False, 'allow_null': True},

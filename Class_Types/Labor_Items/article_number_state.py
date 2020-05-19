@@ -8,5 +8,5 @@ from .article_number import BaseRecord, ArticleNumber
 class ArticleNumberState(BaseRecord):
     state = StringField(max_length=2, min_length=2, required=True)
     price = DecimalField(required=True)
-    fkArticleNumber = ReferenceField(ArticleNumber, required=True)
+    fkArticleNumber = ReferenceField(ArticleNumber, required=True, dbref=True)
     meta = {'collection': 'ArticleNumberState'}

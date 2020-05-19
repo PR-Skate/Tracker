@@ -22,9 +22,9 @@ class SchedulingWork(BaseRecord):
     weekFourContact = BooleanField(default=False)
     weekFourNameOfContact = EmbeddedDocumentField(Name)
     formComplete = BooleanField()
-    fkInstallerID = ReferenceField(Employee)
-    fkSecondInstallerID = ReferenceField(Employee)
-    fkWorkOrderID = ReferenceField(WorkOrder, required=True)
+    fkInstallerID = ReferenceField(Employee, dbref=True)
+    fkSecondInstallerID = ReferenceField(Employee, dbref=True)
+    fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
     meta = {'collection': 'SchedulingWork'}
 
     @property
