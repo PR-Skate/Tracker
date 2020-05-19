@@ -1,8 +1,6 @@
-import 'devextreme/dist/css/dx.common.css';
-import 'devextreme/dist/css/dx.light.css';
 import * as React from "react";
 import Paper from "@material-ui/core/Paper";
-import { ViewState } from "@devexpress/dx-react-scheduler";
+import { ViewState, EditingState } from "@devexpress/dx-react-scheduler";
 import {
     Scheduler,
     WeekView,
@@ -15,7 +13,7 @@ import {
     TodayButton, //FIXME Make today button go to day view instead of month view
 } from "@devexpress/dx-react-scheduler-material-ui";
 
-import {AppointmentDragging} from "devextreme-react/scheduler";
+import { DragDropProvider } from '@devexpress/dx-react-scheduler-material-ui';
 
 import { appointments } from "./demo-data/month-appointments";
 
@@ -27,13 +25,11 @@ export default class App extends React.PureComponent {
 
         this.state = {
             data: appointments,
-            currentViewName: "work-week"
+            currentViewName: "month"
         };
         this.currentViewNameChange = currentViewName => {
             this.setState({ currentViewName });
         };
-        this.onAppointmentRemove = this.onAppointmentRemove.bind(this);
-        this.onAppointmentAdd = this.onAppointmentAdd.bind(this);
     }
 
     render() {
@@ -41,21 +37,15 @@ export default class App extends React.PureComponent {
 
         return (
             <Paper>
-            <Scheduler
-            id="scheduler"
-        data={data}
-        startDayHour={9}
-        editing={true}>
+            <Scheduler data={data}>
+            <EditingState
+                editingAppointment={({data})}
+            />
             <ViewState
-        defaultCurrentDate="2020-05-27"
-        currentViewName={currentViewName}
-        onCurrentViewNameChange={this.currentViewNameChange}
-        />
-        <AppointmentDragging
-        group={draggingGroupName}
-        onRemove={this.onAppointmentRemove}
-        onAdd={this.onAppointmentAdd}
-        />
+                defaultCurrentDate="2020-05-27"
+                currentViewName={currentViewName}
+                onCurrentViewNameChange={this.currentViewNameChange}
+            />
 
         <WeekView startDayHour={10} endDayHour={19} />
 
@@ -68,32 +58,12 @@ export default class App extends React.PureComponent {
             <DateNavigator />
         <ViewSwitcher />
         <Appointments />
+        <DragDropProvider
+            allowDrag={({ allDay }) => !allDay}
+            allowResize={() => true}
+        />
         </Scheduler>
         </Paper>
     );
-    }
-
-    onAppointmentRemove(e) {
-        const index = this.state.appointments.indexOf(e.itemData);
-
-        if (index >= 0) {
-            this.state.appointments.splice(index, 1);
-
-            this.setState({
-                appointments: [...this.state.appointments]
-            });
-        }
-    }
-
-    onAppointmentAdd(e) {
-        const index = this.state.tasks.indexOf(e.fromData);
-
-        if (index >= 0) {
-            this.state.appointments.push(e.itemData);
-
-            this.setState({
-                appointments: [...this.state.appointments]
-            });
-        }
     }
 }
