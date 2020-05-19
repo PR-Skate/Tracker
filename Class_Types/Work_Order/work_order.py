@@ -8,7 +8,6 @@ from mongoengine import DateField, StringField, FileField, ReferenceField
 
 from Class_Types.base_record import BaseRecord
 
-
 class WorkOrder(BaseRecord):
     # constructor:
     workOrderName = StringField(max_length=15, required=True, unique=True)
@@ -24,6 +23,7 @@ class WorkOrder(BaseRecord):
     partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)
-    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True)
-    fkStoreNumber = ReferenceField('Store', required=True)
+    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True, dbref=True)
+    fkStoreNumber = ReferenceField('Store', required=True, dbref=True)
     meta = {'collection': 'WorkOrder'}
+

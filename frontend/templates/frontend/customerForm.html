@@ -14,7 +14,7 @@
                 var formdata = $(this).serialize();
                 $.ajax({
                     type: "POST",
-                    url: "/api/Customer/",
+                    url: "/api/Customer/?format=api",
                     data: formdata,
                     success: function(response) {
                         document.getElementById('form').reset();
@@ -54,9 +54,6 @@
 
         <label for="">LastModifiedTimeStamp</label><br>
         <input type="text" name="lastModifiedTimeStamp"><br><br>
-
-        <label for="">cls</label><br>
-        <input type="text" name="cls"><br><br>
 
         <label for="">CustomerName</label><br>
         <input type="text" name="customerName"><br><br>

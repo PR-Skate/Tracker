@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from Class_Types import *
 
 # Create your views here.
 def index(request):
@@ -17,7 +18,8 @@ def sowForm(request):
     return render(request, 'frontend/sowForm.html')
 
 def storeForm(request):
-    return render(request, 'frontend/storeForm.html')
+    cust = Customer.objects.all()
+    return render(request, 'frontend/storeForm.html', {'cust':cust})
 
 def workOrderForm(request):
     return render(request, 'frontend/workOrderForm.html')

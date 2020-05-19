@@ -148,7 +148,6 @@ class WorkOrderStatusSerializer(BaseSerializer):
 
 
 class WorkOrderSerializer(BaseSerializer):
-    address = AddressSerializer(many=False)
 
     class Meta:
         model = WorkOrder
