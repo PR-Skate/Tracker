@@ -36,13 +36,13 @@ class Store(BaseRecord):
     overnightCrew = StringField(max_length=25)
     overnightAccess = ListField(StringField())
     noiseOrdinance = BooleanField(default=False)
-    timeCutOff = DateTimeField()
+    timeCutOff = StringField()
 
     fkRegionCode = ReferenceField(RegionCode, dbref=True)
     fkMicroRegionCode = ReferenceField(MicroRegionCode, dbref=True)
     coordinates = PointField()
     active = BooleanField(default=True)
-    installationDueDates = ListField(DateField)
-    inspectionDueDates = ListField(DateField)
+    installationDueDates = ListField(DateField())
+    inspectionDueDates = ListField(DateField())
     fiscalWeek = IntField(min_value=1, max_value=53)
     meta = {'collection': 'Store'}

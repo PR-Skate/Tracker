@@ -8,10 +8,10 @@ from mongoengine import connect, DateTimeField, DynamicDocument, ReferenceField
 
 
 class BaseRecord(DynamicDocument):
-    _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)  # TODO: MAKE REFFERENCE
-    createdTimestamp = DateTimeField(default=datetime.now())
-    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=True)
-    lastModifiedTimestamp = DateTimeField(default=datetime.now())
+    _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)
+    createdTimestamp = DateTimeField(default=datetime.now(), required=False)
+    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=True, required=False, allow_null=True, allow_blank=True, blank=True, null=True)
+    lastModifiedTimestamp = DateTimeField(default=datetime.now(), required=False)
     connection = connect(
         host='mongodb://root:6iskvVzSpjcGjOcB8Qfm7htg1@138.68.22.230:27017/Tracker?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false')
     meta = {'allow_inheritance': True, 'abstract': True}
@@ -65,6 +65,19 @@ class BaseRecord(DynamicDocument):
         if not cls._meta.get('abstract'):
             for field, object in cls._fields.items():
                 if not object.__getattribute__('required'):
+                    temp.append(object.__getattribute__('db_field'))
+        if '_id' in temp:
+            temp.remove('_id')
+        if '_cls' in temp:
+            temp.remove('_cls')
+        return temp
+
+    @classmethod
+    def get_reference_fields(cls):
+        temp = list()
+        if not cls._meta.get('abstract'):
+            for field, object in cls._fields.items():
+                if isinstance(object, ReferenceField) and field != '_lastModifiedUser' and field != '_createdUser':
                     temp.append(object.__getattribute__('db_field'))
         if '_id' in temp:
             temp.remove('_id')
