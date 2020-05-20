@@ -25,12 +25,7 @@ class WorkOrder(BaseRecord):
     partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)
-<<<<<<< HEAD
-    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True, dbref=True)
-    fkStoreNumber = ReferenceField('Store', required=True, dbref=True)
-=======
     fkWorkOrderStatus = ReferenceField(WorkOrderStatus, required=True)
     fkStoreNumber = ReferenceField(Store, required=True)
->>>>>>> e0ed5df5b9511da0fb0934f3c18570019b4b9a7a
     meta = {'collection': 'WorkOrder'}
 

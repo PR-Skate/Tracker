@@ -143,10 +143,6 @@ class WorkOrderStatusSerializer(BaseSerializer):
 
 
 class WorkOrderSerializer(BaseSerializer):
-<<<<<<< HEAD
-
-=======
->>>>>>> e0ed5df5b9511da0fb0934f3c18570019b4b9a7a
     class Meta:
         model = WorkOrder
         fields = model.get_fields()
