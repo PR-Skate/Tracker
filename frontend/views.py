@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-import C
+from Class_Types import *
 from .forms import CustomerForm
 from django.contrib import messages
 from django.core.exceptions import ValidationError
