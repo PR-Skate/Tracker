@@ -7,14 +7,13 @@ import bcrypt as bcrypt
 from mongoengine import StringField, EmailField, DecimalField, BooleanField, \
     EmbeddedDocumentField, DynamicField, DateField
 
-from Class_Types.Embeded_Documents.embeded_classes import Address
+from Class_Types.Embeded_Documents.embeded_classes import Address, Name
 from Class_Types.base_record import BaseRecord
 
 
 class Employee(BaseRecord):
     userName = StringField(max_length=50, required=True, unique=True)
-    firstName = StringField(max_length=50, required=True)
-    lastName = StringField(max_length=50, required=True)
+    name = EmbeddedDocumentField(Name, required=True)
     birthDate = DateField(required=True)
     address = EmbeddedDocumentField(Address, required=True)
     email = EmailField(required=True, unique=True)

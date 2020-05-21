@@ -1,7 +1,8 @@
 # Created By: Chase Crossley
 # Created On: 05/08/2020
 import datetime
-from mongoengine import IntField, DecimalField, DateTimeField, EmbeddedDocumentField, BooleanField, ReferenceField
+from mongoengine import IntField, DecimalField, DateTimeField, EmbeddedDocumentField, BooleanField, ReferenceField, \
+    DateField
 
 from Class_Types import Employee, WorkOrder
 from Class_Types.Embeded_Documents.embeded_classes import Name
@@ -10,15 +11,15 @@ from Class_Types.base_record import BaseRecord
 
 class SchedulingWork(BaseRecord):
     GB_Counter = IntField(default=0)
-    _truckDate = DateTimeField()
-    _dateScheduled = DateTimeField(required=True)
-    _duration = DecimalField()
+    _truckDate = DateTimeField(db_field='truckDate')
+    _dateScheduled = DateTimeField(required=True, db_field='dateScheduled')
+    _duration = DecimalField(db_field='duration')
     endDate = DateTimeField()
-    receivingDate = DateTimeField()
-    weekOneCallDate = DateTimeField()
+    receivingDate = DateField()
+    weekOneCallDate = DateField()
     weekOneContact = BooleanField(default=False)
     weekOneNameOfContact = EmbeddedDocumentField(Name)
-    weekFourCallDate = DateTimeField()
+    weekFourCallDate = DateField()
     weekFourContact = BooleanField(default=False)
     weekFourNameOfContact = EmbeddedDocumentField(Name)
     formComplete = BooleanField()
@@ -35,8 +36,8 @@ class SchedulingWork(BaseRecord):
     def truckDate(self, value):
         date = datetime.datetime.strftime(value, '%m/%d/%y')
         self._truckDate = date
-        self.weekFourCallDate = date + datetime.timedelta(weeks=4)
-        self.weekOneCallDate = date + datetime.timedelta(weeks=1)
+        self.weekFourCallDate = date - datetime.timedelta(weeks=4)
+        self.weekOneCallDate = date - datetime.timedelta(weeks=1)
 
     @property
     def dateScheduled(self):

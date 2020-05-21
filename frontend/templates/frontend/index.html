@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Django REST with React</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Django REST with React</title>
 </head>
+
 <body>
 <div id="app">
     <!-- React will load here -->
 </div>
 </body>
 {% load static %}
-<script src="{% static "frontend/main.js" %}"></script>
+<h1>Hello Tracker:</h1>
+<h3>Pages:</h3><br><br>
+<a href="customerForm">Customer Form</a><br>
+<a href="employeeForm">Employee Form</a><br>
+<a href="sowForm">SOW Form</a><br>
+<a href="storeForm">Store Form</a><br>
+<a href="workOrderForm">Work Order Form</a><br>
+
+<br>
+<h3>API:</h3><br><br>
+<a href="/api/Customer">Customer Form</a><br>
+<a href="/api/Employee">Employee Form</a><br>
+<a href="/api/SOW">Work Order Form</a><br>
+<a href="/api/Store">Store Form</a><br>
+<a href="/api/WorkOrder">Work Order Form</a><br>
+
+
+<script src="{% static " frontend/main.js " %}"></script>
+
 </html>

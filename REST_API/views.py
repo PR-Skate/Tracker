@@ -1,201 +1,105 @@
 from __future__ import unicode_literals
 
-from django.http import Http404
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework_mongoengine.generics import GenericAPIView
 from rest_framework_mongoengine.viewsets import ModelViewSet as MongoModelViewSet
+
 from .serializers import *
 
 
 class BasicView(MongoModelViewSet):
-    serializer_class = LocationInStoreSerializer
-    look_up = 'id'
+    serializer_class = BaseSerializer
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        MongoModelViewSet().__init__(**kwargs)
         self.serializer = self.__class__.serializer_class
         self.model = self.serializer.Meta.model
 
-    def get(self, request, format=None):
-        model_instances = self.model.objects.all()
-        serializer = self.serializer(model_instances, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = self.serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def get_object(self, pk):
-        try:
-            return self.model.objects.get(pk=pk)
-        except self.model.DoesNotExist:
-            raise Http404
-
-    def get_object(self):
-        return GenericAPIView.get_object(self)
-
-    def get(self, request, pk, format=None):
-        model_instance = self.get_object(pk)
-        serializer = self.serializer(model_instance)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        model_instance = self.get_object(pk)
-        serializer = self.serializer(model_instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        model_instance = self.get_object(pk)
-        model_instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        self.queryset = self.model.objects.all()
 
     def get_queryset(self):
-        return self.model.objects.filter(**self.request.query_params.dict())
+        if hasattr(self, 'request'):
+            self.queryset = self.model.objects.filter(**self.request.query_params.dict())
+        else:
+            self.queryset = self.model.objects.all()
+
+        return self.queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        return MongoModelViewSet.retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return MongoModelViewSet.update(self, request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        return MongoModelViewSet.destroy(self, request, *args, **kwargs)
 
 
-class LocationInStoreView(MongoModelViewSet):
-    look_up = 'id'
+class LocationInStoreView(BasicView):
     serializer_class = LocationInStoreSerializer
 
-    def get_queryset(self):
-        return LocationInStore.objects.all()
 
-
-class ScopeOfWorkView(MongoModelViewSet):
-    look_up = 'id'
+class ScopeOfWorkView(BasicView):
     serializer_class = ScopeOfWorkSerializer
 
-    def get_queryset(self):
-        return ScopeOfWork.objects.all()
 
-
-class ScopeOfWorkStatusView(MongoModelViewSet):
-    look_up = 'id'
+class ScopeOfWorkStatusView(BasicView):
     serializer_class = ScopeOfWorkStatusSerializer
 
-    def get_queryset(self):
-        return ScopeOfWorkStatus.objects.all()
 
-
-class SchedulingWorkView(MongoModelViewSet):
-    look_up = 'id'
+class SchedulingWorkView(BasicView):
     serializer_class = SchedulingWorkSerializer
 
-    def get_queryset(self):
-        return SchedulingWork.objects.all()
 
-
-class OrderMaterialView(MongoModelViewSet):
-    look_up = 'id'
+class OrderMaterialView(BasicView):
     serializer_class = OrderMaterialSerializer
 
-    def get_queryset(self):
-        return OrderMaterial.objects.all()
 
-
-class MaterialListView(MongoModelViewSet):
-    look_up = 'id'
+class MaterialListView(BasicView):
     serializer_class = MaterialListSerializer
 
-    def get_queryset(self):
-        return MaterialList.objects.all()
 
-
-class MaterialItemView(MongoModelViewSet):
-    look_up = 'id'
+class MaterialItemView(BasicView):
     serializer_class = MaterialItemSerializer
 
-    def get_queryset(self):
-        return MaterialItem.objects.all()
 
-
-class WorkOrderStatusView(MongoModelViewSet):
-    look_up = 'id'
+class WorkOrderStatusView(BasicView):
     serializer_class = WorkOrderStatusSerializer
 
-    def get_queryset(self):
-        return WorkOrderStatus.objects.all()
 
-
-class WorkOrderView(MongoModelViewSet):
-    look_up = 'id'
+class WorkOrderView(BasicView):
     serializer_class = WorkOrderSerializer
 
-    def get_queryset(self):
-        return WorkOrder.objects.all()
 
-
-class EmployeeView(MongoModelViewSet):
-    look_up = 'id'
+class EmployeeView(BasicView):
     serializer_class = EmployeeSerializer
 
-    def get_queryset(self):
-        return Employee.objects.all()
 
-
-class ArticleNumberView(MongoModelViewSet):
-    look_up = 'id'
+class ArticleNumberView(BasicView):
     serializer_class = ArticleNumberSerializer
 
-    def get_queryset(self):
-        return ArticleNumber.objects.all()
 
-
-class LaborItemView(MongoModelViewSet):
-    look_up = 'id'
+class LaborItemView(BasicView):
     serializer_class = LaborItemSerializer
 
-    def get_queryset(self):
-        return LaborItem.objects.all()
 
-
-class ArticleNumberStateView(MongoModelViewSet):
-    look_up = 'id'
+class ArticleNumberStateView(BasicView):
     serializer_class = ArticleNumberStateSerializer
 
-    def get_queryset(self):
-        return ArticleNumberState.objects.all()
 
-
-class StoreView(MongoModelViewSet):
-    look_up = 'id'
+class StoreView(BasicView):
     serializer_class = StoreSerializer
 
-    def get_queryset(self):
-        return Store.objects.all()
 
-
-class RegionCodeView(MongoModelViewSet):
-    look_up = 'id'
+class RegionCodeView(BasicView):
     serializer_class = RegionCodeSerializer
-
-    def get_queryset(self):
-        return RegionCode.objects.all()
 
 
 class CustomerView(BasicView):
-    look_up = 'id'
     serializer_class = CustomerSerializer
 
 
-class MicroRegionCodeView(MongoModelViewSet):
-    look_up = 'id'
+class MicroRegionCodeView(BasicView):
     serializer_class = MicroRegionCodeSerializer
 
-    def get_queryset(self):
-        return MicroRegionCode.objects.all()
 
-
-class PrepWorkView(MongoModelViewSet):
-    look_up = 'id'
+class PrepWorkView(BasicView):
     serializer_class = PrepWorkSerializer
-
-    def get_queryset(self):
-        return PrepWork.objects.all()
