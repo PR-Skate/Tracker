@@ -1,6 +1,6 @@
 from rest_framework_mongoengine.serializers import DocumentSerializer, EmbeddedDocumentSerializer
 from rest_framework import serializers
-from Class_Types import *
+from Tracker.Class_Types import *
 
 
 class BaseSerializer(DocumentSerializer):
