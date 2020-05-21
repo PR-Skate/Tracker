@@ -1,68 +1,98 @@
-import * as React from "react";
-import Paper from "@material-ui/core/Paper";
-import {EditingState, ViewState} from "@devexpress/dx-react-scheduler";
+import * as React from 'react';
+import Paper from '@material-ui/core/Paper';
+import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
 import {
-    Appointments,
-    DateNavigator,
-    DayView,
-    DragDropProvider,
-    MonthView,
-    Scheduler,
-    TodayButton,
-    Toolbar,
-    ViewSwitcher,
-    WeekView,
-} from "@devexpress/dx-react-scheduler-material-ui";
-
-import {appointments} from "./demo-data/month-appointments";
-
-const draggingGroupName = 'appointmentsGroup';
+  Scheduler,
+  MonthView,
+  DayView,
+  WeekView,
+  ViewSwitcher,
+  Appointments,
+  Toolbar,
+  DateNavigator,
+  AppointmentTooltip,
+  AppointmentForm,
+  EditRecurrenceMenu,
+  TodayButton,
+  DragDropProvider,
+} from '@devexpress/dx-react-scheduler-material-ui';
+import { appointments } from "./demo-data/month-appointments";
 
 export default class App extends React.PureComponent {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            data: appointments,
-            currentViewName: "month"
-        };
-        this.currentViewNameChange = currentViewName => {
-            this.setState({ currentViewName });
-        };
-    }
+    this.state = {
+      data: appointments,
+      currentDate: new Date('2020-05-21'),
+      currentViewName: "Month",
+    };
 
-    render() {
-        const { data, currentViewName } = this.state;
+    this.onCommitChanges = this.commitChanges.bind(this);
 
-        return (
-            <Paper>
-                <Scheduler data={data}>
-                    <EditingState
-                        editingAppointment={({data})}
-                    />
-                    <ViewState
-                        defaultCurrentDate="2020-05-27"
-                        currentViewName={currentViewName}
-                        onCurrentViewNameChange={this.currentViewNameChange}
-                    />
+    this.currentViewNameChange = currentViewName => {
+        this.setState({ currentViewName });
+    };
+  }
 
-                    <WeekView startDayHour={10} endDayHour={19}/>
+  commitChanges({ added, changed, deleted }) {
+    this.setState((state) => {
+      let { data } = state;
+      if (added) {
+        const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
+        data = [...data, { id: startingAddedId, ...added }];
+      }
+      if (changed) {
+        data = data.map(appointment => (
+          changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+      }
+      if (deleted !== undefined) {
+        data = data.filter(appointment => appointment.id !== deleted);
+      }
+      return { data };
+    });
+  }
 
-                    <MonthView/>
+  render() {
+    const { data, currentViewName, currentDate } = this.state;
 
-                    <DayView/>
+    return (
+      <Paper>
+        <Scheduler
+          data={data}
+        >
+            <ViewState
+                currentViewName={currentViewName}
+                onCurrentViewNameChange={this.currentViewNameChange}
+                defaultCurrentDate={currentDate}
+            />
 
-                    <Toolbar/>
-                    <TodayButton/>
-                    <DateNavigator/>
-                    <ViewSwitcher/>
-                    <Appointments/>
-                    <DragDropProvider
-                        allowDrag={({allDay}) => !allDay}
-                        allowResize={() => true}
-                    />
-                </Scheduler>
-        </Paper>
+            <EditingState onCommitChanges={this.onCommitChanges} />
+
+            <MonthView />
+            <WeekView startDayHour={10} endDayHour={19} />
+            <DayView />
+
+            <Toolbar />
+            <TodayButton />
+            <DateNavigator />
+            <ViewSwitcher />
+
+            <EditRecurrenceMenu />
+            <Appointments />
+
+            <AppointmentTooltip
+                showCloseButton
+                showDeleteButton
+                showOpenButton
+            />
+
+            <AppointmentForm />
+            <DragDropProvider 
+            allowDrag={({ allDay }) => !allDay}
+            allowResize={() => true}/>
+        </Scheduler>
+      </Paper>
     );
-    }
+  }
 }
