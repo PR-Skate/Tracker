@@ -15,11 +15,12 @@
         <div>
             <h3>Form:</h3>
             <label for="Customer">Customer</label>
-            <select name="Customer" required>
+            <select name="Customer" for="CustomerNames" required>
                 <option value="" selected="selected">Customer</option>
-                <option value="">One</option>
-                <option value="">Two</option>
-                <option value="">Three</option>
+                {% for customer in cust %}   
+                <option value={{customer.id}}>{{customer.customerName}}</option>
+                {% endfor %}
+                <option value = "Other">Other</option>
             </select><br><br>
         </div>
 
@@ -355,7 +356,7 @@
             <input type="text" name="Division" style="margin-left: 4em" required><br><br>
 
             <label for="AwardedVendor">Awarded Vendor</label>
-            <input type="text" name="AwardedVendor" style="margin-left: 4em" required><br><br>
+            <input type="text" name="AwardedVendor" style="margin-left: 4em" value="PR Skate" required><br><br>
         </div>
 
         <div>

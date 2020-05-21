@@ -10,7 +10,6 @@ from .work_order_status import WorkOrderStatus
 from ..Store import Store
 from ..base_record import BaseRecord
 
-
 class WorkOrder(BaseRecord):
     # constructor:
     workOrderName = StringField(max_length=15, required=True, unique=True)
@@ -29,3 +28,4 @@ class WorkOrder(BaseRecord):
     fkWorkOrderStatus = ReferenceField(WorkOrderStatus, required=True)
     fkStoreNumber = ReferenceField(Store, required=True)
     meta = {'collection': 'WorkOrder'}
+

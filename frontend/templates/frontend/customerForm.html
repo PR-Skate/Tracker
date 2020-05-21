@@ -7,37 +7,7 @@
     <title>Add a Customer</title>
 
     <!-- TODO FIGURE OUT LOCAL IMPORTS -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('form').submit(function() {
-                var formdata = $(this).serialize();
-                $.ajax({
-                    type: "POST",
-                    url: "/api/Customer/",
-                    data: formdata,
-                    success: function(response) {
-                        document.getElementById('form').reset();
-                        $('#success').show();
 
-                        setTimeout(function() {
-                            $("#success").hide();
-                        }, 5000);
-                    },
-                    error: function(response) {
-                        $('#fail').show();
-
-                        setTimeout(function() {
-                            $("#fail").hide();
-                        }, 5000);
-                    },
-
-                });
-
-                return false;
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -46,23 +16,12 @@
         <label for="">CreatedUser</label><br>
         <input type="text" name="createdUser"><br><br>
 
-        <label for="">CreatedTimeStamp</label><br>
-        <input type="text" name="createdTimeStamp"><br><br>
-
-        <label for="">LastModifiedUser</label><br>
-        <input type="text" name="lastModifiedUser"><br><br>
-
-        <label for="">LastModifiedTimeStamp</label><br>
-        <input type="text" name="lastModifiedTimeStamp"><br><br>
-
-        <label for="">cls</label><br>
-        <input type="text" name="cls"><br><br>
-
         <label for="">CustomerName</label><br>
         <input type="text" name="customerName"><br><br>
 
-        <input type="submit">
-        <p id='success' style="display:none">Successfully Added</p>
+        <input type="submit"> {% for message in messages %}
+        <ul>{{message}}</ul>
+        {%endfor%} {{form.errors}}
         <p id='fail' style="display:none">ERROR</p>
     </form>
 </body>
