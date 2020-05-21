@@ -1,21 +1,20 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper";
-import { ViewState, EditingState } from "@devexpress/dx-react-scheduler";
+import {EditingState, ViewState} from "@devexpress/dx-react-scheduler";
 import {
-    Scheduler,
-    WeekView,
     Appointments,
-    Toolbar,
     DateNavigator,
-    ViewSwitcher,
-    MonthView,
     DayView,
-    TodayButton, //FIXME Make today button go to day view instead of month view
+    DragDropProvider,
+    MonthView,
+    Scheduler,
+    TodayButton,
+    Toolbar,
+    ViewSwitcher,
+    WeekView,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
-import { DragDropProvider } from '@devexpress/dx-react-scheduler-material-ui';
-
-import { appointments } from "./demo-data/month-appointments";
+import {appointments} from "./demo-data/month-appointments";
 
 const draggingGroupName = 'appointmentsGroup';
 
@@ -37,32 +36,32 @@ export default class App extends React.PureComponent {
 
         return (
             <Paper>
-            <Scheduler data={data}>
-            <EditingState
-                editingAppointment={({data})}
-            />
-            <ViewState
-                defaultCurrentDate="2020-05-27"
-                currentViewName={currentViewName}
-                onCurrentViewNameChange={this.currentViewNameChange}
-            />
+                <Scheduler data={data}>
+                    <EditingState
+                        editingAppointment={({data})}
+                    />
+                    <ViewState
+                        defaultCurrentDate="2020-05-27"
+                        currentViewName={currentViewName}
+                        onCurrentViewNameChange={this.currentViewNameChange}
+                    />
 
-        <WeekView startDayHour={10} endDayHour={19} />
+                    <WeekView startDayHour={10} endDayHour={19}/>
 
-        <MonthView />
+                    <MonthView/>
 
-        <DayView />
+                    <DayView/>
 
-        <Toolbar />
-            <TodayButton />
-            <DateNavigator />
-        <ViewSwitcher />
-        <Appointments />
-        <DragDropProvider
-            allowDrag={({ allDay }) => !allDay}
-            allowResize={() => true}
-        />
-        </Scheduler>
+                    <Toolbar/>
+                    <TodayButton/>
+                    <DateNavigator/>
+                    <ViewSwitcher/>
+                    <Appointments/>
+                    <DragDropProvider
+                        allowDrag={({allDay}) => !allDay}
+                        allowResize={() => true}
+                    />
+                </Scheduler>
         </Paper>
     );
     }

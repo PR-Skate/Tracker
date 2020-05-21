@@ -9,12 +9,28 @@ class BasicView(MongoModelViewSet):
     serializer_class = BaseSerializer
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        MongoModelViewSet().__init__(**kwargs)
         self.serializer = self.__class__.serializer_class
         self.model = self.serializer.Meta.model
 
+        self.queryset = self.model.objects.all()
+
     def get_queryset(self):
-        return self.model.objects.filter(**self.request.query_params.dict())
+        if hasattr(self, 'request'):
+            self.queryset = self.model.objects.filter(**self.request.query_params.dict())
+        else:
+            self.queryset = self.model.objects.all()
+
+        return self.queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        return MongoModelViewSet.retrieve(self, request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return MongoModelViewSet.update(self, request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        return MongoModelViewSet.destroy(self, request, *args, **kwargs)
 
 
 class LocationInStoreView(BasicView):
