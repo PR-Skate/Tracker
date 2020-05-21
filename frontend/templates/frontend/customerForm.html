@@ -11,19 +11,19 @@
 </head>
 
 <body>
-    <h1>Hello World</h1>
-    <form action="#" method="POST" name='form' id='form'>{% csrf_token %}
-        <label for="">CreatedUser</label><br>
-        <input type="text" name="createdUser"><br><br>
+<h1>Hello World</h1>
+<form action="#" method="POST" name='form' id='form'>{% csrf_token %}
+    <label for="">CreatedUser</label><br>
+    <input type="text" name="createdUser"><br><br>
 
-        <label for="">CustomerName</label><br>
-        <input type="text" name="customerName"><br><br>
+    <label for="">CustomerName</label><br>
+    <input type="text" name="customerName"><br><br>
 
-        <input type="submit"> {% for message in messages %}
-        <ul>{{message}}</ul>
-        {%endfor%} {{form.errors}}
-        <p id='fail' style="display:none">ERROR</p>
-    </form>
+    <input type="submit"> {% for message in messages %}
+        <ul>{{ message }}</ul>
+    {% endfor %} {{ form.errors }}
+    <p id='fail' style="display:none">ERROR</p>
+</form>
 </body>
 
 </html>
