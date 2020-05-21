@@ -92,9 +92,12 @@ class BaseRecord(DynamicDocument):
             if self._data.get(field) and isinstance(object, ReferenceField):
                 object_id = bson.ObjectId(self._data.get(field))
                 model = object.__getattribute__('document_type')
-                if model.objects.filter(id=object_id):
+                if model == 'self':
+                    model = self.__class__
+                try:
+                    model.objects.get(id=object_id)
                     continue
-                else:
+                except model.DoesNotExist:
                     not_properly_referenced.append(self._db_field_map.get(field))
         return not_properly_referenced
 
@@ -102,7 +105,7 @@ class BaseRecord(DynamicDocument):
              _refs=None, save_condition=None, signal_kwargs=None, **kwargs):
         not_properly_referenced = self.validate_reference_fields()
         if len(not_properly_referenced) == 0:
-            return DynamicDocument().save(force_insert, validate, clean, write_concern, cascade, cascade_kwargs, _refs,
-                                          save_condition, signal_kwargs, **kwargs)
+            return DynamicDocument.save(self, force_insert, validate, clean, write_concern, cascade, cascade_kwargs,
+                                        _refs, save_condition, signal_kwargs, **kwargs)
         else:
             raise Exception('Reference Fields do not have correct references: ' + ' '.join(not_properly_referenced))
