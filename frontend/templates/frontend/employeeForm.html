@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add an Employee</title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+   <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('form').submit(function() {
@@ -35,7 +35,7 @@
                 return false;
             });
         });
-    </script>
+    </script> -->
 </head>
 
 <body>
@@ -62,16 +62,16 @@
 
 
         <label for="Store">Address</label>
-        <input type="text" id="AddressLineOne" name="address.addressLineOne" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 1" required><br>
+        <input type="text" id="AddressLineOne" name="addressLineOne" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 1" required><br>
 
 
-        <input type="text" id="AddressLineTwo" name="address.addressLineTwo" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 2"><br>
+        <input type="text" id="AddressLineTwo" name="addressLineTwo" maxlength="40" size="15" style="margin-left: 4em" placeholder="Address Line 2"><br>
 
 
-        <input type="text" id="City" name="address.city" maxlength="20" size="10" style="margin-left: 4em" placeholder="City" required><br><br>
+        <input type="text" id="City" name="city" maxlength="20" size="10" style="margin-left: 4em" placeholder="City" required><br><br>
 
         <label for="State">State</label>
-        <select name="address.state" id="state" required>
+        <select name="state" id="state" required>
         <option value="" selected="selected">Select a State</option>
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
@@ -128,10 +128,10 @@
 
 
         <label for="address.zip">Postal Code</label>
-        <input type="text" id="address.zip" name="address.zip" maxlength="10" size="10" style="margin-left: 4em" placeholder="Postal Code" required><br><br>
+        <input type="text" id="zip" name="zip" maxlength="10" size="10" style="margin-left: 4em" placeholder="Postal Code" required><br><br>
 
         <label for="address.country">Country</label>
-        <select id="address.country" name="address.country" style="margin-left: 4em" required>
+        <select id="country" name="country" style="margin-left: 4em" required>
         <option value="" selected>Select a Country</option>
         <option value="Afganistan">Afghanistan</option>
         <option value="Albania">Albania</option>
@@ -409,7 +409,9 @@
         <input type="text" name="passwordHash"><br><br>
 
         <input type="submit">
-
+{% for message in messages %}
+        <ul>{{ message }}</ul>
+    {% endfor %} {{ form.errors }}
         <p id='success' style="display:none">Successfully Added</p>
         <p id='fail' style="display:none">ERROR</p>
     </form>

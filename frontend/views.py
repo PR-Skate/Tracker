@@ -1,27 +1,25 @@
 import re
-
+import pprint
 import mongoengine
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
-from Class_Types import Customer
-from .forms import CustomerForm
-
+from Class_Types import Customer, Employee, Address, Name
+from .forms import CustomerForm, EmployeeForm, NameForm, AddressForm
+from mongoengine.errors import *
 
 # Create your views here.
 def index(request):
     return render(request, 'frontend/index.html')
 
 
-# Validates Customer form and displays content
 def customerForm(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
             try:
                 cust = Customer(**form.cleaned_data)
-                if valid_uniqueness(model=cust, form=form, request=request):
+                if try_to_save(model=cust, form=form, request=request):
                     return HttpResponseRedirect('')
                     # return render(request, 'frontend/customerForm.html', {'form':form})
                 else:
@@ -36,6 +34,30 @@ def customerForm(request):
 
 
 def employeeForm(request):
+    if request.method == "POST":
+        form = EmployeeForm(request.POST, request.POST)
+        if form.is_valid():
+            name = Name(**form.name.cleaned_data)
+            address = Address(**form.address.cleaned_data)
+
+            emp = Employee(**form.cleaned_data, name=name, address=address)
+            print(Employee.objects.filter(userName=str(emp.userName)))
+
+            try:
+                emp.save()
+                messages.success(request, 'Added Employee')
+                return HttpResponseRedirect('')
+            except NotUniqueError as e:
+                if Employee.objects.filter(userName=str(emp.userName)).count() > 0:
+                    print('userName is not unique')
+                    form.add_error('userName', 'Not unique.')
+                if Employee.objects.filter(email=str(emp.email)).count() > 0:
+                    print('email is not unique')
+                    form.add_error('email', 'Not unique.')
+                return render(request, 'frontend/employeeForm.html', {'form': form})
+        return render(request, 'frontend/employeeForm.html', {'form': form})
+    else:
+        pass
     return render(request, 'frontend/employeeForm.html')
 
 
@@ -56,14 +78,20 @@ def workOrderForm(request):
     return render(request, 'frontend/workOrderForm.html')
 
 
-def valid_uniqueness(model, form, request):
+def try_to_save(model, form, request):
     try:
         model.save()
         messages.success(request, 'Successfully added.')
         return True
 
-    except mongoengine.errors.NotUniqueError as e:
+    except mongoengine.No as e:
+        print(e)
         for field in e.args:
+            print(field)
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Must be unique')
         return False
+
+
+def is_unique(model, field, value):
+    return model.objects.filter(field=str(value)).count() == 0
