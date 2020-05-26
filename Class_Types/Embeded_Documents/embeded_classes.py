@@ -4,7 +4,8 @@ from mongoengine import StringField, DynamicEmbeddedDocument, EmbeddedDocument
 
 class Address(EmbeddedDocument):
     addressLineOne = StringField(max_length=150, required=True)
-    addressLineTwo = StringField(max_length=150, required=False, allow_null=True, allow_blank=True, blank=True, null=True)
+    addressLineTwo = StringField(max_length=150, required=False, allow_null=True, allow_blank=True, blank=True,
+                                 null=True)
     city = StringField(max_length=75, required=True)
     state = StringField(max_length=2, required=True)
     zip = StringField(regex=re.compile('^\d{5}'), max_length=5, required=True)
@@ -31,6 +32,7 @@ class Address(EmbeddedDocument):
             temp.remove('_cls')
         return temp
 
+
 class Name(DynamicEmbeddedDocument):
     _firstName = StringField(max_length=150, required=True, db_field='firstName')
     _lastName = StringField(max_length=150, default='', db_field='lastName')
@@ -43,22 +45,21 @@ class Name(DynamicEmbeddedDocument):
 
     @firstName.setter
     def firstName(self, value):
-        print('firstName: Set')
-        self._firstName = value
+        self._firstName = value.trim()
         if self.lastName:
             self.fullName = self._firstName + ' ' + self.lastName
+            self.fullName = self.fullName.trim()
 
     @property
     def lastName(self):
-        print('lastName: Get')
         return self._lastName
 
     @lastName.setter
     def lastName(self, value):
-        print('lastName: Set')
-        self._lastName = value
+        self._lastName = value.trim()
         if self.firstName:
             self.fullName = self.firstName + ' ' + self._lastName
+            self.fullName = self.fullName.trim()
 
     @classmethod
     def get_optional_fields(cls):
