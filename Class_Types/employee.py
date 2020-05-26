@@ -6,7 +6,6 @@ import re
 import bcrypt as bcrypt
 from mongoengine import StringField, EmailField, DecimalField, BooleanField, \
     EmbeddedDocumentField, DynamicField, DateField
-
 from Class_Types.Embeded_Documents.embeded_classes import Address, Name
 from Class_Types.base_record import BaseRecord
 
@@ -31,7 +30,7 @@ class Employee(BaseRecord):
 
     @passwordHash.setter
     def passwordHash(self, passwordString):
-        self._passwordHashBytes = bcrypt.hashpw(passwordString.encode('utf-8'), bcrypt.gensalt( 12 ))
+        self._passwordHashBytes = bcrypt.hashpw(passwordString.encode('utf-8'), bcrypt.gensalt(12))
 
     def validatePassword(self, passwordVerify):
         return bcrypt.checkpw(passwordVerify.encode('utf-8'), self._passwordHashBytes)

@@ -15,7 +15,8 @@ class AddressForm(forms.Form):
 
     class Meta:
         model = Address
-        fields = ('address.addressLineOne', 'address.addressLineTwo', 'address.city', 'address.state', 'address.zip', 'address.country')
+        fields = ('address.addressLineOne', 'address.addressLineTwo', 'address.city', 'address.state', 'address.zip',
+                  'address.country')
 
 
 class NameForm(forms.Form):
@@ -25,9 +26,6 @@ class NameForm(forms.Form):
     class Meta:
         model = Employee
         fields = ('name.FirstName', 'name.lastName')
-
-
-
 
 
 class CustomerForm(forms.Form):
@@ -56,8 +54,6 @@ class EmployeeForm(forms.Form):
 
     def is_valid(self):
         return self.name.is_valid() and self.address.is_valid() and forms.BaseForm.is_valid(self=self)
-
-
 
     class Meta:
         model = Employee

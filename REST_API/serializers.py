@@ -1,6 +1,6 @@
 from rest_framework_mongoengine.serializers import DocumentSerializer, EmbeddedDocumentSerializer
 from rest_framework import serializers
-from Tracker.Class_Types import *
+from Class_Types import *
 
 
 class BaseSerializer(DocumentSerializer):
@@ -9,10 +9,16 @@ class BaseSerializer(DocumentSerializer):
 
     def validate(self, attrs):
         model = self.Meta().__getattribute__("model")
+        not_present_required_fields = list()
         for field in model.get_required_fields():
-            if not attrs[field]:
-                raise serializers.ValidationError(
+            if field not in attrs:
+                not_present_required_fields.append(
                     "{field} is required and should contain some value.".format(field=field))
+
+        if not_present_required_fields:
+            raise serializers.ValidationError(
+                '\n'.join(not_present_required_fields)
+            )
         return attrs
 
 

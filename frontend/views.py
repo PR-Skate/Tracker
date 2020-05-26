@@ -3,14 +3,59 @@ import pprint
 import mongoengine
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+<<<<<<< HEAD
 from django.shortcuts import render
 from Class_Types import Customer, Employee, Address, Name
 from .forms import CustomerForm, EmployeeForm, NameForm, AddressForm
 from mongoengine.errors import *
+=======
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+from Class_Types import Customer
+from .forms import CustomerForm
 
 # Create your views here.
 def index(request):
     return render(request, 'frontend/index.html')
+
+
+def signup(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('/')
+        else:
+            return render(request, 'signup.html', {'form': form})
+    else:
+        form = UserCreationForm()
+        return render(request, 'signup.html', {'form': form})
+
+
+def signin(request):
+    if request.user.is_authenticated:
+        return render(request, 'homepage.html')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+        else:
+            form = AuthenticationForm(request.POST)
+            return render(request, 'signin.html', {'form': form})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'signin.html', {'form': form})
 
 
 def customerForm(request):
@@ -91,7 +136,6 @@ def try_to_save(model, form, request):
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Must be unique')
         return False
-
 
 def is_unique(model, field, value):
     return model.objects.filter(field=str(value)).count() == 0

@@ -1,12 +1,10 @@
 from __future__ import unicode_literals
-
 from rest_framework_mongoengine.viewsets import ModelViewSet as MongoModelViewSet
-
 from .serializers import *
 
 
 class BasicView(MongoModelViewSet):
-    serializer_class = BaseSerializer
+    serializer_class = LocationInStoreSerializer
 
     def __init__(self, **kwargs):
         MongoModelViewSet().__init__(**kwargs)
@@ -17,17 +15,17 @@ class BasicView(MongoModelViewSet):
 
     def get_queryset(self):
         if hasattr(self, 'request'):
-            self.queryset = self.model.objects.filter(**self.request.query_params.dict())
+            return self.model.objects.filter(**self.request.query_params.dict())
         else:
-            self.queryset = self.model.objects.all()
-
-        return self.queryset
+            return self.model.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         return MongoModelViewSet.retrieve(self, request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        return MongoModelViewSet.update(self, request, *args, **kwargs)
+        queryset = self.get_queryset()
+        instance = queryset.get(id=kwargs.get('id'))
+        return instance.update(**request.data)
 
     def destroy(self, request, *args, **kwargs):
         return MongoModelViewSet.destroy(self, request, *args, **kwargs)

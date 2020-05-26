@@ -10,11 +10,9 @@ from mongoengine import connect, DateTimeField, DynamicDocument, ReferenceField
 class BaseRecord(DynamicDocument):
     _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)
     createdTimestamp = DateTimeField(default=datetime.now(), required=False)
-    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=True, required=False,
-                                       allow_null=True, allow_blank=True, blank=True, null=True)
+    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=True, required=False, blank=True,
+                                       null=True)
     lastModifiedTimestamp = DateTimeField(default=datetime.now(), required=False)
-    connection = connect(
-        host='mongodb://root:6iskvVzSpjcGjOcB8Qfm7htg1@138.68.22.230:27017/Tracker?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false')
     meta = {'allow_inheritance': True, 'abstract': True}
 
     @property
@@ -23,7 +21,8 @@ class BaseRecord(DynamicDocument):
 
     @createdUser.setter
     def createdUser(self, value):
-        value = bson.ObjectId(value)
+        if not isinstance(value, bson.ObjectId):
+            value = bson.ObjectId(value)
         if not self.lastModifiedUser:
             self.lastModifiedUser = value
         self._createdUser = value
@@ -90,7 +89,7 @@ class BaseRecord(DynamicDocument):
         not_properly_referenced = list()
         for field, object in self._fields.items():
             if self._data.get(field) and isinstance(object, ReferenceField):
-                object_id = bson.ObjectId(self._data.get(field))
+                object_id = bson.ObjectId(self._data.get(field) if isinstance(self._data.get(field), bson.ObjectId) else self._data.get(field).id)
                 model = object.__getattribute__('document_type')
                 if model == 'self':
                     model = self.__class__
@@ -109,3 +108,8 @@ class BaseRecord(DynamicDocument):
                                         _refs, save_condition, signal_kwargs, **kwargs)
         else:
             raise Exception('Reference Fields do not have correct references: ' + ' '.join(not_properly_referenced))
+
+    def update(self, **kwargs):
+        for field, value in kwargs.items():
+            self.__setattr__(field, value)
+        return self.save()
