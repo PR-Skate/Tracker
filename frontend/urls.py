@@ -9,5 +9,7 @@ urlpatterns = [
     path('prepWorkForm', views.prepWorkForm),
     path('sowForm', views.sowForm),
     path('workOrderForm',  views.workOrderForm),
-    path('storeForm', views.storeForm)
+    path('storeForm', views.storeForm),
+    path('sign-in', views.signin),
+    path('logout', views.signout)
 ]

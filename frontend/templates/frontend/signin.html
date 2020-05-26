@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a Customer</title>
+
+    <!-- TODO FIGURE OUT LOCAL IMPORTS -->
+
+</head>
+
+<body>
+<h1>User Sign-In</h1>
+<form action="#" method="POST" name='form' id='form'>{% csrf_token %}
+    <label for="">Username</label><br>
+    <input type="text" name="userName"><br><br>
+
+    <label for="">Password</label><br>
+    <input type="password" name="passwordHash"><br><br>
+
+    <input type="submit"> {% for message in messages %}
+        <ul>{{ message }}</ul>
+    {% endfor %} {{ form.errors }}
+    <p id='fail' style="display:none">ERROR</p>
+</form>
+</body>
+
+</html>

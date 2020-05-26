@@ -21,8 +21,13 @@ class BaseRecord(DynamicDocument):
 
     @createdUser.setter
     def createdUser(self, value):
-        if not isinstance(value, bson.ObjectId):
+        if isinstance(value, bson.DBRef):
+            pass
+        elif not isinstance(value, bson.ObjectId):
             value = bson.ObjectId(value)
+        else:
+            from Class_Types import Employee
+            value = Employee.objects.get(userName=value).id
         if not self.lastModifiedUser:
             self.lastModifiedUser = value
         self._createdUser = value

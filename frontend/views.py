@@ -2,6 +2,7 @@ import re
 
 import mongoengine
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from Class_Types import Employee, Address, Name
 from .forms import EmployeeForm
@@ -15,7 +16,9 @@ from .forms import CustomerForm
 
 
 # Create your views here.
+@login_required
 def index(request):
+    print('{user} is authenticated: {auth}'.format(user=request.user, auth=request.user.is_authenticated))
     return render(request, 'frontend/index.html')
 
 
@@ -43,8 +46,8 @@ def signin(request):
     if request.user.is_authenticated:
         return render(request, 'frontend/index.html')
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST['userName']
+        password = request.POST['passwordHash']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -61,7 +64,7 @@ def signout(request):
     logout(request)
     return redirect('/')
 
-
+@login_required
 def customerForm(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
@@ -82,6 +85,7 @@ def customerForm(request):
     return render(request, 'frontend/customerForm.html')
 
 
+@login_required
 def employeeForm(request):
     if request.method == "POST":
         form = EmployeeForm(request.POST, request.POST)
@@ -110,19 +114,23 @@ def employeeForm(request):
     return render(request, 'frontend/employeeForm.html')
 
 
+@login_required
 def prepWorkForm(request):
     return render(request, 'frontend/prepWorkForm.html')
 
 
+@login_required
 def sowForm(request):
     return render(request, 'frontend/sowForm.html')
 
 
+@login_required
 def storeForm(request):
     cust = Customer.objects.all()
     return render(request, 'frontend/storeForm.html', {'cust': cust})
 
 
+@login_required
 def workOrderForm(request):
     return render(request, 'frontend/workOrderForm.html')
 
