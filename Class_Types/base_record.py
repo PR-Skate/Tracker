@@ -4,7 +4,7 @@
 from datetime import datetime
 
 import bson as bson
-from mongoengine import connect, DateTimeField, DynamicDocument, ReferenceField
+from mongoengine import DateTimeField, DynamicDocument, ReferenceField, ValidationError
 
 
 class BaseRecord(DynamicDocument):
@@ -85,29 +85,51 @@ class BaseRecord(DynamicDocument):
             temp.remove('_cls')
         return temp
 
-    def validate_reference_fields(self):
-        not_properly_referenced = list()
-        for field, object in self._fields.items():
-            if self._data.get(field) and isinstance(object, ReferenceField):
-                object_id = bson.ObjectId(self._data.get(field) if isinstance(self._data.get(field), bson.ObjectId) else self._data.get(field).id)
-                model = object.__getattribute__('document_type')
-                if model == 'self':
-                    model = self.__class__
-                try:
-                    model.objects.get(id=object_id)
-                    continue
-                except model.DoesNotExist:
-                    not_properly_referenced.append(self._db_field_map.get(field))
-        return not_properly_referenced
+    def is_valid_reference_field(self, field):
+        if self._data.get(field):
+            object_id = bson.ObjectId(
+                self._data.get(field) if isinstance(self._data.get(field), bson.ObjectId) else self._data.get(
+                    field).id)
+            model = object.__getattribute__('document_type')
+            if model == 'self':
+                model = self.__class__
+            try:
+                model.objects.get(id=object_id)
+                return True
+            except model.DoesNotExist:
+                pass
+            return False
+
+    def custom_validate(self):
+        errors = {}
+        for field, object_field in self._fields.items():
+            if isinstance(object_field, ReferenceField) and not self.is_valid_reference_field(field):
+                if field in errors.keys():
+                    if not field in errors.keys():
+                        errors.update({field: ['ReferenceError']})
+                    else:
+                        errors.get(field).append('ReferenceError')
+
+            if object_field.__getattribute__('unique') and not self.is_field_unique(field):
+                if not field in errors.keys():
+                    errors.update({field: ['DuplicateKeyError']})
+                else:
+                    errors.get(field).append('DuplicateKeyError')
+        if errors:
+            raise ValidationError('There was errors with the following field(s)', errors=errors)
 
     def save(self, force_insert=False, validate=True, clean=True, write_concern=None, cascade=None, cascade_kwargs=None,
              _refs=None, save_condition=None, signal_kwargs=None, **kwargs):
-        not_properly_referenced = self.validate_reference_fields()
-        if len(not_properly_referenced) == 0:
+        try:
+            self.custom_validate()
             return DynamicDocument.save(self, force_insert, validate, clean, write_concern, cascade, cascade_kwargs,
                                         _refs, save_condition, signal_kwargs, **kwargs)
-        else:
-            raise Exception('Reference Fields do not have correct references: ' + ' '.join(not_properly_referenced))
+        except Exception as e:
+            print(e)
+
+    def is_field_unique(self, field):
+        field_value = {field: self._data.get(field)}
+        return self.__class__.objects(**field_value).count() < 1
 
     def update(self, **kwargs):
         for field, value in kwargs.items():
