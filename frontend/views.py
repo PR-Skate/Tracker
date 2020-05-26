@@ -1,14 +1,11 @@
 import re
-import pprint
+
 import mongoengine
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-<<<<<<< HEAD
-from django.shortcuts import render
-from Class_Types import Customer, Employee, Address, Name
-from .forms import CustomerForm, EmployeeForm, NameForm, AddressForm
+from Class_Types import Employee, Address, Name
+from .forms import EmployeeForm
 from mongoengine.errors import *
-=======
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
