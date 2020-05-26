@@ -7,11 +7,12 @@ from Class_Types import Employee, Address, Name
 from .forms import EmployeeForm
 from mongoengine.errors import *
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from Class_Types import Customer
 from .forms import CustomerForm
+
 
 # Create your views here.
 def index(request):
@@ -25,21 +26,22 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
+            employeeForm(request)
+            username = form.cleaned_data.get('userName')
+            password = form.cleaned_data.get('passwordHash')
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('/')
         else:
-            return render(request, 'signup.html', {'form': form})
+            return render(request, 'frontend/signup.html', {'form': form})
     else:
         form = UserCreationForm()
-        return render(request, 'signup.html', {'form': form})
+        return render(request, 'frontend/signup.html', {'form': form})
 
 
 def signin(request):
     if request.user.is_authenticated:
-        return render(request, 'homepage.html')
+        return render(request, 'frontend/index.html')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -49,10 +51,15 @@ def signin(request):
             return redirect('/')
         else:
             form = AuthenticationForm(request.POST)
-            return render(request, 'signin.html', {'form': form})
+            return render(request, 'frontend/signin.html', {'form': form})
     else:
         form = AuthenticationForm()
-        return render(request, 'signin.html', {'form': form})
+        return render(request, 'frontend/signin.html', {'form': form})
+
+
+def signout(request):
+    logout(request)
+    return redirect('/')
 
 
 def customerForm(request):
@@ -123,16 +130,12 @@ def workOrderForm(request):
 def try_to_save(model, form, request):
     try:
         model.save()
-        messages.success(request, 'Successfully added.')
+        messages.success(request, 'Successfully added {}.'.format(model.__class__.name))
         return True
 
-    except mongoengine.No as e:
-        print(e)
+    except mongoengine.errors.NotUniqueError as e:
         for field in e.args:
             print(field)
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Must be unique')
         return False
-
-def is_unique(model, field, value):
-    return model.objects.filter(field=str(value)).count() == 0
