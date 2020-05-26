@@ -14,6 +14,7 @@ def index(request):
     return render(request, 'frontend/index.html')
 
 
+# Validates Customer form and displays content
 def customerForm(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
