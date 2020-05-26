@@ -1,5 +1,16 @@
+import React from 'react';
+
 export const appointments = [ //is basically a list
     //months: 0 - Jan, 1 - Feb, 2 - March...
+    /**
+     * Appointments Model: (field name, type)
+     * startDate: SchedularDateTime
+     * endDate: SchedularDateTime
+     * title: string
+     * allDay: boolean
+     * id: number/string
+     * we can include additional fields
+     */
     {
         title: "Website Re-Design Plan",
         startDate: new Date(2020, 4, 23, 9, 30),
@@ -57,3 +68,4 @@ export const appointments = [ //is basically a list
         category: "complete"
     }
 ];
+
