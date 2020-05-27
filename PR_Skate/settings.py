@@ -27,7 +27,7 @@ SECRET_KEY = 'f19t^3g+uod5xjvf%@ays9$a$y!!+*oe2=gznz^c1b%cfve%)_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['138.68.22.230', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -94,7 +94,7 @@ REST_FRAMEWORK = {
        'rest_framework.authentication.TokenAuthentication',
    ),
    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAdminUser'
+        'rest_framework.permissions.IsAdminUser',
    ),
 }
 

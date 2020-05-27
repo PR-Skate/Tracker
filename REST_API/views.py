@@ -6,7 +6,7 @@ from .serializers import *
 
 
 class BasicView(MongoModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = LocationInStoreSerializer
 
     def __init__(self, **kwargs):
@@ -29,18 +29,12 @@ class BasicView(MongoModelViewSet):
     def update(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         instance = queryset.get(id=kwargs.get('id'))
-
-        if not hasattr(request.data, 'lastModifiedUser'):
-            request.data.update({'lastModifiedUser': request.user.username})
-
+        request.data.update({'lastModifiedUser': request.user.username})
         return instance.update(**request.data)
 
     def create(self, request, *args, **kwargs):
         print(request.user)
-
-        if not hasattr(request.data, 'createdUser'):
-            request.data.update({'createdUser': request.user.username})
-
+        request.data.update({'createdUser': request.user.username})
         return MongoModelViewSet.create(self, request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
