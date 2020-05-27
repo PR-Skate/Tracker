@@ -16,25 +16,11 @@ import {
   TodayButton,
   DragDropProvider,
 } from '@devexpress/dx-react-scheduler-material-ui';
+import './components/cell.css'
 //import { appointments, added } from "./demo-data/month-appointments";
 
 export default class App extends React.PureComponent {
-  static appointments = [
-    {
-      title: "Website Re-Design Plan",
-      startDate: new Date(2020, 4, 23, 9, 30),
-      endDate: new Date(2020, 4, 23, 11, 30),
-      id: "1",
-      category: "incomplete"
-    },
-    {
-        title: "Book Flights to San Fran for Sales Trip",
-        startDate: new Date(2020, 4, 23, 12, 0),
-        endDate: new Date(2020, 4, 23, 13, 0),
-        id: "2",
-        category: "complete"
-    }
-  ];
+  appointments = []
 
   constructor(props) {
     super(props);
@@ -52,24 +38,19 @@ export default class App extends React.PureComponent {
     this.currentViewNameChange = currentViewName => {
         this.setState({ currentViewName });
     };
-
-    //this.added = {}
   }
-
-  /*added({data}) {
-    const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
-    data = [...data, { id: startingAddedId, ...added }];
-    appointments = data;
-    return appointments;
-} */
 
   commitChanges({ added, changed, deleted }) {
     this.setState((state) => {
       let { data } = state;
       if (added) {
-        const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
-        data = [...data, { id: startingAddedId, ...added }];
-        //data = added(data);
+        console.log("before: "); //logging the appointments before adding
+        console.log(this.appointments);
+        const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0; //assigning ID to the new appointment
+        data = [...data, { id: startingAddedId, ...added }]; //adding the appointment to the array (data)
+        //this.appointments = data; //updating the appointments array
+        console.log("after: "); //console log after updating it
+        console.log(this.appointments);
       }
       if (changed) {
         data = data.map(appointment => (
@@ -80,6 +61,13 @@ export default class App extends React.PureComponent {
       }
       return { data };
     });
+  }
+
+  //not sure if this is working rn
+  saveToApts = (props) => {
+    this.appointments = props;
+    console.log("after Submit: "); 
+    console.log(this.appointments);
   }
 
   render() {
@@ -103,12 +91,13 @@ export default class App extends React.PureComponent {
             <DayView />
 
             <Toolbar />
+            <button onclick={ this.saveToApts({data}) }>Save Changes</button>
             <TodayButton />
             <DateNavigator />
             <ViewSwitcher />
 
             <EditRecurrenceMenu />
-            <Appointments />
+            <Appointments className='calendarEvent' />
 
             <AppointmentTooltip
                 showCloseButton
