@@ -3,6 +3,12 @@ import re
 from django import forms
 from django.forms import ModelForm, inlineformset_factory, BaseInlineFormSet
 from Class_Types import *
+from django.forms import widgets
+
+
+class CoordinateField(forms.Form):
+    latitude = forms.DecimalField()
+    longitude = forms.DecimalField()
 
 
 class AddressForm(forms.Form):
@@ -58,3 +64,68 @@ class EmployeeForm(forms.Form):
     class Meta:
         model = Employee
         fields = ('userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'passwordHash', 'type')
+
+
+class DaysOfWeekField(forms.Form):
+    OPTIONS = (
+        ('SUN', 'Sunday'),
+        ('MON', 'Monday'),
+        ('TUES', 'Tuesday'),
+        ('WED', 'Wednesday'),
+        ('THURS', 'Thursday'),
+        ('FRI', 'Friday'),
+        ('SAT', 'Saturday')
+    )
+    days = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
+
+
+class MultiDateField(forms.MultiValueField):
+    def __init__(self, **kwargs):
+        # Or define a different message for each field.
+        fields = (
+            forms.DateField(
+            ),
+        )
+        super().__init__(
+            fields=fields,
+            require_all_fields=False, **kwargs
+        )
+
+
+class MyDateForm(forms.Form):
+    inspectDates = MultiDateField()
+    model = Store
+    fields = ('inspectDates')
+
+
+class StoreForm(forms.Form):
+    storeNumber = forms.CharField(max_length=50, required=True)
+    fkCustomer = forms.CharField(max_length=50, required=True)
+    address = AddressForm()
+    phoneNumber = forms.CharField(max_length=20, required=True)
+    region = forms.CharField(max_length=50, required=True)
+
+    division = forms.CharField(max_length=50, required=True)
+    awardedVendor = forms.CharField(max_length=50, required=True)
+    storeManagerName = NameForm()
+    storeManagerEmail = forms.EmailField()
+
+    opsManagerName = NameForm()
+    opsManagerEmail = forms.EmailField()
+    managerName = NameForm()
+    managerEmail = forms.EmailField()
+    overnightManagerName = NameForm()
+
+    overnightManagerEmail = forms.EmailField()
+    overnightCrew = forms.CharField(max_length=25)
+    overnightAccess = DaysOfWeekField()
+    noiseOrdinance = forms.BooleanField()
+    timeCutOff = forms.CharField()
+
+    fkRegionCode = forms.CharField(max_length=12, required=True)
+    fkMicroRegionCode = forms.CharField(max_length=12, required=True)
+    coordinates = CoordinateField()
+    active = forms.BooleanField()
+    installationDueDates = MultiDateField()
+    inspectionDueDates = MultiDateField()
+    fiscalWeek = forms.IntegerField(min_value=1, max_value=53)

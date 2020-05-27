@@ -5,14 +5,52 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Store Entry</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        function getCount(parent, getChildrensChildren){
+            var relevantChildren = 0;
+            var children = parent.childNodes.length;
+            for(var i=0; i < children; i++){
+                if(parent.childNodes[i].nodeType != 3){
+                    if(getChildrensChildren)
+                        relevantChildren += getCount(parent.childNodes[i],true);
+                    relevantChildren++;
+                }
+            }
+            return relevantChildren;
+        }
+        function add(containerName, type, name){
+            var container = document.getElementById(containerName);
+            var input = document.createElement("input");
+                input.type = type;
+
+                input.name = name;
+                container.appendChild(document.createElement("br"));
+                container.appendChild(input);
+                // Append a line break
+                container.appendChild(document.createElement("br"));
+                return false;
+        }
+        function remove(containerName){
+            var numElementsInSelection = 3
+            var container = document.getElementById(containerName);
+            for (i = 0; i < numElementsInSelection; i++) {
+                container.childNodes.item(container.childElementCount -1).remove();
+            }
+            return false;
+        }
+
+    </script>
 </head>
 
 <body>
 
 
+</body>
+<br><br><br><br>
+
 <form method="POST">
     <!-- The dropdown menu should be dynamically filled based on a GET request of all customers in the database -->
-    <div>
         <h3>Form:</h3>
         <label for="Customer">Customer</label>
         <select name="Customer" for="CustomerNames" required>
@@ -22,7 +60,6 @@
             {% endfor %}
             <option value="Other">Other</option>
         </select><br><br>
-    </div>
 
     <!-- Store information -->
     <div>
@@ -436,11 +473,17 @@
             <input type="time"><br><br>
 
             <!-- The two following fields will have to be altered to allow for multiple entries (usuing jquery and JS) -->
-            <label for="">Inspection Due Dates</label>
-            <input type="date" name="" id=""><br><br>
+            <label for="">Inspection Due Dates</label><br>
+            <input type="date" name="inspectionDueDates"><br>
+            <div id = "inspDates" name = "inspDates"></div>
+            <input type="button" onclick="add('inspDates','date', 'inspectionDueDates' )" value="Add">
+            <input type="button" onclick="remove('inspDates')" value="Remove"><br><br>
 
-            <label for="">Installation Due Dates</label>
-            <input type="date" name="" id=""><br><br>
+            <label for="">Installation Due Dates</label><br>
+            <input type="date" name="installationDueDates"><br>
+            <div id = "inslDates" name = "inslDates"></div>
+            <input type="button" onclick="add('inslDates','date', 'installationDueDates' )" value="Add">
+            <input type="button" onclick="remove('inslDates')" value="Remove">
         </div>
 
         <div>
@@ -480,20 +523,22 @@
 
 
             <label for="RegionCode">RegionCode</label>
-            <select name="RegionCode" required>
-                <option value="" selected>Select a region</option>
-                <option value="">One</option>
-                <option value="">Two</option>
-                <option value="">Three</option>
+            <select name="RegionCode" for="RegionCode" required>
+                <option value="" selected="selected">Region Code</option>
+                    {% for rc in region_code %}
+                <option value={{ rc.id }}>{{ rc.regionCodeID }}</option>
+                    {% endfor %}
+                <option value="Other">Other</option>
             </select><br><br>
 
 
             <label for="MicroRegionCode">MicroRegionCode</label>
-            <select name="MicroRegionCode" required>
-                <option value="" selected>Select a micro region</option>
-                <option value="">One</option>
-                <option value="">Two</option>
-                <option value="">Three</option>
+            <select name="MicroRegionCode" for="MicroRegionCode" required>
+                <option value="" selected="selected">Micro Region Code</option>
+                    {% for mrc in micro_region_code %}
+                <option value={{ mrc.id }}>{{ mrc.regionCode }}</option>
+                    {% endfor %}
+                <option value="Other">Other</option>
             </select><br><br>
 
 
@@ -524,7 +569,8 @@
     <div id="app">
         <!-- React will load here -->
     </div>
-</body>
+
+
 
 
 

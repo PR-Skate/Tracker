@@ -4,7 +4,7 @@ import mongoengine
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from Class_Types import Employee, Address, Name
+from Class_Types import Employee, Address, Name, RegionCode, MicroRegionCode
 from .forms import EmployeeForm
 from mongoengine.errors import *
 from django.shortcuts import render, redirect
@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from Class_Types import Customer
-from .forms import CustomerForm
+from .forms import CustomerForm, MyDateForm
 
 
 # Create your views here.
@@ -127,8 +127,12 @@ def sowForm(request):
 @login_required
 def storeForm(request):
     cust = Customer.objects.all()
-    return render(request, 'frontend/storeForm.html', {'cust': cust})
-
+    region_code = RegionCode.objects.all()
+    micro_region_code = MicroRegionCode.objects.all()
+    if request.method == "POST":
+        form = MyDateForm(request.POST)
+        print(form.data)
+    return render(request, 'frontend/storeForm.html', {'form':form, 'region_code': region_code, 'micro_region_code':micro_region_code})
 
 @login_required
 def workOrderForm(request):
