@@ -132,7 +132,7 @@ def storeForm(request):
     if request.method == "POST":
         form = MyDateForm(request.POST)
         print(form.data)
-    return render(request, 'frontend/storeForm.html', {'form':form, 'region_code': region_code, 'micro_region_code':micro_region_code})
+    return render(request, 'frontend/storeForm.html', {'form':form, 'region_code': region_code, 'micro_region_code':micro_region_code, 'cust':cust})
 
 @login_required
 def workOrderForm(request):
