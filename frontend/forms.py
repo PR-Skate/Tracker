@@ -2,8 +2,21 @@ import re
 
 from django import forms
 from django.forms import ModelForm, inlineformset_factory, BaseInlineFormSet
+from django.forms.utils import ErrorList
+
 from Class_Types import *
 from django.forms import widgets
+
+
+class BaseForm(forms.Form):
+    id = forms.CharField(max_length=50)
+    createdUser = forms.CharField(max_length=50)
+    lastModifiedUser = forms.CharField(max_length=50)
+    lastModifiedTimeStamp = forms.DateTimeField()
+    createdTimeStamp = forms.DateTimeField()
+
+
+"""SUBFORMS"""
 
 
 class CoordinateField(forms.Form):
@@ -31,51 +44,7 @@ class NameForm(forms.Form):
 
     class Meta:
         model = Employee
-        fields = ('name.FirstName', 'name.lastName')
-
-
-class CustomerForm(forms.Form):
-    customerName = forms.CharField(max_length=50, required=True)
-
-
-class EmployeeForm(forms.Form):
-    createdUser = forms.CharField(max_length=50, required=True)
-    userName = forms.CharField(max_length=50, required=True)  # Should be unique
-    birthDate = forms.DateField(required=True)
-    email = forms.EmailField(required=True)
-    phone = forms.CharField(max_length=20, required=True)
-    pin = forms.CharField(max_length=4, required=True)
-    rateOfPay = forms.DecimalField()
-    active = forms.BooleanField()
-    passwordHash = forms.CharField(widget=forms.PasswordInput)
-    type = forms.CharField(max_length=10, required=True)
-    name = NameForm()
-    address = AddressForm()
-
-    def __init__(self, request, data):
-        super().__init__(request)
-        self.name = NameForm(data=data)
-        self.address = AddressForm(data=data)
-
-    def is_valid(self):
-        return self.name.is_valid() and self.address.is_valid() and forms.BaseForm.is_valid(self=self)
-
-    class Meta:
-        model = Employee
-        fields = ('userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'passwordHash', 'type')
-
-
-class DaysOfWeekField(forms.Form):
-    OPTIONS = (
-        ('SUN', 'Sunday'),
-        ('MON', 'Monday'),
-        ('TUES', 'Tuesday'),
-        ('WED', 'Wednesday'),
-        ('THURS', 'Thursday'),
-        ('FRI', 'Friday'),
-        ('SAT', 'Saturday')
-    )
-    days = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
+        fields = ('firstName', 'lastName')
 
 
 class MultiDateField(forms.MultiValueField):
@@ -97,7 +66,53 @@ class MyDateForm(forms.Form):
     fields = ('inspectDates')
 
 
-class StoreForm(forms.Form):
+class DaysOfWeekField(forms.Form):
+    OPTIONS = (
+        ('SUN', 'Sunday'),
+        ('MON', 'Monday'),
+        ('TUES', 'Tuesday'),
+        ('WED', 'Wednesday'),
+        ('THURS', 'Thursday'),
+        ('FRI', 'Friday'),
+        ('SAT', 'Saturday')
+    )
+    days = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
+
+
+"""BASE FORMS"""
+
+
+class CustomerForm(BaseForm):
+    customerName = forms.CharField(max_length=50, required=True)
+
+
+class EmployeeForm(BaseForm):
+    userName = forms.CharField(max_length=50, required=True)  # Should be unique
+    birthDate = forms.DateField(required=True)
+    email = forms.EmailField(required=True)
+    phone = forms.CharField(max_length=20, required=True)
+    pin = forms.CharField(max_length=4, required=True)
+    rateOfPay = forms.DecimalField()
+    active = forms.BooleanField()
+    passwordHash = forms.CharField(widget=forms.PasswordInput)
+    type = forms.CharField(max_length=10, required=True)
+    name = NameForm()
+    address = AddressForm()
+
+    def __init__(self, request, data):
+        super().__init__(request)
+        self.name = NameForm(data={'firstName': data.get('firstName'), 'lastName': data.get('lastName')})
+        self.address = AddressForm(data=data)
+
+    def is_valid(self):
+        return self.name.is_valid() and self.address.is_valid() and forms.BaseForm.is_valid(self=self)
+
+    class Meta:
+        model = Employee
+        fields = ('userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'passwordHash', 'type')
+
+
+class StoreForm(BaseForm):
     storeNumber = forms.CharField(max_length=50, required=True)
     fkCustomer = forms.CharField(max_length=50, required=True)
     address = AddressForm()
@@ -128,3 +143,14 @@ class StoreForm(forms.Form):
     installationDueDates = MultiDateField()
     inspectionDueDates = MultiDateField()
     fiscalWeek = forms.IntegerField(min_value=1, max_value=53)
+
+    def __init__(self, request, data):
+        super().__init__(request)
+        self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerNameFirst'), 'lastName': data.get('storeManagerNameLast')})
+        self.opsManagerName = NameForm(data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.get('opsManagerNameLast')})
+        self.managerName = NameForm(data={'firstName': data.get('managerFirstName'), 'lastName': data.get('managerLastName')})
+        self.overnightManagerName = NameForm(data={'firstName': data.get('overnightNameFirst'), 'lastName': data.get('overnightNameFirst')})
+
+        self.address = AddressForm(data={'firstName': data.get('firstName'), 'lastName': data.get('lastName')})
+
+
