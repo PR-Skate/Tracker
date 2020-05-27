@@ -4,7 +4,7 @@ from Class_Types import *
 
 
 class BaseSerializer(DocumentSerializer):
-    createdUser = serializers.CharField(required=True)
+    createdUser = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     lastModifiedUser = serializers.CharField(allow_null=True, allow_blank=True, required=False)
 
     def validate(self, attrs):
@@ -100,7 +100,6 @@ class WorkOrderSerializer(BaseSerializer):
 
 class EmployeeSerializer(BaseSerializer):
     name = NameSerializer(many=False)
-    passwordHash = serializers.CharField(min_length=8, required=True)
 
     class Meta:
         model = Employee

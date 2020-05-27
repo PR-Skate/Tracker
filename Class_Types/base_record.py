@@ -23,7 +23,7 @@ class BaseRecord(DynamicDocument):
     def createdUser(self, value):
         if isinstance(value, bson.DBRef):
             pass
-        elif not isinstance(value, bson.ObjectId):
+        elif  bson.ObjectId.is_valid(value):
             value = bson.ObjectId(value)
         else:
             from Class_Types import Employee
@@ -95,7 +95,7 @@ class BaseRecord(DynamicDocument):
             object_id = bson.ObjectId(
                 self._data.get(field) if isinstance(self._data.get(field), bson.ObjectId) else self._data.get(
                     field).id)
-            model = object.__getattribute__('document_type')
+            model = self._fields.get(field).__getattribute__('document_type')
             if model == 'self':
                 model = self.__class__
             try:
@@ -130,7 +130,7 @@ class BaseRecord(DynamicDocument):
             return DynamicDocument.save(self, force_insert, validate, clean, write_concern, cascade, cascade_kwargs,
                                         _refs, save_condition, signal_kwargs, **kwargs)
         except Exception as e:
-            print(e)
+            raise e
 
     def is_field_unique(self, field):
         field_value = {field: self._data.get(field)}

@@ -1,9 +1,12 @@
 from __future__ import unicode_literals
+
+from rest_framework import permissions
 from rest_framework_mongoengine.viewsets import ModelViewSet as MongoModelViewSet
 from .serializers import *
 
 
 class BasicView(MongoModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = LocationInStoreSerializer
 
     def __init__(self, **kwargs):
@@ -20,12 +23,25 @@ class BasicView(MongoModelViewSet):
             return self.model.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
+        print(request.user)
         return MongoModelViewSet.retrieve(self, request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         instance = queryset.get(id=kwargs.get('id'))
+
+        if not hasattr(request.data, 'lastModifiedUser'):
+            request.data.update({'lastModifiedUser': request.user.username})
+
         return instance.update(**request.data)
+
+    def create(self, request, *args, **kwargs):
+        print(request.user)
+
+        if not hasattr(request.data, 'createdUser'):
+            request.data.update({'createdUser': request.user.username})
+
+        return MongoModelViewSet.create(self, request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         return MongoModelViewSet.destroy(self, request, *args, **kwargs)
