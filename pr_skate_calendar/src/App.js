@@ -7,7 +7,6 @@ import {
   DayView,
   WeekView,
   ViewSwitcher,
-  Appointments,
   Toolbar,
   DateNavigator,
   AppointmentTooltip,
@@ -18,6 +17,8 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import './components/cell.css'
 //import { appointments, added } from "./demo-data/month-appointments";
+const fs = require('fs');
+
 
 export default class App extends React.PureComponent {
   appointments = []
@@ -48,26 +49,39 @@ export default class App extends React.PureComponent {
         console.log(this.appointments);
         const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0; //assigning ID to the new appointment
         data = [...data, { id: startingAddedId, ...added }]; //adding the appointment to the array (data)
-        //this.appointments = data; //updating the appointments array
+
         console.log("after: "); //console log after updating it
         console.log(this.appointments);
       }
-      if (changed) {
+      if (changed) { //TODO FIX SWAPPING OF START DATE AND END DATE
         data = data.map(appointment => (
           changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
       }
       if (deleted !== undefined) {
         data = data.filter(appointment => appointment.id !== deleted);
       }
-      return { data };
+        this.appointments = data; //updating the appointments array
+        return { data };
     });
   }
 
   //not sure if this is working rn
   saveToApts = (props) => {
-    this.appointments = props;
-    console.log("after Submit: "); 
-    console.log(this.appointments);
+      console.log('saveToApts:')
+      console.log(props)
+      var json = JSON.stringify(this.appointments)
+      console.log(json)
+
+      console.log('END saveToApts')
+      // fs.writeFile("output.json", json, 'utf8', function (err) {
+      //     if (err) {
+      //         console.log("An error occured while writing JSON Object to File.");
+      //         return console.log(err);
+      //     }
+
+      //     console.log("JSON file has been saved.");
+      // });
+
   }
 
   render() {
@@ -91,7 +105,7 @@ export default class App extends React.PureComponent {
             <DayView />
 
             <Toolbar />
-            <button onclick={ this.saveToApts({data}) }>Save Changes</button>
+            <button onClick={ this.saveToApts({data}) }>Save Changes</button>
             <TodayButton />
             <DateNavigator />
             <ViewSwitcher />
