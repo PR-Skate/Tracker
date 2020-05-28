@@ -148,7 +148,7 @@ class StoreForm(BaseForm):
         super().__init__(request)
         self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerNameFirst'), 'lastName': data.get('storeManagerNameLast')})
         self.opsManagerName = NameForm(data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.get('opsManagerNameLast')})
-        self.managerName = NameForm(data={'firstName': data.get('managerFirstName'), 'lastName': data.get('managerLastName')})
+        self.managerName = NameForm(data={'firstName': data.get('managerNameFirst'), 'lastName': data.get('managerNameLast')})
         self.overnightManagerName = NameForm(data={'firstName': data.get('overnightNameFirst'), 'lastName': data.get('overnightNameFirst')})
 
         self.address = AddressForm(data={'firstName': data.get('firstName'), 'lastName': data.get('lastName')})

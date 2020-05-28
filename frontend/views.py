@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from Class_Types import Employee, Address, Name, RegionCode, MicroRegionCode
-from .forms import EmployeeForm, StoreForm
+from .forms import EmployeeForm, StoreForm, BaseForm
 from mongoengine.errors import *
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -131,11 +131,15 @@ def storeForm(request):
     region_code = RegionCode.objects.all()
     micro_region_code = MicroRegionCode.objects.all()
     if request.method == "POST":
-        form = StoreForm(request.POST)
-        print(form.data)
-    return render(request, 'frontend/storeForm.html',
-                  {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
-
+        form = StoreForm(request, request.POST)
+        if form.is_valid():
+            print('here')
+            storeManagerName = Name(request, request.POST)
+            print(storeManagerName.firstName)
+            print(storeManagerName.lastName)
+        return render(request, 'frontend/storeForm.html',
+                      {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
+    return render(request, 'frontend/storeForm.html',{'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
 
 @login_required
 def workOrderForm(request):
