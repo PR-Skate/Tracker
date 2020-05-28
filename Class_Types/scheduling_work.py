@@ -10,21 +10,21 @@ from Class_Types.base_record import BaseRecord
 
 
 class SchedulingWork(BaseRecord):
-    GB_Counter = IntField(default=0)
-    _truckDate = DateTimeField(db_field='truckDate')
+    GB_Counter = IntField(default=0) #GB = Go Back
+    _truckDate = DateTimeField(db_field='truckDate') # MAY BE STORED SOMEWHERE ELSE/DERIVED
     _dateScheduled = DateTimeField(required=True, db_field='dateScheduled') #startDate
     _duration = DecimalField(db_field='duration')
     endDate = DateTimeField()
-    receivingDate = DateField()
-    weekOneCallDate = DateField()
-    weekOneContact = BooleanField(default=False)
-    weekOneNameOfContact = EmbeddedDocumentField(Name)
-    weekFourCallDate = DateField()
+    receivingDate = DateField() #OPTIONAL
+    weekOneCallDate = DateField() #CALCULATED
+    weekOneContact = BooleanField(default=False) #OPTIONAL
+    weekOneNameOfContact = EmbeddedDocumentField(Name) #OPTIONAL
+    weekFourCallDate = DateField() #CALCULATED
     weekFourContact = BooleanField(default=False)
-    weekFourNameOfContact = EmbeddedDocumentField(Name)
-    formComplete = BooleanField()
-    fkInstallerID = ReferenceField(Employee, dbref=True)
-    fkSecondInstallerID = ReferenceField(Employee, dbref=True)
+    weekFourNameOfContact = EmbeddedDocumentField(Name) #OPTIONAL
+    formComplete = BooleanField() #OPTIONAL
+    fkInstallerID = ReferenceField(Employee, dbref=True, required=True)
+    fkSecondInstallerID = ReferenceField(Employee, dbref=True) #OPTIONAL
     fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
     meta = {'collection': 'SchedulingWork'}
 
@@ -59,3 +59,4 @@ class SchedulingWork(BaseRecord):
         self._duration = value
         if self._dateScheduled:
             self.endDate = self._dateScheduled + datetime.timedelta(days=self._duration)
+6

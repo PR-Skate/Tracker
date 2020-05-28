@@ -10,6 +10,7 @@ import {
   Toolbar,
   DateNavigator,
   AppointmentTooltip,
+  Appointments,
   AppointmentForm,
   EditRecurrenceMenu,
   TodayButton,
@@ -19,6 +20,8 @@ import './components/cell.css'
 //import { appointments, added } from "./demo-data/month-appointments";
 const fs = require('fs');
 
+//TODO import Appointments in another class and render it there?
+//TODO keep working on customizing the CSS/TypeScript to make calendar cells dynamic
 
 export default class App extends React.PureComponent {
   appointments = []
@@ -55,7 +58,13 @@ export default class App extends React.PureComponent {
       }
       if (changed) { //TODO FIX SWAPPING OF START DATE AND END DATE
         data = data.map(appointment => (
-          changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+            //if(changed[appointment.startDate] > changed[appointment.endDate]) {
+                changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+                console.log(data); //to see the data changes being logged in the console
+            //} else {
+               // console.log("start date greater than end date");
+           // }
+
       }
       if (deleted !== undefined) {
         data = data.filter(appointment => appointment.id !== deleted);

@@ -2,6 +2,7 @@
   "name": "pr_skate_calendar",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@devexpress/dx-react-core": "^2.6.3",
     "@devexpress/dx-react-scheduler": "^2.6.3",
