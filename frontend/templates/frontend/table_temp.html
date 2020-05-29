@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ table_name }}</title>
 </head>
 <body>
 <style type="text/css">
@@ -123,22 +123,24 @@
     <table id="tg-0Xa6r" class="tg">
         <thead>
         <tr>
-            <th class="tg-6xvo" colspan="2">{{ TABLE_NAME }}</th>
+            <th class="tg-6xvo" colspan="{{ fields|length }}">{{ table_name }}</th>
         </tr>
         </thead>
         <tbody>
-        {% for field in fields %}
-            <tr>
-                <td class="tg-qrfk">{{ field }}</td>
-            </tr>
-        {% endfor %}
+        <tr>
+            {% for field in fields %}
 
-        {% for instance in instances %}
-            {% for  field, attribute in instance %}
-                <tr>
-                    <td class="tg-t780">{{ attribute }}</td>
-                </tr>
+                <td class="tg-qrfk">{{ field }}</td>
             {% endfor %}
+        </tr>
+        {% for instance in instances %}
+            <tr>
+                {% for  field, attribute in instance.items %}
+                    <td class="tg-t780">
+                        <pre>{{ attribute }}</pre>
+                    </td>
+                {% endfor %}
+            </tr>
         {% endfor %}
         </tbody>
     </table>

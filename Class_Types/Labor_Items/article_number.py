@@ -8,6 +8,6 @@ from Class_Types.base_record import BaseRecord
 class ArticleNumber(BaseRecord):
     articleNumber = StringField(max_length=20, required=True)
     description = ListField(StringField(), max_length=4, required=True)
-    UsedByInspectionCompanyButNotPrSkate = BooleanField(default=False)
+    usedByInspectionCompanyButNotPrSkate = BooleanField(default=False)
     Capital = BooleanField(default=False)
     meta = {'collection': 'ArticleNumber'}

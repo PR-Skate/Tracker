@@ -1,4 +1,5 @@
 import re
+
 from mongoengine import StringField, DynamicEmbeddedDocument, EmbeddedDocument
 
 
@@ -32,6 +33,16 @@ class Address(EmbeddedDocument):
             temp.remove('_cls')
         return temp
 
+    def __str__(self):
+        return '{addressLineOne}' \
+               '{addressLineTwo}\n' \
+               '{city}, {state} {zip}\n' \
+               '{country}'.format(
+            addressLineOne=self.addressLineOne,
+            addressLineTwo='\n' + self.addressLineTwo if self.addressLineTwo else '',
+            city=self.city, state=self.state,
+            zip=self.zip, country=self.country)
+
 
 class Name(DynamicEmbeddedDocument):
     _firstName = StringField(max_length=150, required=True, db_field='firstName')
@@ -40,7 +51,6 @@ class Name(DynamicEmbeddedDocument):
 
     @property
     def firstName(self):
-        print('firstName: Get')
         return self._firstName
 
     @firstName.setter
@@ -72,3 +82,6 @@ class Name(DynamicEmbeddedDocument):
         if '_cls' in temp:
             temp.remove('_cls')
         return temp
+
+    def __str__(self):
+        return str(self.lastName + '\n' + self.firstName).strip()

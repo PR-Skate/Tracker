@@ -22,3 +22,6 @@ class Employee(BaseRecord):
     active = BooleanField(default=False)
     type = StringField(max_length=10, required=True)
     meta = {'collection': 'Employee'}
+
+    def __str__(self):
+        return self.userName
