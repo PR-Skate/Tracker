@@ -17,6 +17,7 @@ import {
   DragDropProvider,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import './components/cell.css'
+import CalendarForm from "./components/CalendarForm";
 //import { appointments, added } from "./demo-data/month-appointments";
 const fs = require('fs');
 
@@ -40,7 +41,7 @@ export default class App extends React.PureComponent {
     console.log(props);
 
     this.currentViewNameChange = currentViewName => {
-        this.setState({ currentViewName });
+      this.setState({ currentViewName });
     };
   }
 
@@ -59,37 +60,36 @@ export default class App extends React.PureComponent {
       if (changed) { //TODO FIX SWAPPING OF START DATE AND END DATE
         data = data.map(appointment => (
             //if(changed[appointment.startDate] > changed[appointment.endDate]) {
-                changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
-                console.log(data); //to see the data changes being logged in the console
-            //} else {
-               // console.log("start date greater than end date");
-           // }
+            changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+        console.log(data); //to see the data changes being logged in the console
+        //} else {
+        // console.log("start date greater than end date");
+        // }
 
       }
       if (deleted !== undefined) {
         data = data.filter(appointment => appointment.id !== deleted);
       }
-        this.appointments = data; //updating the appointments array
-        return { data };
+      this.appointments = data; //updating the appointments array
+      return { data };
     });
   }
 
-  //not sure if this is working rn
   saveToApts = (props) => {
-      console.log('saveToApts:')
-      console.log(props)
-      var json = JSON.stringify(this.appointments)
-      console.log(json)
+    console.log('saveToApts:')
+    console.log(props)
+    var json = JSON.stringify(this.appointments)
+    console.log(json)
 
-      console.log('END saveToApts')
-      // fs.writeFile("output.json", json, 'utf8', function (err) {
-      //     if (err) {
-      //         console.log("An error occured while writing JSON Object to File.");
-      //         return console.log(err);
-      //     }
+    console.log('END saveToApts')
+    // fs.writeFile("output.json", json, 'utf8', function (err) {
+    //     if (err) {
+    //         console.log("An error occured while writing JSON Object to File.");
+    //         return console.log(err);
+    //     }
 
-      //     console.log("JSON file has been saved.");
-      // });
+    //     console.log("JSON file has been saved.");
+    // });
 
   }
 
@@ -97,10 +97,10 @@ export default class App extends React.PureComponent {
     const { data, currentViewName, currentDate } = this.state;
 
     return (
-      <Paper>
-        <Scheduler
-          data={data}
-        >
+        <Paper>
+          <Scheduler
+              data={data}
+          >
             <ViewState
                 currentViewName={currentViewName}
                 onCurrentViewNameChange={this.currentViewNameChange}
@@ -121,7 +121,6 @@ export default class App extends React.PureComponent {
 
             <EditRecurrenceMenu />
             <Appointments className='calendarEvent' />
-
             <AppointmentTooltip
                 showCloseButton
                 showDeleteButton
@@ -129,11 +128,11 @@ export default class App extends React.PureComponent {
             />
 
             <AppointmentForm />
-            <DragDropProvider 
-            allowDrag={({ allDay }) => !allDay}
-            allowResize={() => true}/>
-        </Scheduler>
-      </Paper>
+            <DragDropProvider
+                allowDrag={({ allDay }) => !allDay}
+                allowResize={() => true}/>
+          </Scheduler>
+        </Paper>
     );
   }
 }
