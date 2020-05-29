@@ -1,19 +1,19 @@
-import re
-
 from django import forms
-from django.forms import ModelForm, inlineformset_factory, BaseInlineFormSet
 from django.forms.utils import ErrorList
 
 from Class_Types import *
-from django.forms import widgets
 
 
 class BaseForm(forms.Form):
-    id = forms.CharField(max_length=50)
-    createdUser = forms.CharField(max_length=50)
-    lastModifiedUser = forms.CharField(max_length=50)
-    lastModifiedTimeStamp = forms.DateTimeField()
-    createdTimeStamp = forms.DateTimeField()
+    createdUser = forms.CharField(max_length=50, required=False)
+    lastModifiedUser = forms.CharField(max_length=50, required=False)
+    lastModifiedTimestamp = forms.DateTimeField(required=False)
+    createdTimestamp = forms.DateTimeField(required=False)
+
+    def __init__(self, data, request):
+        updated_data = data.dict()
+        updated_data.update({'createdUser': request.user.username})
+        super().__init__(data=updated_data)
 
 
 """SUBFORMS"""
@@ -99,8 +99,8 @@ class EmployeeForm(BaseForm):
     name = NameForm()
     address = AddressForm()
 
-    def __init__(self, request, data):
-        super().__init__(request)
+    def __init__(self, data, request):
+        super().__init__(data, request)
         self.name = NameForm(data={'firstName': data.get('firstName'), 'lastName': data.get('lastName')})
         self.address = AddressForm(data=data)
 
@@ -136,21 +136,23 @@ class StoreForm(BaseForm):
     noiseOrdinance = forms.BooleanField()
     timeCutOff = forms.CharField()
 
-    fkRegionCode = forms.CharField(max_length=12, required=True)
-    fkMicroRegionCode = forms.CharField(max_length=12, required=True)
+    fkRegionCode = forms.CharField( required=True)
+    fkMicroRegionCode = forms.CharField( required=True)
     coordinates = CoordinateField()
     active = forms.BooleanField()
     installationDueDates = MultiDateField()
     inspectionDueDates = MultiDateField()
     fiscalWeek = forms.IntegerField(min_value=1, max_value=53)
 
-    def __init__(self, request, data):
-        super().__init__(request)
-        self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerNameFirst'), 'lastName': data.get('storeManagerNameLast')})
-        self.opsManagerName = NameForm(data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.get('opsManagerNameLast')})
-        self.managerName = NameForm(data={'firstName': data.get('managerNameFirst'), 'lastName': data.get('managerNameLast')})
-        self.overnightManagerName = NameForm(data={'firstName': data.get('overnightNameFirst'), 'lastName': data.get('overnightNameFirst')})
+    def __init__(self, data, request):
+        super().__init__(data, request)
+        self.storeManagerName = NameForm(data={'firstName': data.__getitem__('storeManagerNameFirst'),
+                                               'lastName': data.__getitem__('storeManagerNameLast')})
+        self.opsManagerName = NameForm(
+            data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.__getitem__('opsManagerNameLast')})
+        self.managerName = NameForm(
+            data={'firstName': data.__getitem__('managerNameFirst'), 'lastName': data.__getitem__('managerNameLast')})
+        self.overnightManagerName = NameForm(data={'firstName': data.__getitem__('overnightNameFirst'),
+                                                   'lastName': data.__getitem__('overnightNameLast')})
 
-        self.address = AddressForm(data={'firstName': data.get('firstName'), 'lastName': data.get('lastName')})
-
-
+        self.address = AddressForm(data=data)

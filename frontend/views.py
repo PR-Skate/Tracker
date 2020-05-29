@@ -84,7 +84,7 @@ def customerForm(request):
 @login_required
 def employeeForm(request):
     if request.method == "POST":
-        form = EmployeeForm(request, request.POST)
+        form = EmployeeForm(request.POST, request)
         if form.is_valid():
             name = Name(**form.name.cleaned_data)
             address = Address(**form.address.cleaned_data)
@@ -96,7 +96,7 @@ def employeeForm(request):
                 emp.save()
                 messages.success(request, 'Added Employee')
                 return HttpResponseRedirect('')
-            except NotUniqueError as e:
+            except NotUniqueError:
                 if Employee.objects.filter(userName=str(emp.userName)).count() > 0:
                     print('userName is not unique')
                     form.add_error('userName', 'Not unique.')
@@ -126,16 +126,19 @@ def storeForm(request):
     region_code = RegionCode.objects.all()
     micro_region_code = MicroRegionCode.objects.all()
     if request.method == "POST":
-        form = StoreForm(request, request.POST)
+        form = StoreForm(request.POST, request)
         if form.is_valid():
-            print('here')
-            storeManagerName = Name(request, request.POST)
-            print(storeManagerName.firstName)
-            print(storeManagerName.lastName)
-        return render(request, 'frontend/storeForm.html',
+            print('valid')
+            storeManagerName = Name(**form.storeManagerName.cleaned_data)
+            opsManagerName = Name(**form.opsManagerName.cleaned_data)
+            managerName = Name(**form.managerName.cleaned_data)
+            overnightManagerName = Name(**form.overnightManagerName.cleaned_data)
+            address = Address(**form.address.cleaned_data)
+            return render(request, 'frontend/storeForm.html',
                       {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
-    return render(request, 'frontend/storeForm.html',
-                  {'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
+        else:
+            print(form.data)
+    return render(request, 'frontend/storeForm.html',{'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
 
 
 @login_required
