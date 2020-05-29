@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework_mongoengine',
     'REST_API.apps.RestApiConfig',
     'rest_framework.authtoken',
-    'frontend'
+    'frontend',
+    'pr_skate_calendar'
 ]
 
 MIDDLEWARE = [
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'PR_Skate.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'pr_skate_calendar/public')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -73,7 +74,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'PR_Skate.wsgi.application'

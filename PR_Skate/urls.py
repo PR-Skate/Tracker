@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('frontend.urls')),
     path('', include('REST_API.urls')),
+    path('', include('pr_skate_calendar.urls')),
 ]
 
 
