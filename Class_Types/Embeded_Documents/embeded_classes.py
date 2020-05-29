@@ -55,10 +55,10 @@ class Name(DynamicEmbeddedDocument):
 
     @firstName.setter
     def firstName(self, value):
-        self._firstName = value.trim()
+        self._firstName = value.strip()
         if self.lastName:
             self.fullName = self._firstName + ' ' + self.lastName
-            self.fullName = self.fullName.trim()
+            self.fullName = self.fullName.strip()
 
     @property
     def lastName(self):
@@ -66,10 +66,10 @@ class Name(DynamicEmbeddedDocument):
 
     @lastName.setter
     def lastName(self, value):
-        self._lastName = value.trim()
+        self._lastName = value.strip()
         if self.firstName:
             self.fullName = self.firstName + ' ' + self._lastName
-            self.fullName = self.fullName.trim()
+            self.fullName = self.fullName.strip()
 
     @classmethod
     def get_optional_fields(cls):

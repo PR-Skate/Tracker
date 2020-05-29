@@ -47,26 +47,39 @@ class NameForm(forms.Form):
         fields = ('firstName', 'lastName')
 
 
+# noinspection PyArgumentList
+
 class MultiDateField(forms.MultiValueField):
-    def __init__(self, **kwargs):
+    def __init__(self, count, *args, **kwargs):
         # Or define a different message for each field.
-        fields = (
-            forms.DateField(
-            ),
+        field_list = []
+        for i in range(count):
+            field_list.append(forms.DateField())
+
+        super(MultiDateField, self).__init__(
+            fields=tuple(field_list),
+            require_all_fields=False, *args, **kwargs
         )
-        super().__init__(
-            fields=fields,
-            require_all_fields=False, **kwargs
-        )
+
+    def compress(self, data_list):
+        return '|'.join(map(str, data_list))
 
 
-class MyDateForm(forms.Form):
-    inspectDates = MultiDateField()
-    model = Store
-    fields = ('inspectDates')
+class InspectDateForm(forms.Form):
+    def __init__(self, count=0, *args, **kwargs):
+        super(InspectDateForm, self).__init__(*args, **kwargs)
+        self.fields['inspectionDueDates'] = MultiDateField(count=count)
 
 
-class DaysOfWeekField(forms.Form):
+class InstallDateForm(forms.Form):
+    def __init__(self, count=0, *args, **kwargs):
+        super(InstallDateForm, self).__init__(*args, **kwargs)
+        self.fields['installationDueDates'] = MultiDateField(count=count)
+
+
+
+
+class DaysOfWeekForm(forms.Form):
     OPTIONS = (
         ('SUN', 'Sunday'),
         ('MON', 'Monday'),
@@ -76,7 +89,7 @@ class DaysOfWeekField(forms.Form):
         ('FRI', 'Friday'),
         ('SAT', 'Saturday')
     )
-    days = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
+    overnightAccess = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
 
 
 """BASE FORMS"""
@@ -132,27 +145,50 @@ class StoreForm(BaseForm):
 
     overnightManagerEmail = forms.EmailField()
     overnightCrew = forms.CharField(max_length=25)
-    overnightAccess = DaysOfWeekField()
+    overnightAccess = DaysOfWeekForm()
     noiseOrdinance = forms.BooleanField()
     timeCutOff = forms.CharField()
 
-    fkRegionCode = forms.CharField( required=True)
-    fkMicroRegionCode = forms.CharField( required=True)
+    fkRegionCode = forms.CharField(required=True)
+    fkMicroRegionCode = forms.CharField(required=True)
     coordinates = CoordinateField()
     active = forms.BooleanField()
-    installationDueDates = MultiDateField()
-    inspectionDueDates = MultiDateField()
+    installationDueDates = InstallDateForm()
+    inspectionDueDates = InspectDateForm()
     fiscalWeek = forms.IntegerField(min_value=1, max_value=53)
 
     def __init__(self, data, request):
         super().__init__(data, request)
-        self.storeManagerName = NameForm(data={'firstName': data.__getitem__('storeManagerNameFirst'),
-                                               'lastName': data.__getitem__('storeManagerNameLast')})
+        self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerNameFirst'),
+                                               'lastName': data.get('storeManagerNameLast')})
         self.opsManagerName = NameForm(
-            data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.__getitem__('opsManagerNameLast')})
+            data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.get('opsManagerNameLast')})
         self.managerName = NameForm(
-            data={'firstName': data.__getitem__('managerNameFirst'), 'lastName': data.__getitem__('managerNameLast')})
-        self.overnightManagerName = NameForm(data={'firstName': data.__getitem__('overnightNameFirst'),
-                                                   'lastName': data.__getitem__('overnightNameLast')})
-
+            data={'firstName': data.get('managerNameFirst'), 'lastName': data.get('managerNameLast')})
+        self.overnightManagerName = NameForm(data={'firstName': data.get('overnightNameFirst'),
+                                                   'lastName': data.get('overnightNameLast')})
         self.address = AddressForm(data=data)
+
+        self.overnightAccess = DaysOfWeekForm(data={'overnightAccess': data.getlist('overnightAccess')})
+        self.inspectionDueDates = InspectDateForm(count=len(data.getlist('inspectionDueDates')),data={'inspectionDueDates': data.getlist('inspectionDueDates')})
+        self.installationDueDates = InstallDateForm(count=len(data.getlist('installationDueDates')),data={'installationDueDates': data.getlist('installationDueDates')})
+
+    def is_valid(self):
+        test = self.storeManagerName.is_valid()
+        test1 = self.opsManagerName.is_valid()
+        test2 = self.managerName.is_valid()
+        test3 = self.overnightManagerName.is_valid()
+        test4 = self.installationDueDates.is_valid()
+        test5 = self.inspectionDueDates.is_valid()
+        test6 = self.address.is_valid()
+        test7 = self.overnightAccess.is_valid()
+        test8 = forms.BaseForm.is_valid(self=self)
+        return True
+
+    class Meta:
+        model = Store
+        fields = ('storeNumber', 'fkCustomer', 'address', 'phoneNumber', 'region', 'division', 'awardedVendor',
+                  'storeManagerName', 'storeManagerEmail', 'opsManagerName', 'opsManagerEmail', 'managerName',
+                  'managerEmail', 'overnightManagerName', 'overnightManagerEmail', 'overnightCrew', 'overnightAccess',
+                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'coordinates', 'active',
+                  'installationDueDates', 'inspectionDueDates', 'fiscalWeek')

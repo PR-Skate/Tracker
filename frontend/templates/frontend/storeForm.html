@@ -43,13 +43,27 @@
     </script>
 </head>
 
-<body>
+
+<form action="" method="post">{% csrf_token %}
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Sunday' style="margin-left: 4em" unchecked>
+    <label for="">Sunday</label><br><br>
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Monday' style="margin-left: 4em" unchecked>
+    <label for="">Monday</label><br><br>
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Tuesday' style="margin-left: 4em" unchecked>
+    <label for="">Tuesday</label><br><br>
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Wednesday' style="margin-left: 4em" unchecked>
+    <label for="">Wednesday</label><br><br>
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Thursday' style="margin-left: 4em" unchecked>
+    <label for="">Thursday</label><br><br>
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Friday' style="margin-left: 4em" unchecked>
+    <label for="">Friday</label><br><br>
+    <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Saturday' style="margin-left: 4em" unchecked>
+    <label for="">Saturday</label><br><br>
+    <br><input type="submit"><br><br>
+</form>
 
 
-</body>
-<br><br><br><br>
-
-<form method="POST">{% csrf_token %}
+<form action = '#' method="POST">{% csrf_token %}
         <h3>Form:</h3>
         <label for="customer">Customer</label>
         <select name="fkCustomer" for="CustomerNames" required>
@@ -153,20 +167,20 @@
 
         <label for="">Overnight Access</label><br><br>
 
-        <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Sunday' style="margin-left: 4em" unchecked>
-        <label for="scales">Sunday</label><br><br>
-            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Monday' style="margin-left: 4em" unchecked>
-            <label for="scales">Monday</label><br><br>
-            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Tuesday' style="margin-left: 4em" unchecked>
-            <label for="scales">Tuesday</label><br><br>
-            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Wednesday' style="margin-left: 4em" unchecked>
-            <label for="scales">Wednesday</label><br><br>
-            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Thursday' style="margin-left: 4em" unchecked>
-            <label for="scales">Thursday</label><br><br>
-            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Friday' style="margin-left: 4em" unchecked>
-            <label for="scales">Friday</label><br><br>
-            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='Saturday' style="margin-left: 4em" unchecked>
-            <label for="scales">Saturday</label><br><br>
+        <input type="checkbox" id="overnightAccess" name="overnightAccess" value='SUN' style="margin-left: 4em" unchecked>
+        <label for="">Sunday</label><br><br>
+            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='MON' style="margin-left: 4em" unchecked>
+            <label for="">Monday</label><br><br>
+            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='TUES' style="margin-left: 4em" unchecked>
+            <label for="">Tuesday</label><br><br>
+            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='WED' style="margin-left: 4em" unchecked>
+            <label for="">Wednesday</label><br><br>
+            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='THURS' style="margin-left: 4em" unchecked>
+            <label for="">Thursday</label><br><br>
+            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='FRI' style="margin-left: 4em" unchecked>
+            <label for="">Friday</label><br><br>
+            <input type="checkbox" id="overnightAccess" name="overnightAccess" value='SAT' style="margin-left: 4em" unchecked>
+            <label for="">Saturday</label><br><br>
 
 
             <label for="">Noise Ordinance</label><br><br>
@@ -251,7 +265,28 @@
 
 
 <table>
-
+<tr><th><label for="id_createdUser">Createduser:</label></th><td><input type="text" name="createdUser" value="alex" maxlength="50" id="id_createdUser"></td></tr>
+<tr><th><label for="id_lastModifiedUser">Lastmodifieduser:</label></th><td><input type="text" name="lastModifiedUser" maxlength="50" id="id_lastModifiedUser"></td></tr>
+<tr><th><label for="id_lastModifiedTimestamp">Lastmodifiedtimestamp:</label></th><td><input type="text" name="lastModifiedTimestamp" id="id_lastModifiedTimestamp"></td></tr>
+<tr><th><label for="id_createdTimestamp">Createdtimestamp:</label></th><td><input type="text" name="createdTimestamp" id="id_createdTimestamp"></td></tr>
+<tr><th><label for="id_storeNumber">Storenumber:</label></th><td><input type="text" name="storeNumber" value="123" maxlength="50" required id="id_storeNumber"></td></tr>
+<tr><th><label for="id_fkCustomer">Fkcustomer:</label></th><td><input type="text" name="fkCustomer" value="5ec581901b73694fabf324ba" maxlength="50" required id="id_fkCustomer"></td></tr>
+<tr><th><label for="id_phoneNumber">Phonenumber:</label></th><td><input type="text" name="phoneNumber" value="9097056842" maxlength="20" required id="id_phoneNumber"></td></tr>
+<tr><th><label for="id_region">Region:</label></th><td><input type="text" name="region" value="y123.1" maxlength="50" required id="id_region"></td></tr>
+<tr><th><label for="id_division">Division:</label></th><td><input type="text" name="division" value="NW Div" maxlength="50" required id="id_division"></td></tr>
+<tr><th><label for="id_awardedVendor">Awardedvendor:</label></th><td><input type="text" name="awardedVendor" value="PR Skate" maxlength="50" required id="id_awardedVendor"></td></tr>
+<tr><th><label for="id_storeManagerEmail">Storemanageremail:</label></th><td><input type="email" name="storeManagerEmail" value="email@email.com" required id="id_storeManagerEmail"></td></tr>
+<tr><th><label for="id_opsManagerEmail">Opsmanageremail:</label></th><td><input type="email" name="opsManagerEmail" value="Email@email.com" required id="id_opsManagerEmail"></td></tr>
+<tr><th><label for="id_managerEmail">Manageremail:</label></th><td><input type="email" name="managerEmail" value="email@email.com" required id="id_managerEmail"></td></tr>
+<tr><th><label for="id_overnightManagerEmail">Overnightmanageremail:</label></th><td><input type="email" name="overnightManagerEmail" value="email@email.com" required id="id_overnightManagerEmail"></td></tr>
+<tr><th><label for="id_overnightCrew">Overnightcrew:</label></th><td><input type="text" name="overnightCrew" value="1 AM" maxlength="25" required id="id_overnightCrew"></td></tr>
+<tr><th><label for="id_noiseOrdinance">Noiseordinance:</label></th><td><input type="checkbox" name="noiseOrdinance" required id="id_noiseOrdinance" checked></td></tr>
+<tr><th><label for="id_timeCutOff">Timecutoff:</label></th><td><input type="text" name="timeCutOff" value="11:11" required id="id_timeCutOff"></td></tr>
+<tr><th><label for="id_fkRegionCode">Fkregioncode:</label></th><td><input type="text" name="fkRegionCode" value="5ed05703e1e9369487f4db3b" required id="id_fkRegionCode"></td></tr>
+<tr><th><label for="id_fkMicroRegionCode">Fkmicroregioncode:</label></th><td><input type="text" name="fkMicroRegionCode" value="5ed056f4e1e9369487f4db3a" required id="id_fkMicroRegionCode"></td></tr>
+<tr><th><label for="id_active">Active:</label></th><td><input type="checkbox" name="active" required id="id_active" checked></td></tr>
+<tr><th><label for="id_inspectionDueDates">Inspectionduedates:</label></th><td><ul class="errorlist"><li>Enter a list of values.</li></ul><input type="text" name="inspectionDueDates" value="2020-05-08" required id="id_inspectionDueDates"></td></tr>
+<tr><th><label for="id_fiscalWeek">Fiscalweek:</label></th><td><input type="number" name="fiscalWeek" value="4" min="1" max="53" required id="id_fiscalWeek"></td></tr>
 </table>
 
 

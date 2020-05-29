@@ -63,7 +63,7 @@ def signout(request):
 @login_required
 def customerForm(request):
     if request.method == 'POST':
-        form = CustomerForm(request.POST)
+        form = CustomerForm(request.POST, request)
         if form.is_valid():
             try:
                 cust = Customer(**form.cleaned_data)
@@ -122,22 +122,29 @@ def sowForm(request):
 
 @login_required
 def storeForm(request):
+
     cust = Customer.objects.all()
     region_code = RegionCode.objects.all()
     micro_region_code = MicroRegionCode.objects.all()
     if request.method == "POST":
         form = StoreForm(request.POST, request)
         if form.is_valid():
-            print('valid')
+            #print(form.cleaned_data)
             storeManagerName = Name(**form.storeManagerName.cleaned_data)
             opsManagerName = Name(**form.opsManagerName.cleaned_data)
             managerName = Name(**form.managerName.cleaned_data)
             overnightManagerName = Name(**form.overnightManagerName.cleaned_data)
             address = Address(**form.address.cleaned_data)
-            return render(request, 'frontend/storeForm.html',
+            inspectionDueDates= form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
+            installationDueDates= form.installationDueDates.cleaned_data['installationDueDates'].split('|')
+            overnightAccess = form.overnightAccess.cleaned_data['overnightAccess']
+            store = Store(**form.cleaned_data, storeManagerName=storeManagerName, opsManagerName=opsManagerName,
+                          managerName=managerName, overnightManagerName=overnightManagerName, address=address,
+                          inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates, overnightAccess=overnightAccess)
+            store.save()
+
+        return render(request, 'frontend/storeForm.html',
                       {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
-        else:
-            print(form.data)
     return render(request, 'frontend/storeForm.html',{'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
 
 

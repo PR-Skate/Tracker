@@ -16,7 +16,7 @@ from ..base_record import BaseRecord
 class Store(BaseRecord):
     # constructor:
     storeNumber = StringField(max_length=50, required=True)
-    fkCustomer = ReferenceField(Customer, required=True, dbref=True)
+    fkCustomer = ReferenceField('Customer', required=True, dbref=True)
     address = EmbeddedDocumentField(Address, required=True)
     phoneNumber = StringField(max_length=20, required=True)
     region = StringField(max_length=50, required=True)
@@ -38,8 +38,8 @@ class Store(BaseRecord):
     noiseOrdinance = BooleanField(default=False)
     timeCutOff = StringField()
 
-    fkRegionCode = ReferenceField(RegionCode, dbref=True)
-    fkMicroRegionCode = ReferenceField(MicroRegionCode, dbref=True)
+    fkRegionCode = ReferenceField('RegionCode', dbref=True)
+    fkMicroRegionCode = ReferenceField('MicroRegionCode', dbref=True)
     coordinates = PointField()
     active = BooleanField(default=True)
     installationDueDates = ListField(DateField())

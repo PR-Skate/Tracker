@@ -92,14 +92,18 @@ class BaseRecord(DynamicDocument):
 
     def is_valid_reference_field(self, field):
         if self._data.get(field):
-            object_id = bson.ObjectId(
-                self._data.get(field) if isinstance(self._data.get(field), bson.ObjectId) else self._data.get(
-                    field).id)
+            if not isinstance(self._data.get(field), bson.ObjectId):
+                object_id = bson.ObjectId(
+                    self._data.get(field) if bson.ObjectId.is_valid(self._data.get(field))
+                                          else self._data.get(field).id)
+            else:
+                object_id = self._data.get(field)
             model = self._fields.get(field).__getattribute__('document_type')
             if model == 'self':
                 model = self.__class__
             try:
                 model.objects.get(id=object_id)
+                setattr(self, field, object_id)
                 return True
             except model.DoesNotExist:
                 pass
