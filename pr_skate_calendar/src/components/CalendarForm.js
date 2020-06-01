@@ -29,10 +29,8 @@ export default class CalendarForm extends React.Component {
         const name = event.target.name;
         this.setState({ [name]: event.target.value });//sets weekOneNameOfContact to true
         console.log(this.state);
-        //does not change the state yet but when you click on submit it updates the state. why?
     }
-    //I could either create a handleChange function for each checkbox
-    //or find a way to make it read the value stored in the variable, not the variable itself
+
 
     render() {
         return (
