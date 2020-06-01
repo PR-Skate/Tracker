@@ -5,8 +5,10 @@ from datetime import datetime
 
 import bson as bson
 from mongoengine import DateTimeField, DynamicDocument, ReferenceField, ValidationError
+from PR_Skate.logging import log_methods
 
 
+@log_methods
 class BaseRecord(DynamicDocument):
     _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)
     createdTimestamp = DateTimeField(default=datetime.now(), required=False)
@@ -14,6 +16,9 @@ class BaseRecord(DynamicDocument):
                                        null=True)
     lastModifiedTimestamp = DateTimeField(default=datetime.now(), required=False)
     meta = {'allow_inheritance': True, 'abstract': True}
+
+    def __init_subclass__(cls, **kwargs):
+        return log_methods(cls=cls)
 
     @property
     def createdUser(self):
@@ -23,7 +28,7 @@ class BaseRecord(DynamicDocument):
     def createdUser(self, value):
         if isinstance(value, bson.DBRef):
             pass
-        elif  bson.ObjectId.is_valid(value):
+        elif bson.ObjectId.is_valid(value):
             value = bson.ObjectId(value)
         else:
             from Class_Types import Employee
@@ -95,7 +100,7 @@ class BaseRecord(DynamicDocument):
             if not isinstance(self._data.get(field), bson.ObjectId):
                 object_id = bson.ObjectId(
                     self._data.get(field) if bson.ObjectId.is_valid(self._data.get(field))
-                                          else self._data.get(field).id)
+                    else self._data.get(field).id)
             else:
                 object_id = self._data.get(field)
             model = self._fields.get(field).__getattribute__('document_type')

@@ -1,9 +1,13 @@
 import logging
+import pprint
 
 
 def log_debug(func):
     def wrap(*args, **kwargs):
-        extra = {'function_name': func.__qualname__, 'func_args': args, 'func_kwargs': kwargs}
+        func_name  =func.__qualname__ if not isinstance(func, classmethod) else func.__func__.__qualname__
+        extra = {
+            'function_name': func_name,
+            'func_args': args, 'func_kwargs': kwargs}
         try:
             output = func(*args, **kwargs)
             extra.update({'output': output})
@@ -12,7 +16,7 @@ def log_debug(func):
             msg = 'executed with an exception {exception}'.format(exception=e.with_traceback(e.__traceback__))
             extra.update({'output': None})
 
-        logger = get_debug_logger(func.__qualname__.split('.')[0], extra=extra)
+        logger = get_debug_logger(func_name.split('.')[0], extra=extra)
         if 'without' in msg:
             logger.debug(msg, extra=extra)
         else:
