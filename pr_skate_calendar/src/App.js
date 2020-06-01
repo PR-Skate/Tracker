@@ -109,7 +109,7 @@ export default class App extends React.PureComponent {
 
             <EditingState onCommitChanges={this.onCommitChanges} />
 
-            <MonthView />
+            <MonthView/>
             <WeekView startDayHour={10} endDayHour={19} />
             <DayView />
 

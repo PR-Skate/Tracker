@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
+import {Button} from 'react-bootstrap';
 
 export default class CalendarForm extends React.Component {
     //TODO write functions to process the forms?
@@ -11,22 +11,25 @@ export default class CalendarForm extends React.Component {
         this.state = { //new Boolean or just Boolean works?
             formComplete: Boolean (false),
             weekOneNameOfContact: Boolean (false),
-            weekFourContact: Boolean (false)
+            weekFourNameOfContact: Boolean (false)
         };
 
-        this.handleclick = this.handleClick.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        //this.setToTrue = this.setToTrue.bind(this);
-    }
 
+    }
+    //functions were working but I think I broke them. Will fix them soon
     handleClick = (event) => {
-        console.log("button works")
+        console.log("button works");
         console.log(this.state);
         event.preventDefault();
     }
 
     handleChange(event) {
-        this.setState({ weekOneNameOfContact: event.target.value }) //sets weekOneNameOfContact to true
+        const name = event.target.name;
+        this.setState({ [name]: event.target.value });//sets weekOneNameOfContact to true
+        console.log(this.state);
+        //does not change the state yet but when you click on submit it updates the state. why?
     }
     //I could either create a handleChange function for each checkbox
     //or find a way to make it read the value stored in the variable, not the variable itself
@@ -55,7 +58,7 @@ export default class CalendarForm extends React.Component {
                     <br/>
                     <h3>Contacts</h3>
                      <label>Week One Contact:
-                         <input type="checkbox" name="weekOneNameOfContact" value={!this.state.weekOneNameOfContact} onClick={this.handleChange}/> Yes
+                         <input type="checkbox" name="weekOneNameOfContact" value={!this.state.weekOneNameOfContact} onChange={this.handleChange}/> Yes
                      </label>
 
                      <label>Week One Contact Name:
@@ -65,7 +68,7 @@ export default class CalendarForm extends React.Component {
 
                      <br/>
                      <label>Week Four Contact:
-                         <input type="checkbox" name="weekFourNameOfContact" value={!this.state.weekOneNameOfContact} onClick={this.handleChange}/> Yes
+                         <input type="checkbox" name="weekFourNameOfContact" value={!this.state.weekFourNameOfContact} onChange={this.handleChange} /> Yes
                      </label>
 
                      <label>Week Four Contact Name:
@@ -74,11 +77,15 @@ export default class CalendarForm extends React.Component {
                      </label>
 
                      <label>Form Complete
-                         <input type="checkbox" name="formComplete"/>
+                         <div id="wrapper">
+                         <input type="radio" name="formComplete" value={true} onClick={this.handleChange}/> Yes
+                         <br/>
+                         <input type="radio" name="formComplete" value={false} onClick={this.handleChange}/> No
+                         </div>
                      </label>
 
                      <br/>
-                     <Button color="primary" onClick={this.handleClick}>Submit</Button>{' '}
+                     <Button onClick={this.handleClick}>Submit</Button>{' '}
 
                 </div>
             </form>
