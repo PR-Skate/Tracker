@@ -120,6 +120,9 @@
         }
     }</style>
 <div class="tg-wrap">
+    {% for field in fields %}
+    <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.." title="Type in a {{ field }}">
+    {% endfor %}
     <table id="tg-0Xa6r" class="tg">
         <thead>
         <tr>
@@ -129,7 +132,6 @@
         <tbody>
         <tr>
             {% for field in fields %}
-
                 <td class="tg-qrfk">{{ field }}</td>
             {% endfor %}
         </tr>
@@ -266,5 +268,50 @@
         }
     })
 }(document)</script>
+<script>
+
+function search_rows() {
+    display_all_rows()
+    {% for field in fields %}
+    filter_{{ field }}()
+    {% endfor %}
+}
+
+function display_all_rows() {
+    let table, tr, i;
+    table = document.getElementById("tg-0Xa6r");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        tr[i].style.display = "";
+    }
+}
+
+
+
+{% for field in fields %}
+function filter_{{ field }}() {
+    let input, filter, table, tr, td, i, txtValue, result;
+    input = document.getElementById("search_{{ field }}");
+    filter = input.value.toUpperCase();
+    if (filter) {
+        table = document.getElementById("tg-0Xa6r");
+        tr = table.getElementsByTagName("tr");
+        result = [tr.length]
+        for (i = 2; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue = txtValue.trim().toUpperCase()
+                let num = txtValue.indexOf(filter)
+                if (num <= -1){
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    return result
+}
+{% endfor %}
+</script>
 </body>
 </html>
