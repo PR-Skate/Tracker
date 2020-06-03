@@ -33,7 +33,6 @@ numpy                              #TODO add comment
 packaging                          #TODO add comment
 Pillow                             #TODO add comment
 pycparser                          #TODO add comment
-pycrypto                           #TODO add comment
 Pygments                           #TODO add comment
 pyparsing                          #TODO add comment
 python-dateutil                    #TODO add comment
@@ -53,3 +52,6 @@ toml                               #TODO add comment
 urllib3                            #TODO add comment
 wrapt                              #TODO add comment
 reportlab                          #TODO add comment
+django-geojson                     #TODO add comment
+jsonfield                          #TODO add comment
+geojson                            #TODO add comment

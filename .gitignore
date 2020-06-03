@@ -8,4 +8,3 @@ test2.py
 test3.py
 /Activate-env.txt
 frontend/node_modules/
-*.log
