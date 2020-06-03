@@ -48,10 +48,13 @@ class BaseRecord(DynamicDocument):
             self._lastModifiedUser = value
 
     @classmethod
-    def get_fields(cls):
+    def get_fields(cls, get_id=False):
         temp = list(cls._db_field_map.values())
         if '_id' in temp:
             temp.remove('_id')
+            if get_id:
+                temp.append('_id')
+
         if '_cls' in temp:
             temp.remove('_cls')
         return temp

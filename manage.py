@@ -21,6 +21,3 @@ def main():
 if __name__ == '__main__':
     check_dependencies()
     main()
-
-
-# 6iskvVzSpjcGjOcB8Qfm7htg1
