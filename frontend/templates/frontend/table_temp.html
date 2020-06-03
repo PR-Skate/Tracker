@@ -44,7 +44,7 @@
         background-color: #ffffff;
         border-color: #211f2d;
         color: #211f2d;
-        text-align: left;
+        text-align: center;
         vertical-align: middle
     }
 
@@ -52,7 +52,7 @@
         background-color: #efefef;
         border-color: #211f2d;
         color: #211f2d;
-        text-align: left;
+        text-align: center;
         vertical-align: middle
     }
 
@@ -120,6 +120,9 @@
         }
     }</style>
 <div class="tg-wrap">
+    {% for field in fields %}
+    <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.." title="Type in a {{ field }}">
+    {% endfor %}
     <table id="tg-0Xa6r" class="tg">
         <thead>
         <tr>
@@ -129,18 +132,22 @@
         <tbody>
         <tr>
             {% for field in fields %}
-
                 <td class="tg-qrfk">{{ field }}</td>
             {% endfor %}
         </tr>
         {% for instance in instances %}
-            <tr>
+        {% with index=forloop.counter0%}
+            <tr id="{{ instance.id }}" ondblclick="test_outer(event)">
                 {% for  field, attribute in instance.items %}
+{#                    <button ondblclick="myFunction()">#}
                     <td class="tg-t780">
-                        <pre>{{ attribute }}</pre>
+                        <pre id="{{ instance.id }} {{ field }}" ondblclick="editField(event, '{{ instance.id }} {{ field }}')">{{ attribute }}</pre>
                     </td>
+{#                    </button>#}
                 {% endfor %}
             </tr>
+{#            </button>#}
+        {% endwith %}
         {% endfor %}
         </tbody>
     </table>
@@ -266,5 +273,132 @@
         }
     })
 }(document)</script>
+<script>
+
+function search_rows() {
+    display_all_rows()
+    {% for field in fields %}
+    filter_{{ field }}()
+    {% endfor %}
+}
+
+function display_all_rows() {
+    let table, tr, i;
+    table = document.getElementById("tg-0Xa6r");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        tr[i].style.display = "";
+    }
+}
+
+
+
+{% for field in fields %}
+function filter_{{ field }}() {
+    let input, filter, table, tr, td, i, txtValue, result;
+    input = document.getElementById("search_{{ field }}");
+    filter = input.value.toUpperCase();
+    if (filter) {
+        table = document.getElementById("tg-0Xa6r");
+        tr = table.getElementsByTagName("tr");
+        result = [tr.length]
+        for (i = 2; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue = txtValue.trim().toUpperCase()
+                let num = txtValue.indexOf(filter)
+                if (num <= -1){
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    return result
+}
+{% endfor %}
+
+function test_outer() {
+
+    console.log('OUTER')
+}
+
+function editField(event, id){
+    let previousValue, parent, input, newChild, field;
+    field = id.split(' ')[1]
+    event.stopPropagation();
+    console.log('INNER');
+    parent = document.getElementById(id).offsetParent;
+    console.log("parent: ");
+    console.log(parent);
+    previousValue = parent.innerText;
+    console.log("previousValue: " + previousValue);
+
+    while (parent.hasChildNodes()) {
+    parent.removeChild(parent.lastChild);
+    }
+
+    input = document.createElement("input");
+    input.type = 'text' //TODO CHANGE TO FUNCTION THAT DETERMINES TYPE
+    input.name = field
+    input.value = previousValue
+    input.id = id
+    input.ondblclick = function() {submit_changes(event, id)};
+
+    console.log("input: ");
+    console.log(input);
+
+    newChild = parent.appendChild(input);
+    console.log(newChild);
+    return false;
+}
+
+function submit_changes(event, id) {
+    let previousValue, parent, text, input, newChild;
+    event.stopPropagation();
+    console.log('INNER');
+    input = document.getElementById(id);
+    parent = input.offsetParent;
+    console.log("parent: ");
+    console.log(parent);
+    previousValue = input.value;
+    console.log("previousValue: " + previousValue);
+
+    while (parent.hasChildNodes()) {
+    parent.removeChild(parent.lastChild);
+    }
+
+
+
+    text = document.createElement("pre");
+    text.innerText = previousValue
+    input.ondblclick = function() {editField(event, id)};
+
+    console.log("input: ");
+    console.log(input);
+
+    newChild = parent.appendChild(input);
+    console.log(newChild);
+    return false;
+}
+
+var settings = {
+  "url": "http://127.0.0.1:8000/api/RegionCode/",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Authorization": "Token 2c963ad6ba03698d6d3c4598d1cd48057754dd6b",
+    "Content-Type": "application/json",
+    "Cookie": "csrftoken=hoe06ke5kR6JhWomPqM0Sdh6t4YPuvmlQ72UGhKDuP2zQJ6ccuJzSQRJ7ChGIhAH"
+  },
+  "data": JSON.stringify({"regionCodeID":"TEST REGION"}),
+};
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+
+
+</script>
 </body>
 </html>
