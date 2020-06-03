@@ -1,6 +1,12 @@
 import re
 
-from mongoengine import StringField, DynamicEmbeddedDocument, EmbeddedDocument
+from mongoengine import StringField, DynamicEmbeddedDocument, EmbeddedDocument, DecimalField
+
+
+class Coordinates(DynamicEmbeddedDocument):
+    longitude = DecimalField(min_value=-180, max_value=180, precision=25)
+    latitude = DecimalField(min_value=-90, max_value=90, precision=25)
+
 
 
 class Address(EmbeddedDocument):

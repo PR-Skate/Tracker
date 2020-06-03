@@ -1,7 +1,7 @@
 from django import forms
-from django.forms.utils import ErrorList
-
+from datetime import datetime as dt
 from Class_Types import *
+from Class_Types.Embeded_Documents import *
 
 
 class BaseForm(forms.Form):
@@ -22,6 +22,10 @@ class BaseForm(forms.Form):
 class CoordinateField(forms.Form):
     latitude = forms.DecimalField()
     longitude = forms.DecimalField()
+
+    class Meta:
+        model = Coordinates
+        fields = ('latitude', 'longitude')
 
 
 class AddressForm(forms.Form):
@@ -75,8 +79,6 @@ class InstallDateForm(forms.Form):
     def __init__(self, count=0, *args, **kwargs):
         super(InstallDateForm, self).__init__(*args, **kwargs)
         self.fields['installationDueDates'] = MultiDateField(count=count)
-
-
 
 
 class DaysOfWeekForm(forms.Form):
@@ -170,8 +172,12 @@ class StoreForm(BaseForm):
         self.address = AddressForm(data=data)
 
         self.overnightAccess = DaysOfWeekForm(data={'overnightAccess': data.getlist('overnightAccess')})
-        self.inspectionDueDates = InspectDateForm(count=len(data.getlist('inspectionDueDates')),data={'inspectionDueDates': data.getlist('inspectionDueDates')})
-        self.installationDueDates = InstallDateForm(count=len(data.getlist('installationDueDates')),data={'installationDueDates': data.getlist('installationDueDates')})
+        self.inspectionDueDates = InspectDateForm(count=len(data.getlist('inspectionDueDates')),
+                                                  data={'inspectionDueDates': data.getlist('inspectionDueDates')})
+        self.installationDueDates = InstallDateForm(count=len(data.getlist('installationDueDates')),
+                                                    data={'installationDueDates': data.getlist('installationDueDates')})
+
+        self.coordinates = CoordinateField(data={'latitude': data.get('latitude'), 'longitude': data.get('longitude')})
 
     def is_valid(self):
         test = self.storeManagerName.is_valid()
@@ -183,6 +189,7 @@ class StoreForm(BaseForm):
         test6 = self.address.is_valid()
         test7 = self.overnightAccess.is_valid()
         test8 = forms.BaseForm.is_valid(self=self)
+        test9 = self.coordinates.is_valid()
         return True
 
     class Meta:
@@ -190,5 +197,43 @@ class StoreForm(BaseForm):
         fields = ('storeNumber', 'fkCustomer', 'address', 'phoneNumber', 'region', 'division', 'awardedVendor',
                   'storeManagerName', 'storeManagerEmail', 'opsManagerName', 'opsManagerEmail', 'managerName',
                   'managerEmail', 'overnightManagerName', 'overnightManagerEmail', 'overnightCrew', 'overnightAccess',
-                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'coordinates', 'active',
+                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'active',
                   'installationDueDates', 'inspectionDueDates', 'fiscalWeek')
+
+
+class RegionForm(BaseForm):
+    regionCode = forms.CharField(max_length=12, required=True)
+
+    model = RegionCode
+
+
+class MicroRegionForm(BaseForm):
+    regionCode = forms.CharField(max_length=12, required=True)
+
+    model = MicroRegionCode
+
+
+class WorkOrderForm(BaseForm):
+    workOrderName = forms.CharField(required=True, max_length=15)
+    dateReceived = forms.DateField(required=True)
+    detail = forms.CharField(required=True)
+    requestingContact = forms.CharField(required=True)
+    statusCode = forms.CharField(required=True, max_length=30)
+
+    dateCompleted = forms.DateField(required=True)
+    inspectForStorePath = forms.FileField(allow_empty_file=True)
+    detailedReceiptPath = forms.FileField(allow_empty_file=True)
+    signageMapPath = forms.FileField(allow_empty_file=True)
+    partsArrivalDate = forms.DateField()
+
+    targetStartDate = forms.DateField(required=True)
+    fkWorkOrderStatus = forms.CharField(required=True)
+    fkStoreNumber = forms.CharField(required=True)
+
+    model = WorkOrder
+
+class WorkOrderStatusForm(BaseForm):
+    status = forms.CharField(required=True, max_length=50)
+
+    model= WorkOrderStatus
+    fields = 'status'

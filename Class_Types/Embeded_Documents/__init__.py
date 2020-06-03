@@ -1,1 +1,1 @@
-from .embeded_classes import Address, Name
+from .embeded_classes import Address, Name, Coordinates

@@ -1,3 +1,5 @@
+import re
+
 import mongoengine
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -6,7 +8,6 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from mongoengine.errors import *
-
 from .forms import *
 
 
@@ -122,35 +123,77 @@ def sowForm(request):
 
 @login_required
 def storeForm(request):
-
     cust = Customer.objects.all()
     region_code = RegionCode.objects.all()
     micro_region_code = MicroRegionCode.objects.all()
     if request.method == "POST":
         form = StoreForm(request.POST, request)
         if form.is_valid():
-            #print(form.cleaned_data)
             storeManagerName = Name(**form.storeManagerName.cleaned_data)
             opsManagerName = Name(**form.opsManagerName.cleaned_data)
             managerName = Name(**form.managerName.cleaned_data)
             overnightManagerName = Name(**form.overnightManagerName.cleaned_data)
             address = Address(**form.address.cleaned_data)
-            inspectionDueDates= form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
-            installationDueDates= form.installationDueDates.cleaned_data['installationDueDates'].split('|')
+            inspectionDueDates = form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
+            installationDueDates = form.installationDueDates.cleaned_data['installationDueDates'].split('|')
             overnightAccess = form.overnightAccess.cleaned_data['overnightAccess']
+            coordinates = Coordinates(**form.coordinates.cleaned_data)
             store = Store(**form.cleaned_data, storeManagerName=storeManagerName, opsManagerName=opsManagerName,
                           managerName=managerName, overnightManagerName=overnightManagerName, address=address,
-                          inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates, overnightAccess=overnightAccess)
+                          inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates,
+                          overnightAccess=overnightAccess,
+                          coordinates=coordinates)
             store.save()
 
         return render(request, 'frontend/storeForm.html',
                       {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
-    return render(request, 'frontend/storeForm.html',{'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
+    return render(request, 'frontend/storeForm.html',
+                  {'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
 
 
 @login_required
 def workOrderForm(request):
+    if request.method == "POST":
+        form = workOrderForm(request.POST, request)
+        if form.is_valid():
+            print('VALID')
+            return HttpResponseRedirect('')
+        return render(request, 'frontend/workOrderForm.html', {'form': form})
     return render(request, 'frontend/workOrderForm.html')
+
+
+@login_required
+def workOrderStatusForm(request):
+    if request.method == "POST":
+        form = WorkOrderStatusForm(request.POST, request)
+        if form.is_valid():
+            status = WorkOrderStatus(**form.cleaned_data)
+            status.save()
+            return HttpResponseRedirect('')
+        return render(request, 'frontend/workOrderStatusForm.html', {'form':form})
+    return render(request, 'frontend/workOrderStatusForm.html')
+
+def microRegionForm(request):
+    if request.method == 'POST':
+        form = MicroRegionForm(request.POST, request)
+        if form.is_valid():
+            region = MicroRegionCode(**form.cleaned_data)
+            region.save()
+            return HttpResponseRedirect('')
+        return render(request, 'frontend/microRegionForm.html', {'form': form})
+    return render(request, 'frontend/microRegionForm.html')
+
+
+def regionForm(request):
+    if request.method == 'POST':
+        form = RegionForm(request.POST, request)
+        if form.is_valid():
+            region = RegionCode(**form.cleaned_data)
+            print(region.to_json())
+            region.save()
+            return HttpResponseRedirect('')
+        return render(request, 'frontend/regionForm.html', {'form': form})
+    return render(request, 'frontend/regionForm.html')
 
 
 """"REPORTS"""
@@ -267,19 +310,20 @@ def workOrderStatusReport(request):
 def generate_table_render(model, request):
     print(model.__name__)
     records = model.objects.filter(**request.GET.dict())
-    fields = model.get_fields()
+    fields = model.get_fields(get_id=True)
     instances = list()
     for record in records:
         print('id: {}'.format(record.id), end='\n')
         attributes = {}
         for field in fields:
             field_name = record._reverse_db_field_map.get(field)
-            attributes.update({field: record.__getattribute__(field_name)})
+            attributes.update(
+                {field.strip('_'): record.__getattribute__(field_name)})
 
         instances.append(attributes)
 
     return render(request, 'frontend/table_temp.html',
-                  {'table_name': model.__name__, 'fields': model.get_fields(), 'instances': instances})
+                  {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances})
 
 
 def try_to_save(model, form, request):

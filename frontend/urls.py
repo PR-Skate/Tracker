@@ -10,6 +10,10 @@ urlpatterns = [
     path('sowForm', views.sowForm),
     path('workOrderForm', views.workOrderForm),
     path('storeForm', views.storeForm),
+    path('microRegionForm',views.microRegionForm),
+    path('regionForm',views.regionForm),
+    path('workOrderStatusForm', views.workOrderStatusForm),
+
     path('sign-in', views.signin),
     path('logout', views.signout),
     path('customerReport', views.customerReport),

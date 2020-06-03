@@ -3,13 +3,14 @@
 #
 
 from mongoengine import StringField, DateTimeField, BooleanField, \
-    EmbeddedDocumentField, ReferenceField, EmailField, PointField, DateField, \
+    EmbeddedDocumentField, ReferenceField, EmailField, DateField, \
     ListField, IntField
+from djgeojson.fields import PointField
 
 from .micro_region_code import MicroRegionCode
 from .region_code import RegionCode
 from .customer import Customer
-from ..Embeded_Documents.embeded_classes import Address, Name
+from ..Embeded_Documents.embeded_classes import Address, Name, Coordinates
 from ..base_record import BaseRecord
 
 
@@ -40,9 +41,10 @@ class Store(BaseRecord):
 
     fkRegionCode = ReferenceField('RegionCode', dbref=True)
     fkMicroRegionCode = ReferenceField('MicroRegionCode', dbref=True)
-    coordinates = PointField()
+    coordinates = EmbeddedDocumentField(Coordinates)
     active = BooleanField(default=True)
     installationDueDates = ListField(DateField())
     inspectionDueDates = ListField(DateField())
     fiscalWeek = IntField(min_value=1, max_value=53)
     meta = {'collection': 'Store'}
+
