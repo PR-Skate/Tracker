@@ -1,5 +1,8 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"
 
 export default class CalendarForm extends React.Component {
     //TODO write functions to process the forms?
@@ -11,11 +14,13 @@ export default class CalendarForm extends React.Component {
         this.state = { //new Boolean or just Boolean works?
             formComplete: Boolean (false),
             weekOneNameOfContact: Boolean (false),
-            weekFourNameOfContact: Boolean (false)
+            weekFourNameOfContact: Boolean (false),
+            startDate: new Date(2020, 5, 2, 0, 0),
         };
 
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
 
     }
     //functions were working but I think I broke them. Will fix them soon
@@ -31,62 +36,76 @@ export default class CalendarForm extends React.Component {
         console.log(this.state);
     }
 
+    handleChangeDate(date) {
+        this.setState({
+            startDate: date
+        })
+    }
+
 
     render() {
         return (
-            <form method="get">
+            <Form method="get">
                 <div>
                     <h3>Dates</h3>
                     <label>Start Date:
-                        <input type="datetime-local" name="startDate" required/>
+                        <DatePicker
+                            selected={ this.state.startDate }
+                            onChange={ this.handleChangeDate }
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={20}
+                            timeCaption="time"
+                            dateFormat="MMMM d, yyyy h:mm aa"
+                        />
                     </label>
 
                     <label>End Date:
-                        <input type="datetime-local" name="endDate"/>
+                        <Input type="datetime-local" name="endDate"/>
                     </label>
 
                     <label>Receiving Date:
-                        <input type="datetime-local" name="receivingDate" />
+                        <Input type="datetime-local" name="receivingDate" />
                     </label>
 
                     <label>Truck Date:
-                        <input type="datetime-local" name="truckDate" />
+                        <Input type="datetime-local" name="truckDate" />
                     </label>
 
                     <br/>
                     <h3>Contacts</h3>
                      <label>Week One Contact:
-                         <input type="checkbox" name="weekOneNameOfContact" value={!this.state.weekOneNameOfContact} onChange={this.handleChange}/> Yes
+                         <Input type="checkbox" name="weekOneNameOfContact" value={!this.state.weekOneNameOfContact} onChange={this.handleChange}/> Yes
                      </label>
 
                      <label>Week One Contact Name:
-                         <input type="text" name="weekOneFirstNameOfContact" placeholder="First Name"/>
-                         <input type="text" name="weekOneFirstNameOfContact" placeholder="Last Name"/>
+                         <Input type="text" name="weekOneFirstNameOfContact" placeholder="First Name"/>
+                         <Input type="text" name="weekOneFirstNameOfContact" placeholder="Last Name"/>
                      </label>
 
                      <br/>
                      <label>Week Four Contact:
-                         <input type="checkbox" name="weekFourNameOfContact" value={!this.state.weekFourNameOfContact} onChange={this.handleChange} /> Yes
+                         <Input type="checkbox" name="weekFourNameOfContact" value={!this.state.weekFourNameOfContact} onChange={this.handleChange} /> Yes
                      </label>
 
                      <label>Week Four Contact Name:
-                         <input type="text" name="weekFourFirstNameOfContact" placeholder="First Name"/>
-                         <input type="text" name="weekFourFirstNameOfContact" placeholder="Last Name"/>
+                         <Input type="text" name="weekFourFirstNameOfContact" placeholder="First Name"/>
+                         <Input type="text" name="weekFourFirstNameOfContact" placeholder="Last Name"/>
                      </label>
 
                      <label>Form Complete
-                         <div id="wrapper">
-                         <input type="radio" name="formComplete" value={true} onClick={this.handleChange}/> Yes
+                         <FormGroup id="wrapper">
+                         <Input type="radio" name="formComplete" value={true} onClick={this.handleChange}/> Yes
                          <br/>
-                         <input type="radio" name="formComplete" value={false} onClick={this.handleChange}/> No
-                         </div>
+                         <Input type="radio" name="formComplete" value={false} onClick={this.handleChange}/> No
+                         </FormGroup>
                      </label>
 
                      <br/>
                      <Button onClick={this.handleClick}>Submit</Button>{' '}
 
                 </div>
-            </form>
+            </Form>
         );
     }
 }

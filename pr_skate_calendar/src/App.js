@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
+import { ViewState, EditingState,} from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   MonthView,
@@ -24,15 +24,25 @@ const fs = require('fs');
 //TODO import Appointments in another class and render it there?
 //TODO keep working on customizing the CSS/TypeScript to make calendar cells dynamic
 
+const appointments = [
+  {
+    startDate: new Date(2020, 5, 4, 9, 30),
+    endDate: new Date(2020, 5, 4, 4, 30),
+    formComplete: false,
+    truckDate: new Date(2020, 5, 4, 3, 30),
+    weekOneNameOfContact: "Reuella Jacob",
+    id: 1,
+  },
+];
+
 export default class App extends React.PureComponent {
-  appointments = []
 
   constructor(props) {
     super(props);
 
     this.state = {
-      data: this.appointments,
-      currentDate: new Date('2020-05-21'),
+      data: appointments,
+      currentDate: new Date('2020-06-2'),
       currentViewName: "Month",
     };
     console.log(props);
@@ -44,6 +54,14 @@ export default class App extends React.PureComponent {
       this.setState({ currentViewName });
     };
   }
+
+  /*renderAppointmets(props) {
+    return (
+        <React.Fragment>
+          <p>Week One Name of Contact: {{props.appointments.weekOneNameOfContact}}</p>
+        </React.Fragment>
+    );
+  }*/
 
   commitChanges({ added, changed, deleted }) {
     this.setState((state) => {
