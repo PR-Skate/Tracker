@@ -6,24 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-In</title>
 
-    <!-- TODO FIGURE OUT LOCAL IMPORTS -->
-
 </head>
 
-<body>
+<body onload="logout()">
 <h1>User Sign-In</h1>
-<form action="#" method="POST" name='form' id='form'>{% csrf_token %}
+<form onsubmit="getAuthToken()" action="#" method="POST" name='form' id='form'>
+    {% csrf_token %}
     <label for="">Username</label><br>
-    <input type="text" name="userName"><br><br>
+    <input id="username" type="text" name="username"><br><br>
 
     <label for="">Password</label><br>
-    <input type="password" name="passwordHash"><br><br>
+    <input id="password" type="password" name="password"><br><br>
 
     <input type="submit"> {% for message in messages %}
-        <ul>{{ message }}</ul>
-    {% endfor %} {{ form.errors }}
+    <ul>{{ message }}</ul>
+{% endfor %} {{ form.errors }}
     <p id='fail' style="display:none">ERROR</p>
 </form>
 </body>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script>
+    function logout() {
+        var temp;
+        if (localStorage.getItem('auth_token_dict')) {
+            console.log(localStorage.getItem('auth_token_dict'))
+
+            temp = JSON.parse(localStorage.getItem('auth_token_dict'))
+            var settings = {
+                "url": "/logoutall/",
+                "type": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Authorization": "Token " + temp.token,
+                    "Content-Type": "application/json",
+                }
+            };
+            $.ajax(settings).done(function () {
+                localStorage.removeItem('auth_token_dict')
+                console.log("deleted auth token");
+            });
+        }
+    }
+
+    function findValueByPrefix(object, prefix) {
+        for (var property in object) {
+            if (object.hasOwnProperty(property) &&
+                property.toString().startsWith(prefix)) {
+                return object[property];
+            }
+        }
+    }
+
+
+    function getAuthToken() {
+        var settings = {
+            "url": "/login/",
+            "type": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json",
+            },
+            "data": JSON.stringify({
+                "username": document.getElementById("username").value,
+                "password": document.getElementById("password").value
+            }),
+        };
+        $.ajax(settings).done(function (response) {
+            var temp;
+            localStorage.setItem("auth_token_dict", JSON.stringify(response));
+            console.log("saved auth token");
+            temp = localStorage.getItem("auth_token_dict")
+            console.log(temp);
+        });
+
+        return !!localStorage.getItem('auth_token_dict');
+
+    }
+
+</script>
 
 </html>

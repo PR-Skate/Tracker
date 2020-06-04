@@ -8,7 +8,6 @@ class Coordinates(DynamicEmbeddedDocument):
     latitude = DecimalField(min_value=-90, max_value=90, precision=25)
 
 
-
 class Address(EmbeddedDocument):
     addressLineOne = StringField(max_length=150, required=True)
     addressLineTwo = StringField(max_length=150, required=False, allow_null=True, allow_blank=True, blank=True,
