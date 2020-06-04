@@ -48,7 +48,7 @@ def log_methods(cls):
 
 def get_debug_logger(cls_name, extra):
     app_logger = logging.getLogger(cls_name)
-    handler = logging.FileHandler('PR_Skate/logging/class_method.log')
+    handler = logging.FileHandler('PR_Skate/logging/logs/class_method.log')
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s - %(levelname)s - %(function_name)s - %(func_args)s - %(func_kwargs)s - %(output)s - %(message)s',

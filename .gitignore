@@ -9,3 +9,4 @@ test3.py
 /Activate-env.txt
 frontend/node_modules/
 *.log
+/PR_Skate/logging/logs/
