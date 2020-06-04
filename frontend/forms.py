@@ -1,5 +1,5 @@
 from django import forms
-from datetime import datetime as dt
+
 from Class_Types import *
 from Class_Types.Embeded_Documents import *
 from django.core.validators import FileExtensionValidator
@@ -181,17 +181,17 @@ class StoreForm(BaseForm):
         self.coordinates = CoordinateField(data={'latitude': data.get('latitude'), 'longitude': data.get('longitude')})
 
     def is_valid(self):
-        return self.storeManagerName.is_valid() and self.opsManagerName.is_valid() and self.managerName.is_valid() \
-               and self.overnightManagerName.is_valid() and self.installationDueDates.is_valid() \
-               and self.inspectionDueDates.is_valid() and self.address.is_valid() and self.overnightAccess.is_valid() \
-               and forms.BaseForm.is_valid(self=self) and self.coordinates.is_valid()
+        return self.storeManagerName.is_valid() and self.opsManagerName.is_valid() and self.managerName.is_valid() and \
+               self.overnightManagerName.is_valid() and self.installationDueDates.is_valid() and \
+               self.inspectionDueDates.is_valid() and self.address.is_valid() and self.overnightAccess.is_valid() \
+               and forms.BaseForm.is_valid(self=self)
 
     class Meta:
         model = Store
         fields = ('storeNumber', 'fkCustomer', 'address', 'phoneNumber', 'region', 'division', 'awardedVendor',
                   'storeManagerName', 'storeManagerEmail', 'opsManagerName', 'opsManagerEmail', 'managerName',
                   'managerEmail', 'overnightManagerName', 'overnightManagerEmail', 'overnightCrew', 'overnightAccess',
-                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'active',
+                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'coordinates', 'active',
                   'installationDueDates', 'inspectionDueDates', 'fiscalWeek')
 
 

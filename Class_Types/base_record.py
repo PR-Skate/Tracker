@@ -5,10 +5,11 @@ from datetime import datetime
 
 import bson as bson
 from mongoengine import DateTimeField, DynamicDocument, ReferenceField, ValidationError
+
 from PR_Skate.logging import log_methods
 
 
-@log_methods
+# @log_methods
 class BaseRecord(DynamicDocument):
     _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)
     createdTimestamp = DateTimeField(default=datetime.now(), required=False)
@@ -57,8 +58,6 @@ class BaseRecord(DynamicDocument):
         temp = list(cls._db_field_map.values())
         if '_id' in temp and not get_id:
             temp.remove('_id')
-            if get_id:
-                temp.append('_id')
 
         if '_cls' in temp:
             temp.remove('_cls')
