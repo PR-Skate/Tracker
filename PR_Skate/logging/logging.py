@@ -1,5 +1,4 @@
 import logging
-import pprint
 
 
 def log_debug(func):
@@ -21,11 +20,11 @@ def log_debug(func):
             logger.debug(msg, extra=extra)
         else:
             logger.error(msg, extra=extra)
-            format = '%(asctime)s - %(levelname)s - %(function_name)s - %(func_args)s - %(func_kwargs)s - %(output)s ' \
-                     '- %(message)s '
-            logging.basicConfig(format=format, level=logging.DEBUG)
-            loggerConsole = logging.getLogger(__name__)
-            loggerConsole.error(msg, extra=extra)
+            # format = '%(asctime)s - %(levelname)s - %(function_name)s - %(func_args)s - %(func_kwargs)s - %(output)s ' \
+            # '- %(message)s '
+            # logging.basicConfig(format=format, level=logging.DEBUG)
+            # loggerConsole = logging.getLogger(__name__)
+            # loggerConsole.error(msg, extra=extra)
 
         # This will maintain the function name and documentation of the wrapped function.
         # Very helpful when debugging or checking the docs from the python shell:

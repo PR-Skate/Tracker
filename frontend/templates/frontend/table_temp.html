@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ table_name }}</title>
+    <title>{{ table_name }} Report</title>
 </head>
 <body>
 <style type="text/css">
@@ -44,8 +44,10 @@
         background-color: #ffffff;
         border-color: #211f2d;
         color: #211f2d;
+        position: -webkit-sticky;
         text-align: center;
-        vertical-align: middle
+        top: -1px;
+        will-change: transform
     }
 
     .tg .tg-t780 {
@@ -121,37 +123,41 @@
     }</style>
 <div class="tg-wrap">
     {% for field in fields %}
-    <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.." title="Type in a {{ field }}">
+        <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.."
+               title="Type in a {{ field }}">
     {% endfor %}
     <table id="tg-0Xa6r" class="tg">
         <thead>
         <tr>
             <th class="tg-6xvo" colspan="{{ fields|length }}">{{ table_name }}</th>
         </tr>
-        </thead>
-        <tbody>
         <tr>
             {% for field in fields %}
-                <td class="tg-qrfk">{{ field }}</td>
+                <th class="tg-qrfk">{{ field }}</th>
             {% endfor %}
         </tr>
+        </thead>
+        <tbody>
+
         {% for instance in instances %}
-        {% with index=forloop.counter0%}
-            <tr id="{{ instance.id }}" ondblclick="test_outer(event)">
-                {% for  field, attribute in instance.items %}
-{#                    <button ondblclick="myFunction()">#}
-                    <td class="tg-t780">
-                        <pre id="{{ instance.id }} {{ field }}" ondblclick="editField(event, '{{ instance.id }} {{ field }}')">{{ attribute }}</pre>
-                    </td>
-{#                    </button>#}
-                {% endfor %}
-            </tr>
-{#            </button>#}
-        {% endwith %}
+            {% with index=forloop.counter0 %}
+                <tr id="{{ instance.id }}" ondblclick="test_outer(event)">
+                    {% for  field, attribute in instance.items %}
+                        {#                    <button ondblclick="myFunction()">#}
+                        <td class="tg-t780">
+                            <pre id="{{ instance.id }} {{ field }}"
+                                 ondblclick="editField(event, '{{ instance.id }} {{ field }}')">{{ attribute }}</pre>
+                        </td>
+                        {#                    </button>#}
+                    {% endfor %}
+                </tr>
+                {#            </button>#}
+            {% endwith %}
         {% endfor %}
         </tbody>
     </table>
 </div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script charset="utf-8">var TGSort = window.TGSort || function (n) {
     "use strict";
 
@@ -329,13 +335,9 @@ function editField(event, id){
     event.stopPropagation();
     console.log('INNER');
     parent = document.getElementById(id).offsetParent;
-    console.log("parent: ");
-    console.log(parent);
     previousValue = parent.innerText;
-    console.log("previousValue: " + previousValue);
-
     while (parent.hasChildNodes()) {
-    parent.removeChild(parent.lastChild);
+        parent.removeChild(parent.lastChild);
     }
 
     input = document.createElement("input");
@@ -343,10 +345,9 @@ function editField(event, id){
     input.name = field
     input.value = previousValue
     input.id = id
-    input.ondblclick = function() {submit_changes(event, id)};
-
-    console.log("input: ");
-    console.log(input);
+    input.ondblclick = function () {
+        submit_changes(event, id)
+    };
 
     newChild = parent.appendChild(input);
     console.log(newChild);
@@ -354,50 +355,41 @@ function editField(event, id){
 }
 
 function submit_changes(event, id) {
-    let previousValue, parent, text, input, newChild;
+    let previousValue, parent, text, input, newChild, temp, fieldName, instanceID, data;
     event.stopPropagation();
     console.log('INNER');
     input = document.getElementById(id);
     parent = input.offsetParent;
-    console.log("parent: ");
-    console.log(parent);
     previousValue = input.value;
-    console.log("previousValue: " + previousValue);
-
     while (parent.hasChildNodes()) {
-    parent.removeChild(parent.lastChild);
+        parent.removeChild(parent.lastChild);
     }
-
-
-
     text = document.createElement("pre");
     text.innerText = previousValue
-    input.ondblclick = function() {editField(event, id)};
-
-    console.log("input: ");
-    console.log(input);
-
-    newChild = parent.appendChild(input);
-    console.log(newChild);
+    text.ondblclick = function () {
+        editField(event, id)
+    };
+    text.id = id
+    parent.appendChild(text);
+    temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+    instanceID = id.split(' ')[0];
+    fieldName = id.split(' ')[1];
+    data = JSON.stringify({[fieldName]: previousValue})
+    var settings = {
+        "url": "/api/{{table_name}}/" + instanceID + "/",
+        "type": "PUT",
+        "timeout": 0,
+        "headers": {
+            "Authorization": "Token " + temp.token,
+            "Content-Type": "application/json",
+        },
+        "data": data,
+    };
+    $.ajax(settings).done(function (response) {
+        console.log(response);
+    });
     return false;
 }
-
-var settings = {
-  "url": "http://127.0.0.1:8000/api/RegionCode/",
-  "method": "POST",
-  "timeout": 0,
-  "headers": {
-    "Authorization": "Token 2c963ad6ba03698d6d3c4598d1cd48057754dd6b",
-    "Content-Type": "application/json",
-    "Cookie": "csrftoken=hoe06ke5kR6JhWomPqM0Sdh6t4YPuvmlQ72UGhKDuP2zQJ6ccuJzSQRJ7ChGIhAH"
-  },
-  "data": JSON.stringify({"regionCodeID":"TEST REGION"}),
-};
-
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
-
 
 </script>
 </body>

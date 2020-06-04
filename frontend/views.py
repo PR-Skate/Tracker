@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from mongoengine.errors import *
+
 from .forms import *
 
 
@@ -26,8 +27,8 @@ def signup(request):
         if form.is_valid():
             form.save()
             employeeForm(request)
-            username = form.cleaned_data.get('userName')
-            password = form.cleaned_data.get('passwordHash')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('/')
@@ -42,11 +43,12 @@ def signin(request):
     if request.user.is_authenticated:
         return render(request, 'frontend/index.html')
     if request.method == 'POST':
-        username = request.POST['userName']
-        password = request.POST['passwordHash']
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            request.data = {"username": username, "password": password}
             return redirect('/')
         else:
             form = AuthenticationForm(request.POST)
@@ -170,9 +172,11 @@ def workOrderStatusForm(request):
             status = WorkOrderStatus(**form.cleaned_data)
             status.save()
             return HttpResponseRedirect('')
-        return render(request, 'frontend/workOrderStatusForm.html', {'form':form})
+        return render(request, 'frontend/workOrderStatusForm.html', {'form': form})
     return render(request, 'frontend/workOrderStatusForm.html')
 
+
+@login_required
 def microRegionForm(request):
     if request.method == 'POST':
         form = MicroRegionForm(request.POST, request)
@@ -184,6 +188,7 @@ def microRegionForm(request):
     return render(request, 'frontend/microRegionForm.html')
 
 
+@login_required
 def regionForm(request):
     if request.method == 'POST':
         form = RegionForm(request.POST, request)
@@ -323,7 +328,8 @@ def generate_table_render(model, request):
         instances.append(attributes)
 
     return render(request, 'frontend/table_temp.html',
-                  {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances})
+                  {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
+                   'token': request.user})
 
 
 def try_to_save(model, form, request):
