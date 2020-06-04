@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from mongoengine.errors import *
 from .forms import *
-
+from mongoengine import GridFSProxy
 
 # Create your views here.
 @login_required
@@ -153,13 +153,21 @@ def storeForm(request):
 
 @login_required
 def workOrderForm(request):
+    store = Store.objects.all()
+    workOrderStatus = WorkOrderStatus.objects.all()
     if request.method == "POST":
-        form = workOrderForm(request.POST, request)
+        form = WorkOrderForm(data=request.POST, request=request, files=request.FILES or None)
         if form.is_valid():
-            print('VALID')
+            wo = WorkOrder(**form.cleaned_data)
+            wo.save()
             return HttpResponseRedirect('')
         return render(request, 'frontend/workOrderForm.html', {'form': form})
-    return render(request, 'frontend/workOrderForm.html')
+
+    files = WorkOrder.objects.all()
+    pdf = []
+    for f in files:
+        pdf.append(GridFSProxy(f.inspectForStorePath).read())
+    return render(request, 'frontend/workOrderForm.html', {'store': store, 'workOrderStatus': workOrderStatus, 'pdf':pdf})
 
 
 @login_required
@@ -170,8 +178,9 @@ def workOrderStatusForm(request):
             status = WorkOrderStatus(**form.cleaned_data)
             status.save()
             return HttpResponseRedirect('')
-        return render(request, 'frontend/workOrderStatusForm.html', {'form':form})
+        return render(request, 'frontend/workOrderStatusForm.html', {'form': form})
     return render(request, 'frontend/workOrderStatusForm.html')
+
 
 def microRegionForm(request):
     if request.method == 'POST':

@@ -3198,3 +3198,18 @@
 02/06/2020 05:02:11 - ERROR - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception Tried to save duplicate unique keys (E11000 duplicate key error collection: Tracker.WorkOrderStatus index: status_1 dup key: { : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
 02/06/2020 05:02:11 - ERROR - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception Tried to save duplicate unique keys (E11000 duplicate key error collection: Tracker.WorkOrderStatus index: status_1 dup key: { : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
 02/06/2020 05:02:11 - ERROR - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception Tried to save duplicate unique keys (E11000 duplicate key error collection: Tracker.WorkOrderStatus index: status_1 dup key: { : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
+02/06/2020 05:45:22 - DEBUG - BaseRecord.is_valid_reference_field - (<WorkOrderStatus: WorkOrderStatus object>, '_createdUser') - {} - True - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.is_valid_reference_field - (<WorkOrderStatus: WorkOrderStatus object>, '_lastModifiedUser') - {} - True - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.is_valid_reference_field - (<WorkOrderStatus: WorkOrderStatus object>, '_lastModifiedUser') - {} - True - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.is_field_unique - (<WorkOrderStatus: WorkOrderStatus object>, 'status') - {} - True - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.is_field_unique - (<WorkOrderStatus: WorkOrderStatus object>, 'status') - {} - True - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.is_field_unique - (<WorkOrderStatus: WorkOrderStatus object>, 'status') - {} - True - executed without exceptions
+02/06/2020 05:45:22 - ERROR - BaseRecord.custom_validate - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception There was errors with the following field(s)(['DuplicateKeyError']: ['status'])
+02/06/2020 05:45:22 - ERROR - BaseRecord.custom_validate - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception There was errors with the following field(s)(['DuplicateKeyError']: ['status'])
+02/06/2020 05:45:22 - ERROR - BaseRecord.custom_validate - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception There was errors with the following field(s)(['DuplicateKeyError']: ['status'])
+02/06/2020 05:45:22 - ERROR - BaseRecord.custom_validate - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - None - executed with an exception There was errors with the following field(s)(['DuplicateKeyError']: ['status'])
+02/06/2020 05:45:22 - DEBUG - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - WorkOrderStatus object - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - WorkOrderStatus object - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - WorkOrderStatus object - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - WorkOrderStatus object - executed without exceptions
+02/06/2020 05:45:22 - DEBUG - BaseRecord.save - (<WorkOrderStatus: WorkOrderStatus object>,) - {} - WorkOrderStatus object - executed without exceptions

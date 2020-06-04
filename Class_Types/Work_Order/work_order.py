@@ -4,7 +4,7 @@
 
 import datetime as dt
 
-from mongoengine import DateField, StringField, FileField, ReferenceField
+from mongoengine import DateField, StringField, FileField, ReferenceField, GridFSProxy
 
 from .work_order_status import WorkOrderStatus
 from ..Store import Store
@@ -17,6 +17,7 @@ class WorkOrder(BaseRecord):
     dateReceived = DateField(required=True, default=dt.datetime.now())
     detail = StringField(defualt='', required=True)
     requestingContact = StringField(required=True)
+    priority = StringField(required=True)
     statusCode = StringField(max_length=30, required=True)
 
     dateCompleted = DateField(required=True)
@@ -26,6 +27,9 @@ class WorkOrder(BaseRecord):
     partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)
-    fkWorkOrderStatus = ReferenceField(WorkOrderStatus, required=True)
-    fkStoreNumber = ReferenceField(Store, required=True)
+    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True, dbref=True)
+    fkStoreNumber = ReferenceField('Store', required=True, dbref=True)
     meta = {'collection': 'WorkOrder'}
+
+    def to_file(self):
+        return GridFSProxy(self)

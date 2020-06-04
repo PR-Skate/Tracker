@@ -2,6 +2,7 @@ from django import forms
 from datetime import datetime as dt
 from Class_Types import *
 from Class_Types.Embeded_Documents import *
+from django.core.validators import FileExtensionValidator
 
 
 class BaseForm(forms.Form):
@@ -180,17 +181,10 @@ class StoreForm(BaseForm):
         self.coordinates = CoordinateField(data={'latitude': data.get('latitude'), 'longitude': data.get('longitude')})
 
     def is_valid(self):
-        test = self.storeManagerName.is_valid()
-        test1 = self.opsManagerName.is_valid()
-        test2 = self.managerName.is_valid()
-        test3 = self.overnightManagerName.is_valid()
-        test4 = self.installationDueDates.is_valid()
-        test5 = self.inspectionDueDates.is_valid()
-        test6 = self.address.is_valid()
-        test7 = self.overnightAccess.is_valid()
-        test8 = forms.BaseForm.is_valid(self=self)
-        test9 = self.coordinates.is_valid()
-        return True
+        return self.storeManagerName.is_valid() and self.opsManagerName.is_valid() and self.managerName.is_valid() \
+               and self.overnightManagerName.is_valid() and self.installationDueDates.is_valid() \
+               and self.inspectionDueDates.is_valid() and self.address.is_valid() and self.overnightAccess.is_valid() \
+               and forms.BaseForm.is_valid(self=self) and self.coordinates.is_valid()
 
     class Meta:
         model = Store
@@ -218,22 +212,36 @@ class WorkOrderForm(BaseForm):
     dateReceived = forms.DateField(required=True)
     detail = forms.CharField(required=True)
     requestingContact = forms.CharField(required=True)
+    priority = forms.CharField(required=True)
     statusCode = forms.CharField(required=True, max_length=30)
 
     dateCompleted = forms.DateField(required=True)
-    inspectForStorePath = forms.FileField(allow_empty_file=True)
-    detailedReceiptPath = forms.FileField(allow_empty_file=True)
-    signageMapPath = forms.FileField(allow_empty_file=True)
+    inspectForStorePath = forms.FileField(allow_empty_file=True, validators=[FileExtensionValidator(['pdf'])])
+    detailedReceiptPath = forms.FileField(allow_empty_file=True, validators=[FileExtensionValidator(['pdf'])],)
+    signageMapPath = forms.FileField(allow_empty_file=True, validators=[FileExtensionValidator(['pdf'])])
     partsArrivalDate = forms.DateField()
 
     targetStartDate = forms.DateField(required=True)
     fkWorkOrderStatus = forms.CharField(required=True)
     fkStoreNumber = forms.CharField(required=True)
 
-    model = WorkOrder
+    class Meta:
+        model = WorkOrder
+        fields = (
+            'workOrderName', 'dateReceived', 'detail', 'requestingContact', 'priority', 'statusCode', 'dateCompleted',
+            'inspectForStorePath', 'detailedReceiptPath', 'signageMapPath', 'partsArrivalDate', 'targetStartDate',
+            'fkWorkOrderStatus', 'fkStoreNumber')
+
+    def __init__(self, data, request, files):
+        super().__init__(data, request)
+        self.files = files
+
+    def is_valid(self):
+        return BaseForm.is_valid(self)
+
 
 class WorkOrderStatusForm(BaseForm):
     status = forms.CharField(required=True, max_length=50)
 
-    model= WorkOrderStatus
+    model = WorkOrderStatus
     fields = 'status'
