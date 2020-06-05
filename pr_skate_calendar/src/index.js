@@ -4,5 +4,5 @@ import App from './App';
 import CalendarForm from "./components/CalendarForm";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-ReactDOM.render( <CalendarForm/>, document.getElementById('root'));
+ReactDOM.render( <App/>, document.getElementById('root'));
 

@@ -1,14 +1,11 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Container } from 'reactstrap';
 
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css"
 
 export default class CalendarForm extends React.Component {
     //TODO write functions to process the forms?
     //TODO ObjectID, InstallerID, SecondInstallerID using BSON (obejctID is a string)
-    //TODO Parts of the form that are calculated (include them when saving the data but not as a part of the form)
-    //TODO UI (using react-bootstrap?)
+    //TODO Parts of the form that are calculated (include them when saving the data but not as a part of the form
     constructor(props) {
         super(props);
         this.state = { //new Boolean or just Boolean works?
@@ -30,7 +27,7 @@ export default class CalendarForm extends React.Component {
         event.preventDefault();
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         const name = event.target.name;
         this.setState({ [name]: event.target.value });//sets weekOneNameOfContact to true
         console.log(this.state);
@@ -45,29 +42,23 @@ export default class CalendarForm extends React.Component {
 
     render() {
         return (
-            <Form method="get">
-                <div>
+            <Form method="get" className="themed-container">
                     <h3>Dates</h3>
                     <label>Start Date:
-                        <DatePicker
-                            selected={ this.state.startDate }
-                            onChange={ this.handleChangeDate }
-                            showTimeSelect
-                            timeFormat="HH:mm"
-                            timeIntervals={20}
-                            timeCaption="time"
-                            dateFormat="MMMM d, yyyy h:mm aa"
-                        />
+                        <Input type="datetime-local" name="endDate"/>
                     </label>
 
+                    <br/>
                     <label>End Date:
                         <Input type="datetime-local" name="endDate"/>
                     </label>
 
+                    <br/>
                     <label>Receiving Date:
                         <Input type="datetime-local" name="receivingDate" />
                     </label>
 
+                    <br/>
                     <label>Truck Date:
                         <Input type="datetime-local" name="truckDate" />
                     </label>
@@ -78,6 +69,7 @@ export default class CalendarForm extends React.Component {
                          <Input type="checkbox" name="weekOneNameOfContact" value={!this.state.weekOneNameOfContact} onChange={this.handleChange}/> Yes
                      </label>
 
+                     <br/>
                      <label>Week One Contact Name:
                          <Input type="text" name="weekOneFirstNameOfContact" placeholder="First Name"/>
                          <Input type="text" name="weekOneFirstNameOfContact" placeholder="Last Name"/>
@@ -88,23 +80,21 @@ export default class CalendarForm extends React.Component {
                          <Input type="checkbox" name="weekFourNameOfContact" value={!this.state.weekFourNameOfContact} onChange={this.handleChange} /> Yes
                      </label>
 
+                     <br/>
                      <label>Week Four Contact Name:
                          <Input type="text" name="weekFourFirstNameOfContact" placeholder="First Name"/>
                          <Input type="text" name="weekFourFirstNameOfContact" placeholder="Last Name"/>
                      </label>
 
-                     <label>Form Complete
-                         <FormGroup id="wrapper">
+                     <br/>
+                     <div id="wrapper">
+                         <label>Form Complete</label>
                          <Input type="radio" name="formComplete" value={true} onClick={this.handleChange}/> Yes
                          <br/>
                          <Input type="radio" name="formComplete" value={false} onClick={this.handleChange}/> No
-                         </FormGroup>
-                     </label>
-
+                     </div>
                      <br/>
                      <Button onClick={this.handleClick}>Submit</Button>{' '}
-
-                </div>
             </Form>
         );
     }

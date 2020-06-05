@@ -18,7 +18,12 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import './components/cell.css'
 import CalendarForm from "./components/CalendarForm";
-//import { appointments, added } from "./demo-data/month-appointments";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 const fs = require('fs');
 
 //TODO import Appointments in another class and render it there?
@@ -115,6 +120,7 @@ export default class App extends React.PureComponent {
     const { data, currentViewName, currentDate } = this.state;
 
     return (
+        <div>
         <Paper>
           <Scheduler
               data={data}
@@ -150,7 +156,12 @@ export default class App extends React.PureComponent {
                 allowDrag={({ allDay }) => !allDay}
                 allowResize={() => true}/>
           </Scheduler>
-        </Paper>
+          </Paper>
+          <Router>
+            <Link to="/CalendarForm">Calendar Form</Link>
+            <Route path="./components/CalendarForm" component={CalendarForm}/>
+          </Router>
+          </div>
     );
   }
 }
