@@ -85,12 +85,13 @@ def get_field_from_static_file(field_information, data=None):
 def makeSelectContainer(field_information, data=None):
     options = [f'<option value="" {"selected" if not data else ""} disabled>{field_information.name}</option>']
     instances = getInstances(field_information)
-    for instance in instances:
-        option = f'\
-                <option value={instance.id} {"selected" if data == instance.id else ""} >{str(instance)}</option>\n'
-        options.append(option)
-    other = '<option value="Other">Other</option>'
-    options.append(other)
+    if instances:
+        for instance in instances:
+            option = f'\
+                    <option value={instance.id} {"selected" if data == instance.id else ""} >{str(instance)}</option>\n'
+            options.append(option)
+        other = '<option value="Other">Other</option>'
+        options.append(other)
     options_string = "\n".join(options)
 
     selectContainer = f'<label for="{field_information.model_name}">{field_information.name}</label>\n\
