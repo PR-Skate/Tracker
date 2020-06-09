@@ -6,6 +6,7 @@ from os.path import join
 
 from django import template
 from django.utils.safestring import mark_safe
+from Class_Types import *
 
 STATIC_FILES_FOR_FIELDS = ['state', 'country']
 

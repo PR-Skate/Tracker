@@ -12,6 +12,7 @@ from mongoengine.errors import *
 
 from .forms import *
 
+
 # Create your views here.
 @login_required
 def index(request):
@@ -72,6 +73,8 @@ def customer_form(request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": Customer.get_field_information()})
+
+
 @login_required
 def employee_form(request):
     if request.method == "POST":
@@ -96,7 +99,7 @@ def prep_work_form(request):
             prepWork = PrepWork(**form.cleaned_data)
             if try_to_save(model=prepWork, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/prepWorkForm.html', {'form':form, 'work_order': work_order})
+        return render(request, 'frontend/prepWorkForm.html', {'form': form, 'work_order': work_order})
     return render(request, 'frontend/prepWorkForm.html', {'work_order': work_order})
 
 
@@ -126,7 +129,7 @@ def store_form(request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/storeForm.html',
                       {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
-      return render(request, 'frontend/form_template_python.html',
+    return render(request, 'frontend/form_template_python.html',
                   {"field_information_list": Store.get_field_information()})
 
 
@@ -179,6 +182,7 @@ def region_form(request):
         return render(request, 'frontend/regionForm.html', {'form': form})
     return render(request, 'frontend/form_template_python.html',
                   {"field_information_list": Customer.get_field_information()})
+
 
 ''' Needs to be verified afer conflicts resolved'''
 
