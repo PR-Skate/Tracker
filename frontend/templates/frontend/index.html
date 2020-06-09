@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -8,24 +9,32 @@
 </head>
 
 <body>
-<div id="app">
-    <!-- React will load here -->
-</div>
-</body>
+{% include 'frontend/helpers/navbar.html' %}
 {% load static %}
 <h1>Hello Tracker:</h1>
 <h3>Pages:</h3>
 <a href="customerForm">Customer Form</a><br>
 <a href="employeeForm">Employee Form</a><br>
-<a href="sowForm">SOW Form</a><br>
 <a href="storeForm">Store Form</a><br>
+<a href="sowForm">Scope of Work Form</a><br>
 <a href="workOrderForm">Work Order Form</a><br>
-<a href="workOrderStatusForm">Work Order Status Form</a><br>
-<a href="microRegionForm">Micro Region Form</a><br>
-<a href="regionForm">Region Form</a><br>
 
-<p>NOTE: SOW is in progress</p>
-<br>
+<a href="articleNumberForm">Article Number Form</a><br>
+<a href="articleNumberStateForm">Article Number State Form</a><br>
+<a href="laborItemForm">Labor Item Form</a><br>
+<a href="materialItemForm">Material Item Form</a><br>
+<a href="materialListForm">Material List Form</a><br>
+
+<a href="orderMaterialForm">Order Material Form</a><br>
+<a href="locationInStoreForm">Location In Store Form</a><br>
+<a href="sowStatusForm">SOW Status Form</a><br>
+<a href="microRegionCodeForm">Micro Region Code Form</a><br>
+<a href="regionCodeForm">Region Code Form</a><br>
+
+<a href="workOrderStatusForm">Work Order Status Form</a><br>
+<a href="prepWorkForm">Prep Work Form</a><br>
+<a href="schedulingWorkForm">Scheduling Work Form</a><br>
+
 
 <h3>Reports:</h3><br><br>
 <a href="customerReport">Customer Report</a><br>
@@ -62,5 +71,5 @@
 <script src="{% static " frontend/main.js " %}"></script>
 
 <button onclick="location.href = '/logout';" id="myButton" class="float-left submit-button" >Log Out</button>
-
+</body>
 </html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <a href="/" >Home</a>
+  <div class="dropdown">
+    <button class="dropbtn">Reports
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+        <a href="customerReport">Customer Report</a><br>
+        <a href="employeeReport">Employee Report</a><br>
+        <a href="storeReport">Store Report</a><br>
+        <a href="sowReport">Scope of Work Report</a><br>
+        <a href="workOrderReport">Work Order Report</a><br>
+
+        <a href="articleNumberReport">Article Number Report</a><br>
+        <a href="articleNumberStateReport">Article Number State Report</a><br>
+        <a href="laborItemReport">Labor Item Report</a><br>
+        <a href="materialItemReport">Material Item Report</a><br>
+        <a href="materialListReport">Material List Report</a><br>
+
+        <a href="orderMaterialReport">Order Material Report</a><br>
+        <a href="locationInStoreReport">Location In Store Report</a><br>
+        <a href="sowStatusReport">SOW Status Report</a><br>
+        <a href="microRegionCodeReport">Micro Region Code Report</a><br>
+        <a href="regionCodeReport">Region Code Report</a><br>
+
+        <a href="workOrderStatusReport">Work Order Status Report</a><br>
+        <a href="prepWorkReport">Prep Work Report</a><br>
+        <a href="schedulingWorkReport">Scheduling Work Report</a><br>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Forms
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+        <a href="customerForm">Customer Form</a><br>
+        <a href="employeeForm">Employee Form</a><br>
+        <a href="storeForm">Store Form</a><br>
+        <a href="sowForm">Scope of Work Form</a><br>
+        <a href="workOrderForm">Work Order Form</a><br>
+
+        <a href="articleNumberForm">Article Number Form</a><br>
+        <a href="articleNumberStateForm">Article Number State Form</a><br>
+        <a href="laborItemForm">Labor Item Form</a><br>
+        <a href="materialItemForm">Material Item Form</a><br>
+        <a href="materialListForm">Material List Form</a><br>
+
+        <a href="orderMaterialForm">Order Material Form</a><br>
+        <a href="locationInStoreForm">Location In Store Form</a><br>
+        <a href="sowStatusForm">SOW Status Form</a><br>
+        <a href="microRegionCodeForm">Micro Region Code Form</a><br>
+        <a href="regionCodeForm">Region Code Form</a><br>
+
+        <a href="workOrderStatusForm">Work Order Status Form</a><br>
+        <a href="prepWorkForm">Prep Work Form</a><br>
+        <a href="schedulingWorkForm">Scheduling Work Form</a><br>
+    </div>
+  </div>
+    <div style="float: right">
+        {% if user.is_authenticated %}
+            <h4 style="color:white">Welcome, {{ user }}</h4>
+        {% else %}
+            <button onclick="location.href = '/sign-in';" id="myButton" class="float-left submit-button" style="float: right">Sign In</button>
+        {% endif %}
+
+    </div>
+</div>
+</body>
+</html>

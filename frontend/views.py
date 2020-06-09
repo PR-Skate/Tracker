@@ -1,5 +1,4 @@
 import re
-
 import mongoengine
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -7,9 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from mongoengine.errors import *
+
 from .forms import *
-from mongoengine import GridFSProxy
+
 
 # Create your views here.
 @login_required
@@ -25,7 +24,7 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            employeeForm(request)
+            employee_form(request)
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
@@ -62,67 +61,47 @@ def signout(request):
 
 
 @login_required
-def customerForm(request):
+def customer_form(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST, request)
         if form.is_valid():
-            try:
-                cust = Customer(**form.cleaned_data)
-                if try_to_save(model=cust, form=form, request=request):
-                    return HttpResponseRedirect('')
-                    # return render(request, 'frontend/customerForm.html', {'form':form})
-                else:
-                    return render(request, 'frontend/customerForm.html', {'form': form})
-            except:
-                print(form.errors)
-        else:
-            return render(request, 'frontend/customerForm.html', {'form': form})
-    else:
-        pass
+            cust = Customer(**form.cleaned_data)
+            if try_to_save(model=cust, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/customerForm.html', {'form': form})
     return render(request, 'frontend/customerForm.html')
 
 
 @login_required
-def employeeForm(request):
+def employee_form(request):
     if request.method == "POST":
         form = EmployeeForm(request.POST, request)
         if form.is_valid():
             name = Name(**form.name.cleaned_data)
             address = Address(**form.address.cleaned_data)
-
             emp = Employee(**form.cleaned_data, name=name, address=address)
-            print(Employee.objects.filter(userName=str(emp.userName)))
 
-            try:
-                emp.save()
-                messages.success(request, 'Added Employee')
+            if try_to_save(model=emp, form=form, request=request):
                 return HttpResponseRedirect('')
-            except NotUniqueError:
-                if Employee.objects.filter(userName=str(emp.userName)).count() > 0:
-                    print('userName is not unique')
-                    form.add_error('userName', 'Not unique.')
-                if Employee.objects.filter(email=str(emp.email)).count() > 0:
-                    print('email is not unique')
-                    form.add_error('email', 'Not unique.')
-                return render(request, 'frontend/employeeForm.html', {'form': form})
         return render(request, 'frontend/employeeForm.html', {'form': form})
-    else:
-        pass
     return render(request, 'frontend/employeeForm.html')
 
 
 @login_required
-def prepWorkForm(request):
-    return render(request, 'frontend/prepWorkForm.html')
+def prep_work_form(request):
+    work_order = WorkOrder.objects.all()
+    if request.method == "POST":
+        form = PrepWorkForm(request.POST, request)
+        if form.is_valid():
+            prepWork = PrepWork(**form.cleaned_data)
+            if try_to_save(model=prepWork, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/prepWorkForm.html', {'form':form, 'work_order': work_order})
+    return render(request, 'frontend/prepWorkForm.html', {'work_order': work_order})
 
 
 @login_required
-def sowForm(request):
-    return render(request, 'frontend/sowForm.html')
-
-
-@login_required
-def storeForm(request):
+def store_form(request):
     cust = Customer.objects.all()
     region_code = RegionCode.objects.all()
     micro_region_code = MicroRegionCode.objects.all()
@@ -143,8 +122,8 @@ def storeForm(request):
                           inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates,
                           overnightAccess=overnightAccess,
                           coordinates=coordinates)
-            store.save()
-
+            if try_to_save(model=store, form=form, request=request):
+                return HttpResponseRedirect('')
         return render(request, 'frontend/storeForm.html',
                       {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
     return render(request, 'frontend/storeForm.html',
@@ -152,168 +131,250 @@ def storeForm(request):
 
 
 @login_required
-def workOrderForm(request):
+def work_order_form(request):
     store = Store.objects.all()
     workOrderStatus = WorkOrderStatus.objects.all()
     if request.method == "POST":
-        form = WorkOrderForm(data=request.POST, request=request, files=request.FILES or None)
+        form = WorkOrderForm(data=request.POST, request=request, files=request.FILES)
         if form.is_valid():
             wo = WorkOrder(**form.cleaned_data)
-            wo.save()
-            return HttpResponseRedirect('')
-        return render(request, 'frontend/workOrderForm.html', {'form': form})
-
-    files = WorkOrder.objects.all()
-    pdf = []
-    for f in files:
-        pdf.append(GridFSProxy(f.inspectForStorePath).read())
-    return render(request, 'frontend/workOrderForm.html', {'store': store, 'workOrderStatus': workOrderStatus, 'pdf':pdf})
+            if try_to_save(model=wo, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/workOrderForm.html', {'form': form, 'store': store})
+    return render(request, 'frontend/workOrderForm.html', {'store': store, 'workOrderStatus': workOrderStatus})
 
 
 @login_required
-def workOrderStatusForm(request):
+def work_order_status_form(request):
     if request.method == "POST":
         form = WorkOrderStatusForm(request.POST, request)
         if form.is_valid():
             status = WorkOrderStatus(**form.cleaned_data)
-            status.save()
-            return HttpResponseRedirect('')
+            if try_to_save(model=status, form=form, request=request):
+                return HttpResponseRedirect('')
         return render(request, 'frontend/workOrderStatusForm.html', {'form': form})
     return render(request, 'frontend/workOrderStatusForm.html')
 
 
 @login_required
-def microRegionForm(request):
+def micro_region_form(request):
     if request.method == 'POST':
         form = MicroRegionForm(request.POST, request)
         if form.is_valid():
             region = MicroRegionCode(**form.cleaned_data)
-            region.save()
-            return HttpResponseRedirect('')
+            if try_to_save(model=region, form=form, request=request):
+                return HttpResponseRedirect('')
         return render(request, 'frontend/microRegionForm.html', {'form': form})
     return render(request, 'frontend/microRegionForm.html')
 
 
 @login_required
-def regionForm(request):
+def region_form(request):
     if request.method == 'POST':
         form = RegionForm(request.POST, request)
         if form.is_valid():
             region = RegionCode(**form.cleaned_data)
-            print(region.to_json())
-            region.save()
-            return HttpResponseRedirect('')
+            if try_to_save(model=region, form=form, request=request):
+                return HttpResponseRedirect('')
         return render(request, 'frontend/regionForm.html', {'form': form})
     return render(request, 'frontend/regionForm.html')
+
+
+''' Needs to be verified afer conflicts resolved'''
+
+
+@login_required
+def scope_of_work_status_form(request):
+    if request.method == "POST":
+        form = ScopeOfWorkStatusForm(request.POST, request)
+        if form.is_valid():
+            status = ScopeOfWorkStatus(**form.cleaned_data)
+            if try_to_save(model=status, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/scopeOfWorkStatusForm.html', {'form': form})
+    return render(request, 'frontend/scopeOfWorkStatusForm.html')
+
+
+@login_required
+def labor_item_form(request):
+    if request.method == "POST":
+        form = LaborItemForm(request.POST, request)
+        if form.is_valid():
+            item = LaborItem(**form.cleaned_data)
+            if try_to_save(model=item, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/laborItemForm.html', {'form': form})
+    return render(request, 'frontend/laborItemForm.html')
+
+
+@login_required
+def article_number_state_form(request):
+    if request.method == "POST":
+        form = ArticleNumberStateForm(request.POST, request)
+        if form.is_valid():
+            article = ArticleNumberState(**form.cleaned_data)
+            if try_to_save(model=article, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/articleNumberStateForm.html', {'form': form})
+    return render(request, 'frontend/articleNumberStateForm.html')
+
+
+@login_required
+def article_number_form(request):
+    if request.method == "POST":
+        form = ArticleNumberForm(request.POST, request)
+        if form.is_valid():
+            # will need a special form for the list
+            article = ArticleNumber(**form.cleaned_data)
+            if try_to_save(model=article, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/articleNumberForm.html', {'form': form})
+    return render(request, 'frontend/articleNumberForm.html')
+
+
+@login_required
+def material_item_form(request):
+    if request.method == "POST":
+        form = MaterialItemForm(request.POST, request)
+        if form.is_valid():
+            item = MaterialItem(**form.cleaned_data)
+            if try_to_save(model=item, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/materialItemForm.html', {'form': form})
+    return render(request, 'frontend/materialItemForm.html')
+
+
+@login_required
+def material_list_form(request):
+    if request.method == "POST":
+        form = MaterialListForm(request.POST, request)
+        if form.is_valid():
+            item = MaterialList(**form.cleaned_data)
+            if try_to_save(model=item, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/materialListForm.html', {'form': form})
+    return render(request, 'frontend/materialListForm.html')
+
+
+@login_required
+def location_in_store_form(request):
+    if request.method == 'POST':
+        form = LocationInStoreForm(data=request.POST, request=request, files=request.FILES)
+        if form.is_valid():
+            location = LocationInStore(**form.cleaned_data)
+            if try_to_save(model=location, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/locationInStoreForm.html', {'form': form})
+    return render(request, 'frontend/locationInStoreForm.html')
 
 
 """"REPORTS"""
 
 
 @login_required
-def customerReport(request):
+def customer_report(request):
     if request.method == "GET":
         return generate_table_render(model=Customer, request=request)
 
 
 @login_required
-def storeReport(request):
+def store_report(request):
     if request.method == "GET":
         return generate_table_render(model=Store, request=request)
 
 
 @login_required
-def sowReport(request):
+def scope_of_work_report(request):
     if request.method == "GET":
         return generate_table_render(model=ScopeOfWork, request=request)
 
 
 @login_required
-def employeeReport(request):
+def employee_report(request):
     if request.method == "GET":
         return generate_table_render(model=Employee, request=request)
 
 
 @login_required
-def workOrderReport(request):
+def work_order_report(request):
     if request.method == "GET":
         return generate_table_render(model=WorkOrder, request=request)
 
 
 @login_required
-def articleNumberReport(request):
+def article_number_report(request):
     if request.method == "GET":
         return generate_table_render(model=ArticleNumber, request=request)
 
 
 @login_required
-def articleNumberStateReport(request):
+def article_number_state_report(request):
     if request.method == "GET":
         return generate_table_render(model=ArticleNumberState, request=request)
 
 
 @login_required
-def laborItemReport(request):
+def labor_item_report(request):
     if request.method == "GET":
         return generate_table_render(model=LaborItem, request=request)
 
 
 @login_required
-def materialItemReport(request):
+def material_item_report(request):
     if request.method == "GET":
         return generate_table_render(model=MaterialItem, request=request)
 
 
 @login_required
-def materialListReport(request):
+def material_list_report(request):
     if request.method == "GET":
         return generate_table_render(model=MaterialList, request=request)
 
 
 @login_required
-def orderMaterialReport(request):
+def order_material_report(request):
     if request.method == "GET":
         return generate_table_render(model=OrderMaterial, request=request)
 
 
 @login_required
-def locationInStoreReport(request):
+def location_in_store_report(request):
     if request.method == "GET":
         return generate_table_render(model=LocationInStore, request=request)
 
 
 @login_required
-def sowStatusReport(request):
+def scope_of_work_status_report(request):
     if request.method == "GET":
         return generate_table_render(model=ScopeOfWorkStatus, request=request)
 
 
 @login_required
-def microRegionCodeReport(request):
+def micro_region_code_report(request):
     if request.method == "GET":
         return generate_table_render(model=MicroRegionCode, request=request)
 
 
 @login_required
-def regionCodeReport(request):
+def region_code_report(request):
     if request.method == "GET":
         return generate_table_render(model=RegionCode, request=request)
 
 
 @login_required
-def prepWorkReport(request):
+def prep_work_report(request):
     if request.method == "GET":
         return generate_table_render(model=PrepWork, request=request)
 
 
 @login_required
-def schedulingWorkReport(request):
+def scheduling_work_report(request):
     if request.method == "GET":
         return generate_table_render(model=SchedulingWork, request=request)
 
 
 @login_required
-def workOrderStatusReport(request):
+def work_order_status_report(request):
     if request.method == "GET":
         return generate_table_render(model=WorkOrderStatus, request=request)
 
@@ -341,12 +402,15 @@ def generate_table_render(model, request):
 def try_to_save(model, form, request):
     try:
         model.save()
-        messages.success(request, 'Successfully added {}.'.format(model.__class__.name))
+        messages.success(request, 'Successfully added {}.'.format(model.__class__.__name__))
         return True
-
     except mongoengine.errors.NotUniqueError as e:
         for field in e.args:
-            print(field)
+            field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
+            form.add_error(field_name, 'Must be unique')
+        return False
+    except mongoengine.errors.ValidationError as e:
+        for field in e.errors:
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Must be unique')
         return False

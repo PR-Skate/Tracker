@@ -44,14 +44,16 @@ class BaseRecord(DynamicDocument):
 
     @lastModifiedUser.setter
     def lastModifiedUser(self, value):
-        if isinstance(value, bson.DBRef):
-            pass
-        elif bson.ObjectId.is_valid(value):
-            value = bson.ObjectId(value)
-        else:
-            from Class_Types import Employee
-            value = Employee.objects.get(userName=value).id
-        self._lastModifiedUser = value
+        if value:
+            if isinstance(value, bson.DBRef):
+                pass
+            elif bson.ObjectId.is_valid(value):
+                value = bson.ObjectId(value)
+            else:
+                from Class_Types import Employee
+                value = Employee.objects.get(userName=value).id
+            self._lastModifiedUser = value
+
 
     @classmethod
     def get_fields(cls, get_id=False):

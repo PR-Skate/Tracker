@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,6 +10,7 @@
 </head>
 
 <body>
+{% include 'frontend/helpers/navbar.html' %}
 <h2>Work Order Form</h2><br><br><br>
 <form method="POST" enctype="multipart/form-data">{% csrf_token %}
     <div>
@@ -67,7 +70,7 @@
         <input type="file" name="signageMapPath"><br><br>
 
         <label>Parts Arrival Date</label>
-        <input type="date" name="partsArrivalDate"><br><br>
+        <input type="date" name="partsArrivalDate" required><br><br>
 
         <hr>
         <h2>SOW Acknowledgement</h2><br>
@@ -80,6 +83,11 @@
     </div>
 
     <input type="submit">
+
+    {% for message in messages %}
+        <ul>{{ message }}</ul>
+    {% endfor %} {{ form.errors }}
+    <p id='fail' style="display:none">ERROR</p>
 
 </form>
 </body>

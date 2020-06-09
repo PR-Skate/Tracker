@@ -15,7 +15,7 @@ class WorkOrder(BaseRecord):
     # constructor:
     workOrderName = StringField(max_length=15, required=True, unique=True)
     dateReceived = DateField(required=True, default=dt.datetime.now())
-    detail = StringField(defualt='', required=True)
+    detail = StringField(defualt='')
     requestingContact = StringField(required=True)
     priority = StringField(required=True)
     statusCode = StringField(max_length=30, required=True)

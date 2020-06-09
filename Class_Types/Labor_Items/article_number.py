@@ -9,5 +9,5 @@ class ArticleNumber(BaseRecord):
     articleNumber = StringField(max_length=20, required=True)
     description = ListField(StringField(), max_length=4, required=True)
     usedByInspectionCompanyButNotPrSkate = BooleanField(default=False)
-    Capital = BooleanField(default=False)
+    capital = BooleanField(default=False)
     meta = {'collection': 'ArticleNumber'}

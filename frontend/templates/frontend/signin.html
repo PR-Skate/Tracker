@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +8,9 @@
 </head>
 
 <body onload="logout()">
+{% include 'frontend/helpers/navbar.html' %}
+{% load static %}
+
 <h1>User Sign-In</h1>
 <form onsubmit="getAuthToken()" action="#" method="POST" name='form' id='form'>
     {% csrf_token %}
