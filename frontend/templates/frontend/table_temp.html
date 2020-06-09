@@ -161,7 +161,7 @@
         </tbody>
     </table>
 </div>
-<script charset="utf-8" src='/static/bundle.js'></script>
+<script type="module" src="{% static "frontend/bundle.js" %}"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script charset="utf-8">var TGSort = window.TGSort || function (n) {
     "use strict";
@@ -335,27 +335,31 @@
     }
 
     function editField(event, id) {
+        const SYSTEM_FIELDS = ['createdUser', 'lastModifiedUser', 'createdTimestamp', 'lastModifiedTimestamp', 'id']
+
         let previousValue, parent, input, newChild, field;
         field = id.split(' ')[1]
-        event.stopPropagation();
-        console.log('INNER');
-        parent = document.getElementById(id).offsetParent;
-        previousValue = parent.innerText;
-        while (parent.hasChildNodes()) {
-            parent.removeChild(parent.lastChild);
+        if (!SYSTEM_FIELDS.includes(field)) {
+            event.stopPropagation();
+            console.log('INNER');
+            parent = document.getElementById(id).offsetParent;
+            previousValue = parent.innerText;
+            while (parent.hasChildNodes()) {
+                parent.removeChild(parent.lastChild);
+            }
+
+            input = document.createElement("input");
+            input.type = getFieldType(field)
+            input.name = field
+            input.value = formatValue(previousValue, field)
+            input.id = id
+            input.ondblclick = function () {
+                submit_changes(event, id)
+            };
+
+            newChild = parent.appendChild(input);
+            console.log(newChild);
         }
-
-        input = document.createElement("input");
-        input.type = getFieldType(field)
-        input.name = field
-        input.value = formatValue(previousValue, field)
-        input.id = id
-        input.ondblclick = function () {
-            submit_changes(event, id)
-        };
-
-        newChild = parent.appendChild(input);
-        console.log(newChild);
         return false;
     }
 
@@ -366,6 +370,7 @@
         switch (fieldType) {
             case 'IntField':
                 value = parseInt(value)
+                break;
             case 'DecimalField':
                 value = parseFloat(value);
                 break;
@@ -381,9 +386,8 @@
                 break;
             case 'DateField':
             case 'DateTimeField':
-            {#June 4, 2020, 8:19 p.m.#}
-                console.log(window.moment)
-                value = window.moment(value, 'MMMM D, YYYY, H:mm').toDate();
+                value = lib.moment(value, 'MMMM D, YYYY, H:mm');
+                value = value.format('YYYY-MM-DDTHH:MM:SS');
                 break;
             case 'StringField':
             case 'EmailField':
@@ -401,7 +405,7 @@
     }
 
     function submit_changes(event, id) {
-        let previousValue, parent, text, input, newChild, temp, fieldName, instanceID, data;
+        let previousValue, parent, text, input, temp, fieldName, instanceID, data;
         event.stopPropagation();
         console.log('INNER');
         input = document.getElementById(id);

@@ -2,7 +2,7 @@ import copy
 import re
 
 from mongoengine import StringField, DynamicEmbeddedDocument, DecimalField, ReferenceField, \
-    EmbeddedDocumentField
+    EmbeddedDocumentField, ListField
 
 
 def display_string(string):
@@ -40,25 +40,33 @@ class BaseEmbeddedDocument(DynamicEmbeddedDocument):
             model = None
             filter = None
             type = None
+            list_field_information = None
+            list_choices = None
             sub_form_fields_information = None
+            required = None
 
             def __str__(self):
-                return f'{self.model_name} '
+                return f'{self.model_name}'
 
         field_information_list = list()
         for field_name, field_class in cls.get_form_fields_items():
             field_name = field_name.strip('_')
             if field_name != 'cls':
                 field_information = FieldInformation()
-                field_information.model_name = f'{main_field_name}{field_name.capitalize()}'
+                field_information.model_name = field_name
                 field_information.name = display_string(field_name)
                 field_information.type = field_class.__class__.__name__
-                if isinstance(field_class, ReferenceField) or isinstance(field_class, EmbeddedDocumentField):
+                field_information.required = field_class.__getattribute__('required')
+                if isinstance(field_class, ListField):
+                    field_information.list_field_type = field_class.__getattribute__('field').__class__.__name__
+                    if hasattr(field_class.field, 'choices'):
+                        field_information.list_choices = field_class.__getattribute__('choices')
+                elif isinstance(field_class, ReferenceField) or isinstance(field_class, EmbeddedDocumentField):
                     field_information.model = field_class.__getattribute__('document_type')
                     if not isinstance(field_information.model, str):
                         if isinstance(field_class, EmbeddedDocumentField):
                             field_information.sub_form_fields_information = field_information.model.get_field_information(
-                                main_field_name=field_name)
+                                field_name)
                         field_information.model = field_information.model.__name__
                     else:
                         if field_information.model == 'self':

@@ -8,6 +8,7 @@ from django import template
 from django.utils.safestring import mark_safe
 from Class_Types import *
 
+
 STATIC_FILES_FOR_FIELDS = ['state', 'country']
 
 register = template.Library()
@@ -46,8 +47,8 @@ def generateHtmlField(field_information, form=None, *args, **kwargs):
             else:
                 data = f'"{form.FILES.get(field_information.model_name)}"'
 
-        field = f'<label>{field_information.name}</label><br>\
-                <input type="{field_type}" value={data} name="{field_information.model_name}"><br><br>'
+        field = f'<label>{field_information.name}</label><br>\n\
+                <input type="{field_type}" value={data if field_type != "checkbox" else True} name="{field_information.model_name} {"required" if field_information.required else ""}"><br><br>\n'
 
         if field_information.name.lower() in STATIC_FILES_FOR_FIELDS:
             field = get_field_from_static_file(field_information)
