@@ -112,7 +112,6 @@ class EmployeeForm(BaseForm):
     pin = forms.CharField(max_length=4, required=True)
     rateOfPay = forms.DecimalField()
     active = forms.BooleanField()
-    passwordHash = forms.CharField(widget=forms.PasswordInput)
     type = forms.CharField(max_length=10, required=True)
     name = NameForm()
     address = AddressForm()
@@ -128,7 +127,7 @@ class EmployeeForm(BaseForm):
     class Meta:
         model = Employee
         fields = (
-            'userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'passwordHash', 'type', 'address')
+            'userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'type', 'address')
 
 
 class StoreForm(BaseForm):
@@ -251,6 +250,30 @@ class WorkOrderStatusForm(BaseForm):
 
     model = WorkOrderStatus
     fields = 'status'
+
+
+class ScopeOfWorkForm(BaseForm):
+    GB_Counter = forms.IntegerField(min_value=0)
+    GB_CounterBillable = forms.IntegerField(min_value=0)
+    SOWPicturePath = forms.ImageField(required=True)
+    WrongLocation = forms.BooleanField()
+    ConcretePatchNeeded = forms.BooleanField()
+    fkRightSOWID = forms.CharField(required=True)
+    fkStatusID = forms.CharField(required=True)
+    completedPicturePath = forms.ImageField(required=False)
+    dateFieldEditedStatus = forms.DateField()
+    timeFieldEditedStatus = forms.DateTimeField()
+    approvedBilling = forms.BooleanField()
+    fkInstallerID = forms.CharField(required=True)
+    fkRequireMaterials = forms.CharField(required=True)
+    fkLocationInStoreID = forms.CharField(required=True)
+    fkWorkOrderID = forms.CharField(required=True)
+    fkInitialLaborID = forms.CharField(required=True)
+    fkExtraLaborID = forms.CharField(required=True)
+    fkCorrectLaborID = forms.CharField(required=True)
+
+    model = ScopeOfWork
+    fields = ('GB_Counter', 'GB_CounterBillable', 'SOWPicturePath', 'WrongLocation', 'ConcretePatchNeeded', 'fkRightSOWID', 'fkStatusID', 'completedPicturePath', 'dateFieldEditedStatus', 'timeFieldEditedStatus', 'approvedBilling', 'fkInstallerID', 'fkRequireMaterials', 'fkLocationInStoreID', 'fkWorkOrderID', 'fkInitialLaborID', 'fkExtraLaborID', 'fkCorrectLaborID')
 
 
 class ScopeOfWorkStatusForm(BaseForm):

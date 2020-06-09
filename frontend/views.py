@@ -72,7 +72,9 @@ def customer_form(request):
             if try_to_save(model=cust, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": Customer.get_field_information()})
+                      {"field_information_list": Customer.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": Customer.get_field_information()})
 
 
 @login_required
@@ -86,28 +88,28 @@ def employee_form(request):
 
             if try_to_save(model=emp, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/employeeForm.html', {'form': form})
-    return render(request, 'frontend/employeeForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": Employee.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": Employee.get_field_information()})
 
 
 @login_required
 def prep_work_form(request):
-    work_order = WorkOrder.objects.all()
     if request.method == "POST":
         form = PrepWorkForm(request.POST, request)
         if form.is_valid():
             prepWork = PrepWork(**form.cleaned_data)
             if try_to_save(model=prepWork, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/prepWorkForm.html', {'form': form, 'work_order': work_order})
-    return render(request, 'frontend/prepWorkForm.html', {'work_order': work_order})
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": PrepWork.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": PrepWork.get_field_information()})
 
 
 @login_required
 def store_form(request):
-    cust = Customer.objects.all()
-    region_code = RegionCode.objects.all()
-    micro_region_code = MicroRegionCode.objects.all()
     if request.method == "POST":
         form = StoreForm(request.POST, request)
         if form.is_valid():
@@ -127,8 +129,8 @@ def store_form(request):
                           coordinates=coordinates)
             if try_to_save(model=store, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/storeForm.html',
-                      {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": Store.get_field_information(), 'form': form})
     return render(request, 'frontend/form_template_python.html',
                   {"field_information_list": Store.get_field_information()})
 
@@ -143,8 +145,10 @@ def work_order_form(request):
             wo = WorkOrder(**form.cleaned_data)
             if try_to_save(model=wo, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/workOrderForm.html', {'form': form, 'store': store})
-    return render(request, 'frontend/workOrderForm.html', {'store': store, 'workOrderStatus': workOrderStatus})
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": WorkOrder.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": WorkOrder.get_field_information()})
 
 
 @login_required
@@ -155,8 +159,10 @@ def work_order_status_form(request):
             status = WorkOrderStatus(**form.cleaned_data)
             if try_to_save(model=status, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/workOrderStatusForm.html', {'form': form})
-    return render(request, 'frontend/workOrderStatusForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": WorkOrderStatus.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": WorkOrderStatus.get_field_information()})
 
 
 @login_required
@@ -167,8 +173,10 @@ def micro_region_form(request):
             region = MicroRegionCode(**form.cleaned_data)
             if try_to_save(model=region, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/microRegionForm.html', {'form': form})
-    return render(request, 'frontend/microRegionForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": MicroRegionCode.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": MicroRegionCode.get_field_information()})
 
 
 @login_required
@@ -179,12 +187,26 @@ def region_form(request):
             region = RegionCode(**form.cleaned_data)
             if try_to_save(model=region, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/regionForm.html', {'form': form})
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": RegionCode.get_field_information(), 'form': form})
     return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": Customer.get_field_information()})
+                  {"field_information_list": RegionCode.get_field_information()})
 
 
 ''' Needs to be verified afer conflicts resolved'''
+
+@login_required
+def scope_of_work_form(request):
+    if request.method == "POST":
+        form = ScopeOfWorkForm(request.POST, request)
+        if form.is_valid():
+            status = ScopeOfWork(**form.cleaned_data)
+            if try_to_save(model=status, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": ScopeOfWork.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": ScopeOfWork.get_field_information()})
 
 
 @login_required
@@ -195,8 +217,10 @@ def scope_of_work_status_form(request):
             status = ScopeOfWorkStatus(**form.cleaned_data)
             if try_to_save(model=status, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/scopeOfWorkStatusForm.html', {'form': form})
-    return render(request, 'frontend/scopeOfWorkStatusForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": ScopeOfWorkStatus.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": ScopeOfWorkStatus.get_field_information()})
 
 
 @login_required
@@ -207,8 +231,10 @@ def labor_item_form(request):
             item = LaborItem(**form.cleaned_data)
             if try_to_save(model=item, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/laborItemForm.html', {'form': form})
-    return render(request, 'frontend/laborItemForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": LaborItem.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": LaborItem.get_field_information()})
 
 
 @login_required
@@ -219,8 +245,10 @@ def article_number_state_form(request):
             article = ArticleNumberState(**form.cleaned_data)
             if try_to_save(model=article, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/articleNumberStateForm.html', {'form': form})
-    return render(request, 'frontend/articleNumberStateForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": ArticleNumberState.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": ArticleNumberState.get_field_information()})
 
 
 @login_required
@@ -232,8 +260,10 @@ def article_number_form(request):
             article = ArticleNumber(**form.cleaned_data)
             if try_to_save(model=article, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/articleNumberForm.html', {'form': form})
-    return render(request, 'frontend/articleNumberForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": ArticleNumber.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": ArticleNumber.get_field_information()})
 
 
 @login_required
@@ -244,8 +274,10 @@ def material_item_form(request):
             item = MaterialItem(**form.cleaned_data)
             if try_to_save(model=item, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/materialItemForm.html', {'form': form})
-    return render(request, 'frontend/materialItemForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": MaterialItem.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": MaterialItem.get_field_information()})
 
 
 @login_required
@@ -256,8 +288,10 @@ def material_list_form(request):
             item = MaterialList(**form.cleaned_data)
             if try_to_save(model=item, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/materialListForm.html', {'form': form})
-    return render(request, 'frontend/materialListForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": MaterialList.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": MaterialList.get_field_information()})
 
 
 @login_required
@@ -268,8 +302,10 @@ def location_in_store_form(request):
             location = LocationInStore(**form.cleaned_data)
             if try_to_save(model=location, form=form, request=request):
                 return HttpResponseRedirect('')
-        return render(request, 'frontend/locationInStoreForm.html', {'form': form})
-    return render(request, 'frontend/locationInStoreForm.html')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": LocationInStore.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": LocationInStore.get_field_information()})
 
 
 """"REPORTS"""
@@ -404,8 +440,7 @@ def generate_table_render(model, request):
                    'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
 
 
-def generate_form_render(model, request):
-    print(model.__name__)
+def generate_form_render(model, request):  # TODO JUST WRONG
     records = model.objects.filter(**request.GET.dict())
     fields = model.get_fields(get_id=True)
     instances = list()
