@@ -2,19 +2,25 @@
 # Created On: 05/07/2020
 #
 
-from mongoengine import StringField, DateTimeField, BooleanField, \
+from mongoengine import StringField, BooleanField, \
     EmbeddedDocumentField, ReferenceField, EmailField, DateField, \
     ListField, IntField
-from djgeojson.fields import PointField
 
-from .micro_region_code import MicroRegionCode
-from .region_code import RegionCode
-from .customer import Customer
 from ..Embeded_Documents.embeded_classes import Address, Name, Coordinates
 from ..base_record import BaseRecord
 
 
 class Store(BaseRecord):
+    OPTIONS = (
+        ('SUN', 'Sunday'),
+        ('MON', 'Monday'),
+        ('TUES', 'Tuesday'),
+        ('WED', 'Wednesday'),
+        ('THURS', 'Thursday'),
+        ('FRI', 'Friday'),
+        ('SAT', 'Saturday')
+    )
+
     # constructor:
     storeNumber = StringField(max_length=50, required=True)
     fkCustomer = ReferenceField('Customer', required=True, dbref=True)
@@ -35,7 +41,15 @@ class Store(BaseRecord):
 
     overnightManagerEmail = EmailField()
     overnightCrew = StringField(max_length=25)
-    overnightAccess = ListField(StringField())
+    overnightAccess = ListField(StringField(max_length=5), choices=(
+        ('SUN', 'Sunday'),
+        ('MON', 'Monday'),
+        ('TUES', 'Tuesday'),
+        ('WED', 'Wednesday'),
+        ('THURS', 'Thursday'),
+        ('FRI', 'Friday'),
+        ('SAT', 'Saturday')
+    ))
     noiseOrdinance = BooleanField(default=False)
     timeCutOff = StringField()
 
@@ -48,3 +62,5 @@ class Store(BaseRecord):
     fiscalWeek = IntField(min_value=1, max_value=53)
     meta = {'collection': 'Store'}
 
+    def __str__(self):
+        return f'{self.storeNumber} - {self.address.city} - {self.address.state}'

@@ -2,6 +2,7 @@
 # Created On: 05/08/2020
 #
 from datetime import datetime
+
 from mongoengine import DateTimeField, BooleanField, StringField, ReferenceField
 
 from Class_Types import BaseRecord, WorkOrder
@@ -21,3 +22,5 @@ class PrepWork(BaseRecord):
     fkWorkOrderName = ReferenceField(WorkOrder, required=True, dbref=True)
     meta = {'collection': 'PrepWork'}
 
+    def __str__(self):
+        return f'{self.fkWorkOrderName.WorkOrderName} - Form Complete:{self.formComplete}'

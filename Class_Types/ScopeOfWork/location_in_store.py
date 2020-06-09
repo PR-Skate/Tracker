@@ -2,8 +2,8 @@
 # Created On: 05/07/2020
 from mongoengine import StringField, BooleanField, ReferenceField, ImageField
 
-from ..Store import Store
 from ..Material_Items import MaterialList
+from ..Store import Store
 from ..base_record import BaseRecord
 
 
@@ -22,3 +22,6 @@ class LocationInStore(BaseRecord):
     fkMaterialList = ReferenceField(MaterialList, dbref=True)
     fkStoreNumber = ReferenceField(document_type=Store, required=True, dbref=True)
     meta = {'collection': 'LocationInStore'}
+
+    def __str__(self):
+        return f'Dept:{self.department} - Bay:{self.bay} - Tower:{self.tower} - Level: {self.level}'

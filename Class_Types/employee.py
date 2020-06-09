@@ -24,4 +24,4 @@ class Employee(BaseRecord):
     meta = {'collection': 'Employee'}
 
     def __str__(self):
-        return self.userName
+        return f'{self.userName} - {self.name}'

@@ -6,8 +6,6 @@ import datetime as dt
 
 from mongoengine import DateField, StringField, FileField, ReferenceField, GridFSProxy
 
-from .work_order_status import WorkOrderStatus
-from ..Store import Store
 from ..base_record import BaseRecord
 
 
@@ -33,3 +31,6 @@ class WorkOrder(BaseRecord):
 
     def to_file(self):
         return GridFSProxy(self)
+
+    def __str__(self):
+        return f'{self.workOrderName} - {self.fkWorkOrderStatus.status}'

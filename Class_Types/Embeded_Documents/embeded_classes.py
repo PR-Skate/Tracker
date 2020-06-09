@@ -1,14 +1,81 @@
+import copy
 import re
 
-from mongoengine import StringField, DynamicEmbeddedDocument, EmbeddedDocument, DecimalField
+from mongoengine import StringField, DynamicEmbeddedDocument, DecimalField, ReferenceField, \
+    EmbeddedDocumentField
 
 
-class Coordinates(DynamicEmbeddedDocument):
+def display_string(string):
+    words = list()
+    word = ''
+    for letter in string:
+        if letter.islower():
+            if not word:
+                letter = letter.upper()
+            word += letter
+        else:
+            words.append(word)
+            word = letter
+    words.append(word)
+    return ' '.join(words)
+
+
+def camel_case_to_upper(string):
+    return ''.join(display_string(string).split(' '))
+
+
+class BaseEmbeddedDocument(DynamicEmbeddedDocument):
+    meta = {'allow_inheritance': True, 'abstract': True}
+
+    @classmethod
+    def get_form_fields_items(cls):
+        return cls._fields.items()
+
+    @classmethod
+    def get_field_information(cls, main_field_name):
+
+        class FieldInformation(object):
+            name = None
+            model_name = None
+            model = None
+            filter = None
+            type = None
+            sub_form_fields_information = None
+
+            def __str__(self):
+                return f'{self.model_name} '
+
+        field_information_list = list()
+        for field_name, field_class in cls.get_form_fields_items():
+            field_name = field_name.strip('_')
+            if field_name != 'cls':
+                field_information = FieldInformation()
+                field_information.model_name = f'{main_field_name}{field_name.capitalize()}'
+                field_information.name = display_string(field_name)
+                field_information.type = field_class.__class__.__name__
+                if isinstance(field_class, ReferenceField) or isinstance(field_class, EmbeddedDocumentField):
+                    field_information.model = field_class.__getattribute__('document_type')
+                    if not isinstance(field_information.model, str):
+                        if isinstance(field_class, EmbeddedDocumentField):
+                            field_information.sub_form_fields_information = field_information.model.get_field_information(
+                                main_field_name=field_name)
+                        field_information.model = field_information.model.__name__
+                    else:
+                        if field_information.model == 'self':
+                            field_information.model = cls.__name__
+                field_information_list.append(field_information)
+        return field_information_list
+
+
+class Coordinates(BaseEmbeddedDocument):
     longitude = DecimalField(min_value=-180, max_value=180, precision=25)
     latitude = DecimalField(min_value=-90, max_value=90, precision=25)
 
+    def __str__(self):
+        return f'{self.latitude}, {self.longitude}'
 
-class Address(EmbeddedDocument):
+
+class Address(BaseEmbeddedDocument):
     addressLineOne = StringField(max_length=150, required=True)
     addressLineTwo = StringField(max_length=150, required=False, allow_null=True, allow_blank=True, blank=True,
                                  null=True)
@@ -49,7 +116,7 @@ class Address(EmbeddedDocument):
             zip=self.zip, country=self.country)
 
 
-class Name(DynamicEmbeddedDocument):
+class Name(BaseEmbeddedDocument):
     _firstName = StringField(max_length=150, required=True, db_field='firstName')
     _lastName = StringField(max_length=150, default='', db_field='lastName')
     fullName = StringField(max_length=300, required=True)
@@ -87,6 +154,12 @@ class Name(DynamicEmbeddedDocument):
         if '_cls' in temp:
             temp.remove('_cls')
         return temp
+
+    @classmethod
+    def get_form_fields_items(cls):
+        temp = copy.deepcopy(cls._fields)
+        temp.pop('fullName')
+        return temp.items()
 
     def __str__(self):
         return str(self.lastName + '\n' + self.firstName).strip()

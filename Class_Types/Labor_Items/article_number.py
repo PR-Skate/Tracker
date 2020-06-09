@@ -11,3 +11,7 @@ class ArticleNumber(BaseRecord):
     usedByInspectionCompanyButNotPrSkate = BooleanField(default=False)
     capital = BooleanField(default=False)
     meta = {'collection': 'ArticleNumber'}
+
+    def __str__(self):
+        description = ' - '.join(self.description)
+        return f'{self.articleNumber}: {description}'

@@ -1,0 +1,25 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ model_name }} Form</title>
+</head>
+<script type="module" src="{% static "frontend/bundle.js" %}"></script>
+<body>
+<h1>{{ model_name }} Form</h1>
+<form action="#" method="POST" name='form' id='form' enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% for field_information in field_information_list %}
+        {% generateHtmlField field_information form messages=messages %}
+    {% endfor %}
+
+    <input type="submit"> {% for message in messages %}
+    <ul>{{ message }}</ul>
+{% endfor %} {{ form.errors }}
+    <p id='fail' style="display:none">ERROR</p>
+</form>
+</body>
+</html>
