@@ -4,7 +4,8 @@
 from datetime import datetime
 
 import bson as bson
-from mongoengine import DateTimeField, DynamicDocument, ReferenceField, ValidationError
+from mongoengine import DateTimeField, DynamicDocument, ReferenceField, ValidationError, EmbeddedDocumentField, \
+    ListField
 
 from PR_Skate.logging import log_methods
 
@@ -44,14 +45,19 @@ class BaseRecord(DynamicDocument):
 
     @lastModifiedUser.setter
     def lastModifiedUser(self, value):
-        if isinstance(value, bson.DBRef):
-            pass
-        elif bson.ObjectId.is_valid(value):
-            value = bson.ObjectId(value)
-        else:
-            from Class_Types import Employee
-            value = Employee.objects.get(userName=value).id
-        self._lastModifiedUser = value
+        if value:
+            if isinstance(value, bson.DBRef):
+                pass
+            elif bson.ObjectId.is_valid(value):
+                value = bson.ObjectId(value)
+            else:
+                from Class_Types import Employee
+                value = Employee.objects.get(userName=value).id
+            self._lastModifiedUser = value
+
+    @classmethod
+    def get_all_fields(cls):
+        return list([x.strip('_') for x in cls._db_field_map.values()])
 
     @classmethod
     def get_fields(cls, get_id=False):
@@ -102,6 +108,63 @@ class BaseRecord(DynamicDocument):
             temp.remove('_cls')
         return temp
 
+    @staticmethod
+    def display_string(string):
+        words = list()
+        word = ''
+        for letter in string:
+            if letter.islower():
+                if not word:
+                    letter = letter.upper()
+                word += letter
+            else:
+                words.append(word)
+                word = letter
+        words.append(word)
+        return ' '.join(words)
+
+    @classmethod
+    def get_field_information(cls):
+
+        class FieldInformation(object):
+            name = None
+            model_name = None
+            model = None
+            filter = None
+            type = None
+            list_field_information = None
+            list_choices = None
+            sub_form_fields_information = None
+
+            def __str__(self):
+                return f'{self.model_name} '
+
+        field_information_list = list()
+        base_record_fields = BaseRecord.get_all_fields()
+        for field_name, field_class in cls._fields.items():
+            field_name = field_name.strip('_')
+            if field_name not in base_record_fields and field_name != 'id':
+                field_information = FieldInformation()
+                field_information.model_name = field_name
+                field_information.name = cls.display_string(field_name)
+                field_information.type = field_class.__class__.__name__
+                if isinstance(field_class, ListField):
+                    field_information.list_field_type = field_class.__getattribute__('field').__class__.__name__
+                    if hasattr(field_class.field, 'choices'):
+                        field_information.list_choices = field_class.__getattribute__('choices')
+                elif isinstance(field_class, ReferenceField) or isinstance(field_class, EmbeddedDocumentField):
+                    field_information.model = field_class.__getattribute__('document_type')
+                    if not isinstance(field_information.model, str):
+                        if isinstance(field_class, EmbeddedDocumentField):
+                            field_information.sub_form_fields_information = field_information.model.get_field_information(
+                                field_name)
+                        field_information.model = field_information.model.__name__
+                    else:
+                        if field_information.model == 'self':
+                            field_information.model = cls.__name__
+                field_information_list.append(field_information)
+        return field_information_list
+
     def is_valid_reference_field(self, field):
         if self._data.get(field):
             if not isinstance(self._data.get(field), bson.ObjectId):
@@ -143,6 +206,7 @@ class BaseRecord(DynamicDocument):
              _refs=None, save_condition=None, signal_kwargs=None, **kwargs):
         try:
             self.custom_validate()
+            self.toString = self.__str__()
             return DynamicDocument.save(self, force_insert, validate, clean, write_concern, cascade, cascade_kwargs,
                                         _refs, save_condition, signal_kwargs, **kwargs)
         except Exception as e:

@@ -45,8 +45,10 @@
         border-color: #211f2d;
         color: #211f2d;
         position: -webkit-sticky;
+        position: sticky;
         text-align: center;
         top: -1px;
+        vertical-align: top;
         will-change: transform
     }
 
@@ -121,7 +123,7 @@
             margin: auto 0px;
         }
     }</style>
-<div class="tg-wrap">
+<div class="tg- wrap">
     {% for field in fields %}
         <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.."
                title="Type in a {{ field }}">
@@ -157,6 +159,7 @@
         </tbody>
     </table>
 </div>
+<script charset="utf-8" src='/static/bundle.js'></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script charset="utf-8">var TGSort = window.TGSort || function (n) {
     "use strict";
@@ -281,116 +284,198 @@
 }(document)</script>
 <script>
 
-function search_rows() {
-    display_all_rows()
-    {% for field in fields %}
-    filter_{{ field }}()
-    {% endfor %}
-}
-
-function display_all_rows() {
-    let table, tr, i;
-    table = document.getElementById("tg-0Xa6r");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-        tr[i].style.display = "";
+    function search_rows() {
+        display_all_rows()
+        {% for field in fields %}
+            filter_{{ field }}()
+        {% endfor %}
     }
-}
 
-
-
-{% for field in fields %}
-function filter_{{ field }}() {
-    let input, filter, table, tr, td, i, txtValue, result;
-    input = document.getElementById("search_{{ field }}");
-    filter = input.value.toUpperCase();
-    if (filter) {
+    function display_all_rows() {
+        let table, tr, i;
         table = document.getElementById("tg-0Xa6r");
         tr = table.getElementsByTagName("tr");
-        result = [tr.length]
-        for (i = 2; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                txtValue = txtValue.trim().toUpperCase()
-                let num = txtValue.indexOf(filter)
-                if (num <= -1){
-                    tr[i].style.display = "none";
-                }
-            }
+        for (i = 0; i < tr.length; i++) {
+            tr[i].style.display = "";
         }
     }
-    return result
-}
-{% endfor %}
 
-function test_outer() {
 
-    console.log('OUTER')
-}
 
-function editField(event, id){
-    let previousValue, parent, input, newChild, field;
-    field = id.split(' ')[1]
-    event.stopPropagation();
-    console.log('INNER');
-    parent = document.getElementById(id).offsetParent;
-    previousValue = parent.innerText;
-    while (parent.hasChildNodes()) {
-        parent.removeChild(parent.lastChild);
+    {% for field in fields %}
+        function filter_{{ field }}() {
+            let input, filter, table, tr, td, i, txtValue, result;
+            input = document.getElementById("search_{{ field }}");
+            filter = input.value.toUpperCase();
+            if (filter) {
+                table = document.getElementById("tg-0Xa6r");
+                tr = table.getElementsByTagName("tr");
+                result = [tr.length]
+                for (i = 2; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        txtValue = txtValue.trim().toUpperCase()
+                        let num = txtValue.indexOf(filter)
+                        if (num <= -1) {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            return result
+        }
+    {% endfor %}
+
+    function test_outer() {
+
+        console.log('OUTER')
     }
 
-    input = document.createElement("input");
-    input.type = 'text' //TODO CHANGE TO FUNCTION THAT DETERMINES TYPE
-    input.name = field
-    input.value = previousValue
-    input.id = id
-    input.ondblclick = function () {
-        submit_changes(event, id)
-    };
+    function editField(event, id) {
+        let previousValue, parent, input, newChild, field;
+        field = id.split(' ')[1]
+        event.stopPropagation();
+        console.log('INNER');
+        parent = document.getElementById(id).offsetParent;
+        previousValue = parent.innerText;
+        while (parent.hasChildNodes()) {
+            parent.removeChild(parent.lastChild);
+        }
 
-    newChild = parent.appendChild(input);
-    console.log(newChild);
-    return false;
-}
+        input = document.createElement("input");
+        input.type = getFieldType(field)
+        input.name = field
+        input.value = formatValue(previousValue, field)
+        input.id = id
+        input.ondblclick = function () {
+            submit_changes(event, id)
+        };
 
-function submit_changes(event, id) {
-    let previousValue, parent, text, input, newChild, temp, fieldName, instanceID, data;
-    event.stopPropagation();
-    console.log('INNER');
-    input = document.getElementById(id);
-    parent = input.offsetParent;
-    previousValue = input.value;
-    while (parent.hasChildNodes()) {
-        parent.removeChild(parent.lastChild);
+        newChild = parent.appendChild(input);
+        console.log(newChild);
+        return false;
     }
-    text = document.createElement("pre");
-    text.innerText = previousValue
-    text.ondblclick = function () {
-        editField(event, id)
-    };
-    text.id = id
-    parent.appendChild(text);
-    temp = JSON.parse(localStorage.getItem('auth_token_dict'));
-    instanceID = id.split(' ')[0];
-    fieldName = id.split(' ')[1];
-    data = JSON.stringify({[fieldName]: previousValue})
-    var settings = {
-        "url": "/api/{{table_name}}/" + instanceID + "/",
-        "type": "PUT",
-        "timeout": 0,
-        "headers": {
-            "Authorization": "Token " + temp.token,
-            "Content-Type": "application/json",
-        },
-        "data": data,
-    };
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-    });
-    return false;
-}
 
+    function formatValue(value, field) {
+        var fieldDictionary, fieldType;
+        fieldDictionary = {{ fields_dictionary | safe }}
+            fieldType = fieldDictionary[field]
+        switch (fieldType) {
+            case 'IntField':
+                value = parseInt(value)
+            case 'DecimalField':
+                value = parseFloat(value);
+                break;
+            case 'BooleanField':
+                value = Boolean(value)
+                break;
+            case 'ReferenceField':
+                value = 'select'; //TODO
+                break;
+            case 'ImageField':
+            case 'FileField':
+                value = 'file'; //TODO
+                break;
+            case 'DateField':
+            case 'DateTimeField':
+            {#June 4, 2020, 8:19 p.m.#}
+                console.log(window.moment)
+                value = window.moment(value, 'MMMM D, YYYY, H:mm').toDate();
+                break;
+            case 'StringField':
+            case 'EmailField':
+                break;
+            case 'EmbeddedDocumentField':
+            case 'ListField':
+                value = 'number'; //TODO
+                break;
+            default:
+                value = null;
+                break;
+        }
+        console.log(value)
+        return value
+    }
+
+    function submit_changes(event, id) {
+        let previousValue, parent, text, input, newChild, temp, fieldName, instanceID, data;
+        event.stopPropagation();
+        console.log('INNER');
+        input = document.getElementById(id);
+        parent = input.offsetParent;
+        previousValue = input.value;
+        while (parent.hasChildNodes()) {
+            parent.removeChild(parent.lastChild);
+        }
+        text = document.createElement("pre");
+        text.innerText = previousValue
+        text.ondblclick = function () {
+            editField(event, id)
+        };
+        text.id = id
+        parent.appendChild(text);
+        temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+        instanceID = id.split(' ')[0];
+        fieldName = id.split(' ')[1];
+        data = JSON.stringify({[fieldName]: previousValue})
+        var settings = {
+            "url": "/api/{{table_name}}/" + instanceID + "/",
+            "type": "PUT",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Token " + temp.token,
+                "Content-Type": "application/json",
+            },
+            "data": data,
+        };
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+        return false;
+    }
+
+    function getFieldType(field) {
+        let fieldDictionary, fieldType, result;
+        fieldDictionary = {{ fields_dictionary | safe }}
+            fieldType = fieldDictionary[field]
+        switch (fieldType) {
+            case 'IntField':
+            case 'DecimalField':
+                result = 'number';
+                break;
+            case 'BooleanField':
+                result = 'checkbox';
+                break;
+            case 'ReferenceField':
+                result = 'select';
+                break;
+            case 'ImageField':
+            case 'FileField':
+                result = 'file';
+                break;
+            case 'DateField':
+                result = 'date';
+                break;
+            case 'DateTimeField':
+                result = 'datetime-local';
+                break;
+            case 'StringField':
+                result = 'text';
+                break;
+            case 'EmailField':
+                result = 'email';
+            case 'EmbeddedDocumentField':
+            case 'ListField':
+                result = 'number'; //TODO WHAT TO DO WITH EMBEDS and LISTS? RECURSION?
+                break;
+            default:
+                result = null;
+                break;
+        }
+        console.log(result)
+        return result;
+    }
 </script>
 </body>
 </html>

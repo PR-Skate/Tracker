@@ -10,3 +10,6 @@ class ArticleNumberState(BaseRecord):
     price = DecimalField(required=True)
     fkArticleNumber = ReferenceField(ArticleNumber, required=True, dbref=True)
     meta = {'collection': 'ArticleNumberState'}
+
+    def __str__(self):
+        return f'{self.state} {self.fkArticleNumber.articleNumber}'

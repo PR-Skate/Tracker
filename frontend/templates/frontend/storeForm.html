@@ -72,13 +72,13 @@
         <input type="text" id="City" name="city" maxlength="20" size="10" style="margin-left: 4em" placeholder="City"
                required><br><br>
 
-        {% include 'frontend/helpers/states.html' %}
+        {% include 'frontend/helpers/state.html' %}
 
 
         <label for="PostalCode">Postal Code</label>
         <input type="text" id="zip" name="zip" maxlength="10" size="10" style="margin-left: 4em" placeholder="Postal Code" required><br><br>
 
-        {% include 'frontend/helpers/countries.html' %}
+        {% include 'frontend/helpers/country.html' %}
 
         <label for="region">Region Name</label>
         <input type="text" name="region" style="margin-left: 4em" required><br><br>
@@ -233,18 +233,15 @@
             <input type="submit" value="Submit">
             <input type="reset" value="Reset">
         </div>
-    </form>
+</form>
 
 
-
-
-
-    <!-- This can be taken out. It is only kept for reference of id="app" -->
-    <div id="app">
-        <!-- React will load here -->
-    </div>
+<!-- This can be taken out. It is only kept for reference of id="app" -->
+<div id="app">
+    <!-- React will load here -->
+</div>
 
 <!-- {% load static %} -->
-<!-- <script src="{% static " frontend/main.js " %}"></script> -->
+<!-- <script src="{% static " frontend/lib.js " %}"></script> -->
 
 </html>

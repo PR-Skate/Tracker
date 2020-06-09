@@ -1,6 +1,7 @@
 # Created By: Chase Crossley
 # Created On: 05/08/2020
 import datetime
+
 from mongoengine import IntField, DecimalField, DateTimeField, EmbeddedDocumentField, BooleanField, ReferenceField, \
     DateField
 
@@ -59,4 +60,6 @@ class SchedulingWork(BaseRecord):
         self._duration = value
         if self._dateScheduled:
             self.endDate = self._dateScheduled + datetime.timedelta(days=self._duration)
-6
+
+    def __str__(self):
+        return f'{self.fkWorkOrderID.WorkOrderName} - Form Complete:{self.formComplete}'

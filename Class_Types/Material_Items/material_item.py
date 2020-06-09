@@ -9,3 +9,7 @@ class MaterialItem(BaseRecord):
     materialArticleNumber = StringField(required=True)
     description = ListField(StringField(), max_length=7, required=True)
     meta = {'collection': 'MaterialItem'}
+
+    def __str__(self):
+        description = ' - '.join(self.description)
+        return f'{self.materialArticleNumber}: {description}'

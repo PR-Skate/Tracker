@@ -1,3 +1,4 @@
+import json
 import re
 
 import mongoengine
@@ -7,9 +8,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from mongoengine.errors import *
-from .forms import *
 from mongoengine import GridFSProxy
+from mongoengine.errors import *
+
+from .forms import *
+
 
 # Create your views here.
 @login_required
@@ -69,17 +72,18 @@ def customerForm(request):
             try:
                 cust = Customer(**form.cleaned_data)
                 if try_to_save(model=cust, form=form, request=request):
-                    return HttpResponseRedirect('')
-                    # return render(request, 'frontend/customerForm.html', {'form':form})
+                    return render(request, 'frontend/form_template_python.html',
+                                  {"field_information_list": Customer.get_field_information(), 'form': form})
                 else:
-                    return render(request, 'frontend/customerForm.html', {'form': form})
-            except:
+                    return render(request, 'frontend/form_template_python.html',
+                                  {"field_information_list": Customer.get_field_information(), 'form': form})
+            except Exception as e:
                 print(form.errors)
+                print(e)
         else:
-            return render(request, 'frontend/customerForm.html', {'form': form})
-    else:
-        pass
-    return render(request, 'frontend/customerForm.html')
+            return render(request, 'frontend/form_template_python.html', {'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": Customer.get_field_information()})
 
 
 @login_required
@@ -147,8 +151,10 @@ def storeForm(request):
 
         return render(request, 'frontend/storeForm.html',
                       {'form': form, 'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
-    return render(request, 'frontend/storeForm.html',
-                  {'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
+    # return render(request, 'frontend/storeForm.html',
+    #               {'region_code': region_code, 'micro_region_code': micro_region_code, 'cust': cust})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": Store.get_field_information()})
 
 
 @login_required
@@ -167,7 +173,8 @@ def workOrderForm(request):
     pdf = []
     for f in files:
         pdf.append(GridFSProxy(f.inspectForStorePath).read())
-    return render(request, 'frontend/workOrderForm.html', {'store': store, 'workOrderStatus': workOrderStatus, 'pdf':pdf})
+    return render(request, 'frontend/workOrderForm.html',
+                  {'store': store, 'workOrderStatus': workOrderStatus, 'pdf': pdf})
 
 
 @login_required
@@ -203,8 +210,9 @@ def regionForm(request):
             print(region.to_json())
             region.save()
             return HttpResponseRedirect('')
-        return render(request, 'frontend/regionForm.html', {'form': form})
-    return render(request, 'frontend/regionForm.html')
+        return render(request, 'frontend/form_template_python.html', {'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {'field_information_list': RegionCode.get_field_information()})
 
 
 """"REPORTS"""
@@ -323,30 +331,57 @@ def generate_table_render(model, request):
     records = model.objects.filter(**request.GET.dict())
     fields = model.get_fields(get_id=True)
     instances = list()
+    fields_dictionary = dict()
     for record in records:
         print('id: {}'.format(record.id), end='\n')
-        attributes = {}
+        attributes = dict()
         for field in fields:
             field_name = record._reverse_db_field_map.get(field)
             attributes.update(
                 {field.strip('_'): record.__getattribute__(field_name)})
-
+            fields_dictionary.update({field.strip('_'): model._fields[field_name].__class__.__name__})
         instances.append(attributes)
 
     return render(request, 'frontend/table_temp.html',
                   {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
-                   'token': request.user})
+                   'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
+
+
+def generate_form_render(model, request):
+    print(model.__name__)
+    records = model.objects.filter(**request.GET.dict())
+    fields = model.get_fields(get_id=True)
+    instances = list()
+    fields_dictionary = dict()
+    for record in records:
+        print('id: {}'.format(record.id), end='\n')
+        attributes = dict()
+        for field in fields:
+            field_name = record._reverse_db_field_map.get(field)
+            attributes.update(
+                {field.strip('_'): record.__getattribute__(field_name)})
+            fields_dictionary.update({field.strip('_'): model._fields[field_name].__class__.__name__})
+        instances.append(attributes)
+
+    return render(request, 'frontend/table_temp.html',
+                  {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
+                   'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
 
 
 def try_to_save(model, form, request):
     try:
         model.save()
-        messages.success(request, 'Successfully added {}.'.format(model.__class__.name))
+        messages.success(request, 'Successfully added {}.'.format(model.__class__.__name__))
         return True
-
     except mongoengine.errors.NotUniqueError as e:
         for field in e.args:
             print(field)
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Must be unique')
+        return False
+    except mongoengine.errors.ValidationError as e:
+        for field in e.errors:
+            print(field)
+            field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
+            form.add_error(field, 'Must be unique')
         return False

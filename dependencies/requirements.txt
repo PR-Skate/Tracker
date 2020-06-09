@@ -56,3 +56,7 @@ django-geojson                     #TODO add comment
 jsonfield                          #TODO add comment
 geojson                            #TODO add comment
 django-rest-knox                   #TODO add comment
+cryptography                       #TODO add comment
+djangorestframework-simplejwt      #TODO add comment
+pycrypto                           #TODO add comment
+PyJWT                              #TODO add comment

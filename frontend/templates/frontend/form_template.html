@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ model_name }} Form</title>
+</head>
+<body>
+<h1>Hello World</h1>
+<form onload="populateForm({{ field_information }})" action="#" method="POST" name='form' id='form'>
+    {% csrf_token %}
+    <input type="submit"> {% for message in messages %}
+    <ul>{{ message }}</ul>
+{% endfor %} {{ form.errors }}
+    <p id='fail' style="display:none">ERROR</p>
+</form>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script>
+    function populateForm(fieldInformationList) {
+        let form, fieldInformation, i;
+        form = document.getElementById("form");
+        for (i = 0; i < fieldInformationList.length; i++) {
+            fieldInformation = fieldInformationList[i];
+            let newChild = generateHtmlField(fieldInformation);
+            let separationTag = document.createElement("br")
+            let label = document.createElement("label")
+            label.innerText = fieldInformation.name
+            label.for = fieldInformation.name
+            form.insertBefore(separationTag, form.childNodes.item(0));
+            form.insertBefore(separationTag, form.childNodes.item(0));
+            form.insertBefore(newChild, form.childNodes.item(0));
+            form.insertBefore(newChild, form.childNodes.item(0));
+            form.insertBefore(label, form.childNodes.item(0));
+        }
+    }
+
+    function generateHtmlField(fieldInformation) {
+        let field;
+        field = document.createElement("input");
+        field.type = getFieldType(fieldInformation);
+
+        if (!isBasicFieldType(field.type)) {
+            if (field.type === "select") {
+                field = makeSelectContainer(fieldInformation);
+            } else {
+                field = makeSubForm(fieldInformation);
+            }
+        }
+        return field;
+    }
+
+    function makeSelectContainer(fieldInformation) {
+        let selectContainer, selected, i, options, other;
+        selectContainer = document.createElement("select");
+        selectContainer.name = fieldInformation.name;
+        selectContainer.id = fieldInformation.name;
+
+        selected = document.createElement("option");
+        selected.innerText = fieldInformation.name;
+        selected.value = "";
+
+        selectContainer.add(selected);
+
+        options = getInstances(fieldInformation);
+        for (i = 0; i < options.length; i++) {
+            let instance = options[i];
+            let option = document.createElement("option");
+            option.value = instance.id;
+            option.innerText = instance["toString"];
+
+            selectContainer.add(option);
+        }
+
+        other = document.createElement("option");
+        other.innerText = "Other";
+        other.value = "Other";
+        selectContainer.add(other);
+
+        return selectContainer;
+    }
+
+
+    function getInstances(fieldInformation) {
+        let settings, result, tableName, temp;
+        temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+        if (fieldInformation.tableName !== 'self') {
+            tableName = fieldInformation.tableName;
+        } else {
+            tableName = {{ table_name }};
+        }
+        settings = {
+            "url": "/api/${tableName}/?${fieldInformation.filter}",
+            "type": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Token " + temp.token,
+            },
+        };
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            result = response;
+        });
+        if (!result) {
+            result = null;
+        }
+        return result;
+    }
+
+
+    function makeSubForm(fieldInformation) {
+
+    }
+
+    function isBasicFieldType(fieldType) {
+        return fieldType !== "select" && fieldType !== "subform"
+    }
+
+    function getFieldType(fieldInformation) {
+        let fieldType, result;
+        fieldType = fieldInformation.type
+        switch (fieldType) {
+            case 'IntField':
+            case 'DecimalField':
+                result = 'number';
+                break;
+            case 'BooleanField':
+                result = 'checkbox';
+                break;
+            case 'ReferenceField':
+                result = 'select';
+                break;
+            case 'ImageField':
+            case 'FileField':
+                result = 'file';
+                break;
+            case 'DateField':
+                result = 'date';
+                break;
+            case 'DateTimeField':
+                result = 'datetime-local';
+                break;
+            case 'StringField':
+                result = 'text';
+                break;
+            case 'EmailField':
+                result = 'email';
+            case 'EmbeddedDocumentField':
+            case 'ListField':
+                result = 'subform'; //TODO WHAT TO DO WITH EMBEDS and LISTS? RECURSION?
+                break;
+            default:
+                result = null;
+                break;
+        }
+        console.log(result)
+        return result;
+    }
+</script>
+</body>
+</html>
