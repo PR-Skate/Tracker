@@ -24,6 +24,8 @@
   },
   "description": "",
   "dependencies": {
-    "moment": "^2.26.0"
+    "ajax": "0.0.4",
+    "moment": "^2.26.0",
+    "jquery": "^3.5.1"
   }
 }

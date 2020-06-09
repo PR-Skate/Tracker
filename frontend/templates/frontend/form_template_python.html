@@ -14,7 +14,9 @@
     {% csrf_token %}
 
     {% for field_information in field_information_list %}
-        {% generateHtmlField field_information form messages=messages %}
+        {% autoescape off %}
+            {% generateHtmlField field_information form messages=messages %}
+        {% endautoescape %}
     {% endfor %}
 
     <input type="submit"> {% for message in messages %}

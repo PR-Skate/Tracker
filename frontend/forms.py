@@ -1,8 +1,8 @@
 from django import forms
+from django.core.validators import FileExtensionValidator
 
 from Class_Types import *
 from Class_Types.Embeded_Documents import *
-from django.core.validators import FileExtensionValidator
 
 
 class BaseForm(forms.Form):
@@ -13,7 +13,7 @@ class BaseForm(forms.Form):
 
     def __init__(self, data, request):
         updated_data = data.dict()
-        if 'id' in updated_data.keys() and updated_data.get('id') is not '':
+        if 'id' in updated_data.keys() and updated_data.get('id') != '':
             updated_data.update({'lastModifiedUser': request.user.username})
         else:
             updated_data.update({'createdUser': request.user.username})

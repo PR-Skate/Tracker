@@ -135,9 +135,10 @@ class BaseRecord(DynamicDocument):
             list_field_information = None
             list_choices = None
             sub_form_fields_information = None
+            required = None
 
             def __str__(self):
-                return f'{self.model_name} '
+                return f'{self.model_name}'
 
         field_information_list = list()
         base_record_fields = BaseRecord.get_all_fields()
@@ -148,6 +149,7 @@ class BaseRecord(DynamicDocument):
                 field_information.model_name = field_name
                 field_information.name = cls.display_string(field_name)
                 field_information.type = field_class.__class__.__name__
+                field_information.required = field_class.__getattribute__('required')
                 if isinstance(field_class, ListField):
                     field_information.list_field_type = field_class.__getattribute__('field').__class__.__name__
                     if hasattr(field_class.field, 'choices'):
