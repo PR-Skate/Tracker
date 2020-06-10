@@ -56,7 +56,7 @@ class Store(BaseRecord):
     fkRegionCode = ReferenceField('RegionCode', dbref=True)
     fkMicroRegionCode = ReferenceField('MicroRegionCode', dbref=True)
     coordinates = EmbeddedDocumentField(Coordinates)
-    active = BooleanField(default=True)
+    active = BooleanField(default=False)
     installationDueDates = ListField(DateField())
     inspectionDueDates = ListField(DateField())
     fiscalWeek = IntField(min_value=1, max_value=53)

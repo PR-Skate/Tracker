@@ -127,6 +127,7 @@ def store_form(request):
                           inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates,
                           overnightAccess=overnightAccess,
                           coordinates=coordinates)
+            print('here')
             if try_to_save(model=store, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
@@ -475,3 +476,8 @@ def try_to_save(model, form, request):
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Must be unique')
         return False
+    except Exception as e:
+        for field in e.errors:
+            print(field)
+            field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
+            form.add_error(field_name, field)
