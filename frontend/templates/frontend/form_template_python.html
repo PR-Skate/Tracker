@@ -7,7 +7,7 @@
     <title>{{ model_name }} Form</title>
 </head>
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
-<body>
+<body onload="lib.checkSignInStatus()">
 {% include 'frontend/helpers/navbar.html' %}
 <h1>{{ model_name }} Form</h1>
 <form action="#" method="POST" name='form' id='form' enctype="multipart/form-data">

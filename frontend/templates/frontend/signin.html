@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +7,9 @@
     <title>Sign-In</title>
 
 </head>
-
 <body onload="lib.logout()">
-{#<script type="module" src="{% static "frontend/bundle.js" %}"></script>#}
 {% include 'frontend/helpers/navbar.html' %}
-{% load static %}
+<script type="module" src="{% static "frontend/bundle.js" %}"></script>
 
 <h1>User Sign-In</h1>
 <form onsubmit="lib.getAuthToken()" action="#" method="POST" name='form' id='form'>

@@ -1,10 +1,11 @@
 from django.urls import path
-
+from django.conf.urls import url
 from . import views
 
 urlpatterns = [
     path('', views.index),
     path('customerForm', views.customer_form),
+    url(r'^customerForm/(?P<id>\w+)$', views.customer_form, name='id'),
     path('employeeForm', views.employee_form),
     path('prepWorkForm', views.prep_work_form),
     path('workOrderForm', views.work_order_form),

@@ -13,6 +13,28 @@ from mongoengine.errors import *
 from .forms import *
 
 
+def process_view(request, model_class, form_class, id=None):
+    if request.method == 'POST':
+        form = form_class(request.POST, request)
+        if form.is_valid():
+            model_instance = model_class(**form.cleaned_data)
+            if try_to_save(instance=model_instance, form=form, request=request):
+                form.data = dict()
+                return render(request, 'frontend/form_template_python.html',
+                              {"field_information_list": model_class.get_field_information(), 'form': form})
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": model_class.get_field_information(), 'form': form})
+    elif id:
+        id = id.strip('#')
+        model_instance = model_class.objects.get(id=id)
+        form = form_class(model_instance.get_form_data())
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": model_class.get_field_information(), 'form': form})
+    else:
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": model_class.get_field_information()})
+
+
 # Create your views here.
 @login_required
 def index(request):
@@ -64,17 +86,8 @@ def signout(request):
 
 
 @login_required
-def customer_form(request):
-    if request.method == 'POST':
-        form = CustomerForm(request.POST, request)
-        if form.is_valid():
-            cust = Customer(**form.cleaned_data)
-            if try_to_save(model=cust, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": Customer.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": Customer.get_field_information()})
+def customer_form(request, id=None):
+    return process_view(request, model_class=Customer, form_class=CustomerForm, id=id)
 
 
 @login_required
@@ -86,7 +99,7 @@ def employee_form(request):
             address = Address(**form.address.cleaned_data)
             emp = Employee(**form.cleaned_data, name=name, address=address)
 
-            if try_to_save(model=emp, form=form, request=request):
+            if try_to_save(instance=emp, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": Employee.get_field_information(), 'form': form})
@@ -100,7 +113,7 @@ def prep_work_form(request):
         form = PrepWorkForm(request.POST, request)
         if form.is_valid():
             prepWork = PrepWork(**form.cleaned_data)
-            if try_to_save(model=prepWork, form=form, request=request):
+            if try_to_save(instance=prepWork, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": PrepWork.get_field_information(), 'form': form})
@@ -128,7 +141,7 @@ def store_form(request):
                           overnightAccess=overnightAccess,
                           coordinates=coordinates)
             print('here')
-            if try_to_save(model=store, form=form, request=request):
+            if try_to_save(instance=store, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": Store.get_field_information(), 'form': form})
@@ -144,7 +157,7 @@ def work_order_form(request):
         form = WorkOrderForm(data=request.POST, request=request, files=request.FILES)
         if form.is_valid():
             wo = WorkOrder(**form.cleaned_data)
-            if try_to_save(model=wo, form=form, request=request):
+            if try_to_save(instance=wo, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": WorkOrder.get_field_information(), 'form': form})
@@ -158,7 +171,7 @@ def work_order_status_form(request):
         form = WorkOrderStatusForm(request.POST, request)
         if form.is_valid():
             status = WorkOrderStatus(**form.cleaned_data)
-            if try_to_save(model=status, form=form, request=request):
+            if try_to_save(instance=status, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": WorkOrderStatus.get_field_information(), 'form': form})
@@ -172,7 +185,7 @@ def micro_region_form(request):
         form = MicroRegionForm(request.POST, request)
         if form.is_valid():
             region = MicroRegionCode(**form.cleaned_data)
-            if try_to_save(model=region, form=form, request=request):
+            if try_to_save(instance=region, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": MicroRegionCode.get_field_information(), 'form': form})
@@ -186,7 +199,7 @@ def region_form(request):
         form = RegionForm(request.POST, request)
         if form.is_valid():
             region = RegionCode(**form.cleaned_data)
-            if try_to_save(model=region, form=form, request=request):
+            if try_to_save(instance=region, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": RegionCode.get_field_information(), 'form': form})
@@ -194,7 +207,8 @@ def region_form(request):
                   {"field_information_list": RegionCode.get_field_information()})
 
 
-''' Needs to be verified afer conflicts resolved'''
+''' Needs to be verified after conflicts resolved'''
+
 
 @login_required
 def scope_of_work_form(request):
@@ -202,7 +216,7 @@ def scope_of_work_form(request):
         form = ScopeOfWorkForm(request.POST, request)
         if form.is_valid():
             status = ScopeOfWork(**form.cleaned_data)
-            if try_to_save(model=status, form=form, request=request):
+            if try_to_save(instance=status, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": ScopeOfWork.get_field_information(), 'form': form})
@@ -216,7 +230,7 @@ def scope_of_work_status_form(request):
         form = ScopeOfWorkStatusForm(request.POST, request)
         if form.is_valid():
             status = ScopeOfWorkStatus(**form.cleaned_data)
-            if try_to_save(model=status, form=form, request=request):
+            if try_to_save(instance=status, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": ScopeOfWorkStatus.get_field_information(), 'form': form})
@@ -230,7 +244,7 @@ def labor_item_form(request):
         form = LaborItemForm(request.POST, request)
         if form.is_valid():
             item = LaborItem(**form.cleaned_data)
-            if try_to_save(model=item, form=form, request=request):
+            if try_to_save(instance=item, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": LaborItem.get_field_information(), 'form': form})
@@ -244,7 +258,7 @@ def article_number_state_form(request):
         form = ArticleNumberStateForm(request.POST, request)
         if form.is_valid():
             article = ArticleNumberState(**form.cleaned_data)
-            if try_to_save(model=article, form=form, request=request):
+            if try_to_save(instance=article, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": ArticleNumberState.get_field_information(), 'form': form})
@@ -259,7 +273,7 @@ def article_number_form(request):
         if form.is_valid():
             # will need a special form for the list
             article = ArticleNumber(**form.cleaned_data)
-            if try_to_save(model=article, form=form, request=request):
+            if try_to_save(instance=article, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": ArticleNumber.get_field_information(), 'form': form})
@@ -272,8 +286,9 @@ def material_item_form(request):
     if request.method == "POST":
         form = MaterialItemForm(request.POST, request)
         if form.is_valid():
+
             item = MaterialItem(**form.cleaned_data)
-            if try_to_save(model=item, form=form, request=request):
+            if try_to_save(instance=item, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": MaterialItem.get_field_information(), 'form': form})
@@ -287,7 +302,7 @@ def material_list_form(request):
         form = MaterialListForm(request.POST, request)
         if form.is_valid():
             item = MaterialList(**form.cleaned_data)
-            if try_to_save(model=item, form=form, request=request):
+            if try_to_save(instance=item, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": MaterialList.get_field_information(), 'form': form})
@@ -301,7 +316,7 @@ def location_in_store_form(request):
         form = LocationInStoreForm(data=request.POST, request=request, files=request.FILES)
         if form.is_valid():
             location = LocationInStore(**form.cleaned_data)
-            if try_to_save(model=location, form=form, request=request):
+            if try_to_save(instance=location, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": LocationInStore.get_field_information(), 'form': form})
@@ -461,10 +476,13 @@ def generate_form_render(model, request):  # TODO JUST WRONG
                    'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
 
 
-def try_to_save(model, form, request):
+def try_to_save(instance, form, request):
     try:
-        model.save()
-        messages.success(request, 'Successfully added {}.'.format(model.__class__.__name__))
+        if hasattr(instance, 'id'):
+            instance.update()
+        else:
+            instance.save()
+        messages.success(request, 'Successfully added {}.'.format(instance.__class__.__name__))
         return True
     except mongoengine.errors.NotUniqueError as e:
         for field in e.args:

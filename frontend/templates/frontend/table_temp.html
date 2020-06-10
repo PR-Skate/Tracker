@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>{{ table_name }} Report</title>
 </head>
-<body>
+<script type="module" src="{% static "frontend/bundle.js" %}"></script>
+<body onload="lib.checkSignInStatus()">
 {% include 'frontend/helpers/navbar.html' %}
 <style type="text/css">
     .tg {
@@ -145,7 +146,7 @@
 
         {% for instance in instances %}
             {% with index=forloop.counter0 %}
-                <tr id="{{ instance.id }}" ondblclick="test_outer(event)">
+                <tr id="{{ instance.id }}" ondblclick="test_outer(event, '{{ instance.id }}')">
                     {% for  field, attribute in instance.items %}
                         {#                    <button ondblclick="myFunction()">#}
                         <td class="tg-t780">
@@ -161,8 +162,6 @@
         </tbody>
     </table>
 </div>
-<script type="module" src="{% static "frontend/bundle.js" %}"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script charset="utf-8">var TGSort = window.TGSort || function (n) {
     "use strict";
 
@@ -302,8 +301,6 @@
         }
     }
 
-
-
     {% for field in fields %}
         function filter_{{ field }}() {
             let input, filter, table, tr, td, i, txtValue, result;
@@ -329,9 +326,19 @@
         }
     {% endfor %}
 
-    function test_outer() {
-
+    function test_outer(event, recordId) {
         console.log('OUTER')
+        console.log(window.location.href)
+        var report = window.location.href.split('/')
+
+        console.log(report)
+
+        report = report[report.length - 1]
+
+        report = report.replace('Report', 'Form')
+
+        location.replace(report.concat('/', recordId));
+
     }
 
     function editField(event, id) {

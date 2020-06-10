@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Django REST with React</title>
 </head>
-
-<body>
+<script type="module" src="{% static "frontend/bundle.js" %}"></script>
+<body onload="lib.checkSignInStatus()">
 {% include 'frontend/helpers/navbar.html' %}
 {% load static %}
 <h1>Hello Tracker:</h1>
