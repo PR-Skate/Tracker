@@ -29,7 +29,8 @@ def process_view(request, model_class, form_class, id=None):
         model_instance = model_class.objects.get(id=id)
         form = form_class(model_instance.get_form_data())
         return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": model_class.get_field_information(), 'form': form})
+                      {"field_information_list": model_class.get_field_information(),
+                       'model_name': model_class.__name__, 'form': form})
     else:
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": model_class.get_field_information()})
@@ -91,209 +92,71 @@ def customer_form(request, id=None):
 
 
 @login_required
-def employee_form(request):
-    if request.method == "POST":
-        form = EmployeeForm(request.POST, request)
-        if form.is_valid():
-            name = Name(**form.name.cleaned_data)
-            address = Address(**form.address.cleaned_data)
-            emp = Employee(**form.cleaned_data, name=name, address=address)
-
-            if try_to_save(instance=emp, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": Employee.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": Employee.get_field_information()})
+def employee_form(request, id=None):
+    return process_view(request, model_class=Employee, form_class=EmployeeForm, id=id)
 
 
 @login_required
-def prep_work_form(request):
-    if request.method == "POST":
-        form = PrepWorkForm(request.POST, request)
-        if form.is_valid():
-            prepWork = PrepWork(**form.cleaned_data)
-            if try_to_save(instance=prepWork, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": PrepWork.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": PrepWork.get_field_information()})
+def prep_work_form(request, id=None):
+    return process_view(request, model_class=PrepWork, form_class=EmployeeForm, id=id)
 
 
 @login_required
-def store_form(request):
-    if request.method == "POST":
-        form = StoreForm(request.POST, request)
-        if form.is_valid():
-            storeManagerName = Name(**form.storeManagerName.cleaned_data)
-            opsManagerName = Name(**form.opsManagerName.cleaned_data)
-            managerName = Name(**form.managerName.cleaned_data)
-            overnightManagerName = Name(**form.overnightManagerName.cleaned_data)
-            address = Address(**form.address.cleaned_data)
-            inspectionDueDates = form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
-            installationDueDates = form.installationDueDates.cleaned_data['installationDueDates'].split('|')
-            overnightAccess = form.overnightAccess.cleaned_data['overnightAccess']
-            coordinates = Coordinates(**form.coordinates.cleaned_data)
-            store = Store(**form.cleaned_data, storeManagerName=storeManagerName, opsManagerName=opsManagerName,
-                          managerName=managerName, overnightManagerName=overnightManagerName, address=address,
-                          inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates,
-                          overnightAccess=overnightAccess,
-                          coordinates=coordinates)
-            print('here')
-            if try_to_save(instance=store, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": Store.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": Store.get_field_information()})
+def store_form(request, id=None):
+    return process_view(request, model_class=Store, form_class=StoreForm, id=id)
 
 
 @login_required
-def work_order_form(request):
-    store = Store.objects.all()
-    workOrderStatus = WorkOrderStatus.objects.all()
-    if request.method == "POST":
-        form = WorkOrderForm(data=request.POST, request=request, files=request.FILES)
-        if form.is_valid():
-            wo = WorkOrder(**form.cleaned_data)
-            if try_to_save(instance=wo, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": WorkOrder.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": WorkOrder.get_field_information()})
+def work_order_form(request, id=None):
+    return process_view(request, model_class=WorkOrder, form_class=WorkOrderForm, id=id)
 
 
 @login_required
-def work_order_status_form(request):
-    if request.method == "POST":
-        form = WorkOrderStatusForm(request.POST, request)
-        if form.is_valid():
-            status = WorkOrderStatus(**form.cleaned_data)
-            if try_to_save(instance=status, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": WorkOrderStatus.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": WorkOrderStatus.get_field_information()})
+def work_order_status_form(request, id=None):
+    return process_view(request, model_class=WorkOrderStatus, form_class=WorkOrderStatusForm, id=id)
 
 
 @login_required
-def micro_region_form(request):
-    if request.method == 'POST':
-        form = MicroRegionForm(request.POST, request)
-        if form.is_valid():
-            region = MicroRegionCode(**form.cleaned_data)
-            if try_to_save(instance=region, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": MicroRegionCode.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": MicroRegionCode.get_field_information()})
+def micro_region_form(request, id=None):
+    return process_view(request, model_class=MicroRegionCode, form_class=MicroRegionForm, id=id)
 
 
 @login_required
-def region_form(request):
-    if request.method == 'POST':
-        form = RegionForm(request.POST, request)
-        if form.is_valid():
-            region = RegionCode(**form.cleaned_data)
-            if try_to_save(instance=region, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": RegionCode.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": RegionCode.get_field_information()})
+def region_form(request, id=None):
+    return process_view(request, model_class=RegionCode, form_class=RegionForm, id=id)
 
 
 ''' Needs to be verified after conflicts resolved'''
 
 
 @login_required
-def scope_of_work_form(request):
-    if request.method == "POST":
-        form = ScopeOfWorkForm(request.POST, request)
-        if form.is_valid():
-            status = ScopeOfWork(**form.cleaned_data)
-            if try_to_save(instance=status, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": ScopeOfWork.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": ScopeOfWork.get_field_information()})
+def scope_of_work_form(request, id=None):
+    return process_view(request, model_class=ScopeOfWork, form_class=ScopeOfWorkForm, id=id)
 
 
 @login_required
-def scope_of_work_status_form(request):
-    if request.method == "POST":
-        form = ScopeOfWorkStatusForm(request.POST, request)
-        if form.is_valid():
-            status = ScopeOfWorkStatus(**form.cleaned_data)
-            if try_to_save(instance=status, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": ScopeOfWorkStatus.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": ScopeOfWorkStatus.get_field_information()})
+def scope_of_work_status_form(request, id=None):
+    return process_view(request, model_class=ScopeOfWorkStatus, form_class=ScopeOfWorkStatusForm, id=id)
 
 
 @login_required
-def labor_item_form(request):
-    if request.method == "POST":
-        form = LaborItemForm(request.POST, request)
-        if form.is_valid():
-            item = LaborItem(**form.cleaned_data)
-            if try_to_save(instance=item, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": LaborItem.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": LaborItem.get_field_information()})
+def labor_item_form(request, id=None):
+    return process_view(request, model_class=LaborItem, form_class=LaborItemForm, id=id)
 
 
 @login_required
-def article_number_state_form(request):
-    if request.method == "POST":
-        form = ArticleNumberStateForm(request.POST, request)
-        if form.is_valid():
-            article = ArticleNumberState(**form.cleaned_data)
-            if try_to_save(instance=article, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": ArticleNumberState.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": ArticleNumberState.get_field_information()})
+def article_number_state_form(request, id=None):
+    return process_view(request, model_class=ArticleNumberState, form_class=ArticleNumberStateForm, id=id)
 
 
 @login_required
-def article_number_form(request):
-    if request.method == "POST":
-        form = ArticleNumberForm(request.POST, request)
-        if form.is_valid():
-            # will need a special form for the list
-            article = ArticleNumber(**form.cleaned_data)
-            if try_to_save(instance=article, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": ArticleNumber.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": ArticleNumber.get_field_information()})
+def article_number_form(request, id=None):
+    return process_view(request, model_class=ArticleNumber, form_class=ArticleNumberForm, id=id)
 
 
 @login_required
-def material_item_form(request):
-    if request.method == "POST":
-        form = MaterialItemForm(request.POST, request)
-        if form.is_valid():
-
-            item = MaterialItem(**form.cleaned_data)
-            if try_to_save(instance=item, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": MaterialItem.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": MaterialItem.get_field_information()})
+def material_item_form(request, id=None):
+    return process_view(request, model_class=MaterialItem, form_class=MaterialItemForm, id=id)
 
 
 @login_required
@@ -311,17 +174,8 @@ def material_list_form(request):
 
 
 @login_required
-def location_in_store_form(request):
-    if request.method == 'POST':
-        form = LocationInStoreForm(data=request.POST, request=request, files=request.FILES)
-        if form.is_valid():
-            location = LocationInStore(**form.cleaned_data)
-            if try_to_save(instance=location, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": LocationInStore.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": LocationInStore.get_field_information()})
+def location_in_store_form(request, id=None):
+    return process_view(request, model_class=LocationInStore, form_class=LocationInStoreForm, id=id)
 
 
 """"REPORTS"""
