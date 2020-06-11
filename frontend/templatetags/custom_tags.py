@@ -128,6 +128,7 @@ def makeSubForm(field_information):
     field = f'<label for="{field_information.model_name}">{field_information.name}</label>\n<hr>'
     sub_form_field_list = list()
     for sub_form_field_information in field_information.sub_form_fields_information:
+        sub_form_field_information.model_name = field_information.model_name + "." + sub_form_field_information.model_name
         sub_form_field_list.append(generateHtmlField(sub_form_field_information))
     return field + '\n'.join(sub_form_field_list) + '\n<hr>\n'
 

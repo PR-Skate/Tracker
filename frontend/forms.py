@@ -66,6 +66,28 @@ class NameForm(forms.Form):
         fields = ('firstName', 'lastName')
 
 
+class MultiCharField(forms.MultiValueField):
+    def __init__(self, count, *args, **kwargs):
+        # Or define a different message for each field.
+        field_list = []
+        for i in range(count):
+            field_list.append(forms.CharField())
+
+        super(MultiCharField, self).__init__(
+            fields=tuple(field_list),
+            require_all_fields=False, *args, **kwargs
+        )
+
+    def compress(self, data_list):
+        return '|'.join(map(str, data_list))
+
+
+class DescriptionForm(forms.Form):
+    def __init__(self, count=0, *args, **kwargs):
+        super(DescriptionForm, self).__init__(*args, **kwargs)
+        self.fields['description'] = MultiCharField(count=count)
+
+
 # noinspection PyArgumentList
 
 class MultiDateField(forms.MultiValueField):
@@ -130,8 +152,11 @@ class EmployeeForm(BaseForm):
 
     def __init__(self, data, request):
         super().__init__(data, request)
-        self.name = NameForm(data={'firstName': data.get('firstName'), 'lastName': data.get('lastName')})
-        self.address = AddressForm(data=data)
+        self.name = NameForm(data={'firstName': data.get('name.firstName'), 'lastName': data.get('name.lastName')})
+        self.address = AddressForm(data={'addressLineOne': data.get('address.addressLineOne'),
+                                         'addressLineTwo': data.get('address.addressLineTwo'),
+                                         'city': data.get('address.city'), 'state': data.get('address.state'),
+                                         'zip': data.get('address.zip'), 'country': data.get('address.country')})
 
     def is_valid(self):
         return self.name.is_valid() and self.address.is_valid() and forms.BaseForm.is_valid(self=self)
@@ -176,15 +201,18 @@ class StoreForm(BaseForm):
 
     def __init__(self, data, request):
         super().__init__(data, request)
-        self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerNameFirst'),
-                                               'lastName': data.get('storeManagerNameLast')})
+        self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerName.firstName'),
+                                               'lastName': data.get('storeManagerName.lastName')})
         self.opsManagerName = NameForm(
-            data={'firstName': data.get('opsManagerNameFirst'), 'lastName': data.get('opsManagerNameLast')})
+            data={'firstName': data.get('opsManagerName.firstName'), 'lastName': data.get('opsManagerName.lastName')})
         self.managerName = NameForm(
-            data={'firstName': data.get('managerNameFirst'), 'lastName': data.get('managerNameLast')})
-        self.overnightManagerName = NameForm(data={'firstName': data.get('overnightNameFirst'),
-                                                   'lastName': data.get('overnightNameLast')})
-        self.address = AddressForm(data=data)
+            data={'firstName': data.get('managerName.firstName'), 'lastName': data.get('managerName.lastName')})
+        self.overnightManagerName = NameForm(data={'firstName': data.get('overnightManagerName.firstName'),
+                                                   'lastName': data.get('overnightManagerName.lastName')})
+        self.address = AddressForm(data={'addressLineOne': data.get('address.addressLineOne'),
+                                         'addressLineTwo': data.get('address.addressLineTwo'),
+                                         'city': data.get('address.city'), 'state': data.get('address.state'),
+                                         'zip': data.get('address.zip'), 'country': data.get('address.country')})
 
         self.overnightAccess = DaysOfWeekForm(data={'overnightAccess': data.getlist('overnightAccess')})
         self.inspectionDueDates = InspectDateForm(count=len(data.getlist('inspectionDueDates')),
@@ -192,13 +220,14 @@ class StoreForm(BaseForm):
         self.installationDueDates = InstallDateForm(count=len(data.getlist('installationDueDates')),
                                                     data={'installationDueDates': data.getlist('installationDueDates')})
 
-        self.coordinates = CoordinateField(data={'latitude': data.get('latitude'), 'longitude': data.get('longitude')})
+        self.coordinates = CoordinateField(
+            data={'latitude': data.get('coordinates.latitude'), 'longitude': data.get('coordinates.longitude')})
 
     def is_valid(self):
         return self.storeManagerName.is_valid() and self.opsManagerName.is_valid() and self.managerName.is_valid() and \
                self.overnightManagerName.is_valid() and self.installationDueDates.is_valid() and \
                self.inspectionDueDates.is_valid() and self.address.is_valid() and self.overnightAccess.is_valid() \
-               and forms.BaseForm.is_valid(self=self)
+               and forms.BaseForm.is_valid(self=self) and self.coordinates.is_valid()
 
     class Meta:
         model = Store
@@ -216,7 +245,7 @@ class RegionForm(BaseForm):
 
 
 class MicroRegionForm(BaseForm):
-    regionCode = forms.CharField(max_length=12, required=True)
+    microRegionCode = forms.CharField(max_length=12, required=True)
 
     model = MicroRegionCode
 
@@ -319,20 +348,37 @@ class ArticleNumberStateForm(BaseForm):
 
 class ArticleNumberForm(BaseForm):
     articleNumber = forms.CharField()
-    description = forms.CharField()  # Make this a list of Strings
+    description = DescriptionForm()  # Make this a list of Strings
     usedByInspectionCompanyButNotPrSkate = forms.BooleanField(required=False)
     capital = forms.BooleanField(required=False)
 
-    model = ArticleNumber
-    fields = ('articleNumber', 'description', 'usedByInspectionCompanyButNotPrSkate', 'capital')
+    def __init__(self, data, request):
+        super().__init__(data, request)
+        self.description = DescriptionForm(count=len(data.getlist('description')),
+                                           data={'description': data.getlist('description')})
+
+    def is_valid(self):
+        return forms.BaseForm.is_valid(self) and self.description.is_valid()
+
+    class Meta:
+        model = ArticleNumber
+        fields = ('articleNumber', 'description', 'usedByInspectionCompanyButNotPrSkate', 'capital')
 
 
 class MaterialItemForm(BaseForm):
     materialArticleNumber = forms.CharField(required=True)
-    description = forms.CharField()  # Make this a list of Strings
+    description = DescriptionForm()  # Make this a list of Strings
 
     model = MaterialItem
     fields = ('materialArticleNumber', 'description')
+
+    def __init__(self, data, request):
+        super().__init__(data, request)
+        self.description = DescriptionForm(count=len(data.getlist('description')),
+                                           data={'description': data.getlist('description')})
+
+    def is_valid(self):
+        return forms.BaseForm.is_valid(self) and self.description.is_valid()
 
 
 class MaterialListForm(BaseForm):
@@ -391,3 +437,11 @@ class PrepWorkForm(BaseForm):
         'downloadMLX', 'excelInspectUploaded', 'inspectionPictures', 'postedSync', 'formComplete',
         'concretePatchNeeded',
         'materialOrderNumberHD', 'cpn_eta', 'inspectionDueDates', 'lastDateChecked', 'fkWorkOrderName')
+
+
+class OrderMaterialForm(BaseForm):
+    quantity = forms.IntegerField(min_value=1, required=True)
+    fkMaterialItem = forms.CharField(required=True)
+
+    model = OrderMaterial
+    fields = ('quantity', 'fkMaterialItem')

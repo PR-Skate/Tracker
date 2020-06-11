@@ -21,6 +21,7 @@ urlpatterns = [
     path('materialItemForm', views.material_item_form),
     path('materialListForm', views.material_list_form),
     path('locationInStoreForm', views.location_in_store_form),
+    path('orderMaterialForm', views.order_material_form),
 
     path('sign-in', views.signin),
     path('logout', views.signout),
