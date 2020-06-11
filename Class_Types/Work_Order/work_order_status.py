@@ -11,3 +11,6 @@ class WorkOrderStatus(BaseRecord):
     # constructor:
     status = StringField(required=True, unique=True, max_length=50)
     meta = {'collection': 'WorkOrderStatus'}
+
+    def __str__(self):
+        return f'{self.status}'
