@@ -210,7 +210,6 @@ def region_form(request):
 ''' Needs to be verified after conflicts resolved'''
 
 
-
 @login_required
 def scope_of_work_form(request):
     if request.method == "POST":
