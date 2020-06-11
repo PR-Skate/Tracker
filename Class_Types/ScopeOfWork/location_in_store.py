@@ -2,7 +2,7 @@
 # Created On: 05/07/2020
 from mongoengine import StringField, BooleanField, ReferenceField, ImageField, ListField
 
-from ..Material_Items import MaterialList
+from ..Material_Items import MaterialItem
 from ..Store import Store
 from ..base_record import BaseRecord
 
@@ -19,7 +19,7 @@ class LocationInStore(BaseRecord):
     electricalInLocation = BooleanField(default=False)
     electricalPicturePath = ImageField(default=None)
     electricalPicturePath2 = ImageField(default=None)
-    fkMaterialList = ListField(ReferenceField(MaterialList, dbref=True))
+    fkMaterialItems = ListField(ReferenceField(MaterialItem, dbref=True))
     fkStoreNumber = ReferenceField(document_type=Store, required=True, dbref=True)
     meta = {'collection': 'LocationInStore'}
 

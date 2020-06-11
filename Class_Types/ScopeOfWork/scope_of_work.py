@@ -25,6 +25,7 @@ class ScopeOfWork(BaseRecord):
     fkInstallerID = ReferenceField(Employee, default=None, dbref=True)
     fkRequireMaterials = ReferenceField(OrderMaterial, default=None, dbref=True)
     fkLocationInStoreID = ReferenceField(LocationInStore, default=None, dbref=True)
+    fkLocationInStoreChangedID = ReferenceField(LocationInStore, default=None, dbref=True)
     fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
     fkInitialLaborID = ReferenceField(LaborItem, required=True, dbref=True)
     fkExtraLaborID = ReferenceField(LaborItem, default=None, dbref=True)

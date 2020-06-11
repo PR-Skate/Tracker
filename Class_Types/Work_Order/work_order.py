@@ -19,9 +19,9 @@ class WorkOrder(BaseRecord):
     statusCode = StringField(max_length=30, required=True)
 
     dateCompleted = DateField(required=True)
-    inspectForStorePath = FileField()
-    detailedReceiptPath = FileField()
-    signageMapPath = FileField()
+    inspectForStoreFile = FileField()
+    detailedReceiptFile = FileField()
+    signageMapFile = FileField()
     partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)

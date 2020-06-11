@@ -44,6 +44,7 @@ class BaseEmbeddedDocument(DynamicEmbeddedDocument):
             list_choices = None
             sub_form_fields_information = None
             required = None
+            hidden = None
 
             def __str__(self):
                 return f'{self.model_name}'
@@ -57,6 +58,8 @@ class BaseEmbeddedDocument(DynamicEmbeddedDocument):
                 field_information.name = display_string(field_name)
                 field_information.type = field_class.__class__.__name__
                 field_information.required = field_class.__getattribute__('required')
+                if field_name == 'id':
+                    field_information.hidden = True
                 if isinstance(field_class, ListField):
                     field_information.list_field_type = field_class.__getattribute__('field').__class__.__name__
                     if hasattr(field_class.field, 'choices'):
