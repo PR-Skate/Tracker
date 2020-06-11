@@ -7,6 +7,7 @@ import datetime
 
 
 class BaseForm(forms.Form):
+
     def __init__(self, data, request=None, *args, **kwargs):
         if isinstance(data, QueryDict):
             updated_data = data.dict()
@@ -30,6 +31,10 @@ class BaseForm(forms.Form):
             self.fields['createdTimestamp'] = forms.DateTimeField(required=False)
         else:
             super(BaseForm, self).__init__(data=updated_data)
+
+    def to_model(self):
+        assert form.cleaned_data
+        Meta.model(**form.cleaned_data)
 
 
 """SUB FORMS"""
@@ -137,6 +142,9 @@ class DaysOfWeekForm(forms.Form):
 class CustomerForm(BaseForm):
     customerName = forms.CharField(max_length=50, required=True)
 
+    class Meta:
+        model = Customer
+
 
 class EmployeeForm(BaseForm):
     userName = forms.CharField(max_length=50, required=True)  # Should be unique
@@ -150,6 +158,11 @@ class EmployeeForm(BaseForm):
     name = NameForm()
     address = AddressForm()
 
+    class Meta:
+        model = Employee
+        fields = (
+            'userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'type', 'address')
+
     def __init__(self, data, request):
         super().__init__(data, request)
         self.name = NameForm(data={'firstName': data.get('name.firstName'), 'lastName': data.get('name.lastName')})
@@ -160,11 +173,6 @@ class EmployeeForm(BaseForm):
 
     def is_valid(self):
         return self.name.is_valid() and self.address.is_valid() and forms.BaseForm.is_valid(self=self)
-
-    class Meta:
-        model = Employee
-        fields = (
-            'userName', 'birthDate', 'email', 'phone', 'pin', 'rateOfPay', 'active', 'type', 'address')
 
 
 class StoreForm(BaseForm):
@@ -199,6 +207,14 @@ class StoreForm(BaseForm):
     inspectionDueDates = InspectDateForm()
     fiscalWeek = forms.IntegerField(min_value=1, max_value=53)
 
+    class Meta:
+        model = Store
+        fields = ('storeNumber', 'fkCustomer', 'address', 'phoneNumber', 'region', 'division', 'awardedVendor',
+                  'storeManagerName', 'storeManagerEmail', 'opsManagerName', 'opsManagerEmail', 'managerName',
+                  'managerEmail', 'overnightManagerName', 'overnightManagerEmail', 'overnightCrew', 'overnightAccess',
+                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'coordinates', 'active',
+                  'installationDueDates', 'inspectionDueDates', 'fiscalWeek')
+
     def __init__(self, data, request):
         super().__init__(data, request)
         self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerName.firstName'),
@@ -229,25 +245,19 @@ class StoreForm(BaseForm):
                self.inspectionDueDates.is_valid() and self.address.is_valid() and self.overnightAccess.is_valid() \
                and forms.BaseForm.is_valid(self=self) and self.coordinates.is_valid()
 
-    class Meta:
-        model = Store
-        fields = ('storeNumber', 'fkCustomer', 'address', 'phoneNumber', 'region', 'division', 'awardedVendor',
-                  'storeManagerName', 'storeManagerEmail', 'opsManagerName', 'opsManagerEmail', 'managerName',
-                  'managerEmail', 'overnightManagerName', 'overnightManagerEmail', 'overnightCrew', 'overnightAccess',
-                  'noiseOrdinance', 'timeCutOff', 'fkRegionCode', 'fkMicroRegionCode', 'coordinates', 'active',
-                  'installationDueDates', 'inspectionDueDates', 'fiscalWeek')
-
 
 class RegionForm(BaseForm):
     regionCode = forms.CharField(max_length=12, required=True)
 
-    model = RegionCode
+    class Meta:
+        model = RegionCode
 
 
 class MicroRegionForm(BaseForm):
     microRegionCode = forms.CharField(max_length=12, required=True)
 
-    model = MicroRegionCode
+    class Meta:
+        model = MicroRegionCode
 
 
 class WorkOrderForm(BaseForm):
@@ -289,8 +299,9 @@ class WorkOrderForm(BaseForm):
 class WorkOrderStatusForm(BaseForm):
     status = forms.CharField(required=True, max_length=50)
 
-    model = WorkOrderStatus
-    fields = 'status'
+    class Meta:
+        model = WorkOrderStatus
+        fields = 'status'
 
 
 class ScopeOfWorkForm(BaseForm):
@@ -313,28 +324,32 @@ class ScopeOfWorkForm(BaseForm):
     fkExtraLaborID = forms.CharField(required=True)
     fkCorrectLaborID = forms.CharField(required=True)
 
-    model = ScopeOfWork
-    fields = (
-        'GB_Counter', 'GB_CounterBillable', 'SOWPicturePath', 'WrongLocation', 'ConcretePatchNeeded', 'fkRightSOWID',
-        'fkStatusID', 'completedPicturePath', 'dateFieldEditedStatus', 'timeFieldEditedStatus', 'approvedBilling',
-        'fkInstallerID', 'fkRequireMaterials', 'fkLocationInStoreID', 'fkWorkOrderID', 'fkInitialLaborID',
-        'fkExtraLaborID',
-        'fkCorrectLaborID')
+    class Meta:
+        model = ScopeOfWork
+        fields = (
+            'GB_Counter', 'GB_CounterBillable', 'SOWPicturePath', 'WrongLocation', 'ConcretePatchNeeded',
+            'fkRightSOWID',
+            'fkStatusID', 'completedPicturePath', 'dateFieldEditedStatus', 'timeFieldEditedStatus', 'approvedBilling',
+            'fkInstallerID', 'fkRequireMaterials', 'fkLocationInStoreID', 'fkWorkOrderID', 'fkInitialLaborID',
+            'fkExtraLaborID',
+            'fkCorrectLaborID')
 
 
 class ScopeOfWorkStatusForm(BaseForm):
     status = forms.CharField(required=True, max_length=50)
 
-    model = ScopeOfWorkStatus
-    fields = 'status'
+    class Meta:
+        model = ScopeOfWorkStatus
+        fields = 'status'
 
 
 class LaborItemForm(BaseForm):
     quantity = forms.IntegerField(min_value=1)
     fkArticleNumberState = forms.CharField(required=True)
 
-    model = LaborItem
-    fields = ('quantity', 'fkArticleNumberState')
+    class Meta:
+        model = LaborItem
+        fields = ('quantity', 'fkArticleNumberState')
 
 
 class ArticleNumberStateForm(BaseForm):
@@ -342,8 +357,9 @@ class ArticleNumberStateForm(BaseForm):
     price = forms.DecimalField(required=True, decimal_places=2)
     fkArticleNumber = forms.CharField(required=True)
 
-    model = ArticleNumberState
-    fields = ('state', 'price', 'fkArticleNumber',)
+    class Meta:
+        model = ArticleNumberState
+        fields = ('state', 'price', 'fkArticleNumber',)
 
 
 class ArticleNumberForm(BaseForm):
@@ -351,6 +367,10 @@ class ArticleNumberForm(BaseForm):
     description = DescriptionForm()  # Make this a list of Strings
     usedByInspectionCompanyButNotPrSkate = forms.BooleanField(required=False)
     capital = forms.BooleanField(required=False)
+
+    class Meta:
+        model = ArticleNumber
+        fields = ('articleNumber', 'description', 'usedByInspectionCompanyButNotPrSkate', 'capital')
 
     def __init__(self, data, request):
         super().__init__(data, request)
@@ -360,17 +380,14 @@ class ArticleNumberForm(BaseForm):
     def is_valid(self):
         return forms.BaseForm.is_valid(self) and self.description.is_valid()
 
-    class Meta:
-        model = ArticleNumber
-        fields = ('articleNumber', 'description', 'usedByInspectionCompanyButNotPrSkate', 'capital')
-
 
 class MaterialItemForm(BaseForm):
     materialArticleNumber = forms.CharField(required=True)
     description = DescriptionForm()  # Make this a list of Strings
 
-    model = MaterialItem
-    fields = ('materialArticleNumber', 'description')
+    class Meta:
+        model = MaterialItem
+        fields = ('materialArticleNumber', 'description')
 
     def __init__(self, data, request):
         super().__init__(data, request)
@@ -384,8 +401,9 @@ class MaterialItemForm(BaseForm):
 class MaterialListForm(BaseForm):
     fkMaterialItem = forms.CharField()  # Make a list of references (forms should be a list of Char fields)
 
-    model = MaterialList
-    fields = 'fkMaterialItem'
+    class Meta:
+        model = MaterialList
+        fields = 'fkMaterialItem'
 
 
 class LocationInStoreForm(BaseForm):
@@ -432,16 +450,18 @@ class PrepWorkForm(BaseForm):
     lastDateChecked = forms.DateTimeField()
     fkWorkOrderName = forms.CharField(required=True)
 
-    model = PrepWork
-    fields = (
-        'downloadMLX', 'excelInspectUploaded', 'inspectionPictures', 'postedSync', 'formComplete',
-        'concretePatchNeeded',
-        'materialOrderNumberHD', 'cpn_eta', 'inspectionDueDates', 'lastDateChecked', 'fkWorkOrderName')
+    class Meta:
+        model = PrepWork
+        fields = (
+            'downloadMLX', 'excelInspectUploaded', 'inspectionPictures', 'postedSync', 'formComplete',
+            'concretePatchNeeded',
+            'materialOrderNumberHD', 'cpn_eta', 'inspectionDueDates', 'lastDateChecked', 'fkWorkOrderName')
 
 
 class OrderMaterialForm(BaseForm):
     quantity = forms.IntegerField(min_value=1, required=True)
     fkMaterialItem = forms.CharField(required=True)
 
-    model = OrderMaterial
-    fields = ('quantity', 'fkMaterialItem')
+    class Meta:
+        model = OrderMaterial
+        fields = ('quantity', 'fkMaterialItem')

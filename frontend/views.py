@@ -17,7 +17,7 @@ def process_view(request, model_class, form_class, id=None):
     if request.method == 'POST':
         form = form_class(request.POST, request)
         if form.is_valid():
-            model_instance = model_class(**form.cleaned_data)
+            model_instance = form.to_model()
             if try_to_save(instance=model_instance, form=form, request=request):
                 form.data = dict()
                 return render(request, 'frontend/form_template_python.html',
@@ -344,7 +344,7 @@ def generate_table_render(model, request):
             fields_dictionary.update({field.strip('_'): model._fields[field_name].__class__.__name__})
         instances.append(attributes)
 
-    return render(request, 'frontend/table_temp.html',
+    return render(request, 'frontend/table_template.html',
                   {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
                    'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
 
@@ -364,7 +364,7 @@ def generate_form_render(model, request):  # TODO JUST WRONG
             fields_dictionary.update({field.strip('_'): model._fields[field_name].__class__.__name__})
         instances.append(attributes)
 
-    return render(request, 'frontend/table_temp.html',
+    return render(request, 'frontend/table_template.html',
                   {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
                    'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
 
