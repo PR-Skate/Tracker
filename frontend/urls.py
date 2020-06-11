@@ -19,7 +19,7 @@ urlpatterns = [
     path('articleNumberStateForm', views.article_number_state_form),
     path('articleNumberForm', views.article_number_form),
     path('materialItemForm', views.material_item_form),
-    path('materialListForm', views.material_list_form),
+    # path('materialListForm', views.material_list_form),
     path('locationInStoreForm', views.location_in_store_form),
     path('orderMaterialForm', views.order_material_form),
 
