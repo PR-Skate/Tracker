@@ -44,30 +44,42 @@ function remove(containerName) {
 
 
 function checkSignInStatus() {
-
+    var temp;
+    console.log(localStorage.getItem('auth_token_dict'));
+    temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+    console.log(temp.expiry)
+    if (new Date(temp.expiry) < new Date()) {
+        logout()
+    }
 }
+
 
 function logout() {
     var temp;
     if (localStorage.getItem('auth_token_dict')) {
-        console.log(localStorage.getItem('auth_token_dict'))
-
-        temp = JSON.parse(localStorage.getItem('auth_token_dict'))
-        var settings = {
-            "url": "/logoutall/",
-            "type": "POST",
-            "timeout": 0,
-            "headers": {
-                "Authorization": "Token " + temp.token,
-                "Content-Type": "application/json",
-            }
-        };
-        jquery.ajax(settings).done(function () {
-            localStorage.removeItem('auth_token_dict')
-            console.log("deleted auth token");
-        });
+        console.log(localStorage.getItem('auth_token_dict'));
+        temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+        console.log(temp.expiry)
+        if (new Date(temp.expiry) > new Date()) {
+            var settings = {
+                "url": "/logoutall/",
+                "type": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Authorization": "Token " + temp.token,
+                    "Content-Type": "application/json",
+                }
+            };
+            jquery.ajax(settings).done(function () {
+                console.log("deleted auth token");
+            });
+        }
+        localStorage.removeItem('auth_token_dict')
     }
-    window.location.href = "/logout";
+    console.log(window.location.href)
+    if (!window.location.href.includes("/sign-in")) {
+        window.location.href = "/logout";
+    }
 }
 
 function findValueByPrefix(object, prefix) {
@@ -100,9 +112,7 @@ function getAuthToken() {
         temp = localStorage.getItem("auth_token_dict")
         console.log(temp);
     });
-
     return !!localStorage.getItem('auth_token_dict');
-
 }
 
 //EXPORT
@@ -112,5 +122,6 @@ exports.getCount = getCount;
 exports.getAuthToken = getAuthToken
 exports.findValueByPrefix = findValueByPrefix
 exports.logout = logout
+exports.checkSignInStatus = checkSignInStatus
 exports.moment = moment
 exports.jquery = jquery

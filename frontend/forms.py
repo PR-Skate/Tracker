@@ -1,23 +1,35 @@
 from django import forms
 from django.core.validators import FileExtensionValidator
-
+from django.http import QueryDict
 from Class_Types import *
 from Class_Types.Embeded_Documents import *
+import datetime
 
 
 class BaseForm(forms.Form):
-    lastModifiedUser = forms.CharField(max_length=50, required=False)
-    lastModifiedTimestamp = forms.DateTimeField(required=False)
-    createdUser = forms.CharField(max_length=50, required=False)
-    createdTimestamp = forms.DateTimeField(required=False)
-
-    def __init__(self, data, request):
-        updated_data = data.dict()
-        if 'id' in updated_data.keys() and updated_data.get('id') != '':
-            updated_data.update({'lastModifiedUser': request.user.username})
+    def __init__(self, data, request=None, *args, **kwargs):
+        if isinstance(data, QueryDict):
+            updated_data = data.dict()
         else:
+            updated_data = data
+
+        if 'id' in updated_data.keys() and updated_data.get('id') != '' and request:
+            updated_data.update({'lastModifiedUser': request.user.username})
+            updated_data.update({'lastModifiedTimestamp': datetime.datetime.now()})
+            super(BaseForm, self).__init__(data=updated_data)
+            self.fields['id'] = forms.CharField(max_length=50, required=False)
+            self.fields['lastModifiedUser'] = forms.CharField(max_length=50, required=False)
+            self.fields['lastModifiedTimestamp'] = forms.DateTimeField(required=False)
+            self.fields['createdUser'] = forms.CharField(max_length=50, required=False)
+            self.fields['createdTimestamp'] = forms.DateTimeField(required=False)
+        elif request:
             updated_data.update({'createdUser': request.user.username})
-        super().__init__(data=updated_data)
+            updated_data.update({'createdTimestamp': datetime.datetime.now()})
+            super(BaseForm, self).__init__(data=updated_data)
+            self.fields['createdUser'] = forms.CharField(max_length=50, required=False)
+            self.fields['createdTimestamp'] = forms.DateTimeField(required=False)
+        else:
+            super(BaseForm, self).__init__(data=updated_data)
 
 
 """SUB FORMS"""

@@ -3,16 +3,15 @@ statement will load tags/filters for the given Python module name, not the name 
 import json
 import os
 from os.path import join
-
 from django import template
 from django.utils.safestring import mark_safe
+from mongoengine.dereference import DBRef
 from Class_Types import *
 
 
 STATIC_FILES_FOR_FIELDS = ['state', 'country']
 
 register = template.Library()
-
 
 def to_json(query_set):
     temp = json.loads(query_set.to_json())
@@ -39,20 +38,20 @@ def generateHtmlField(field_information, form=None, *args, **kwargs):
         for message in storage:
             successful_add = 'success' == message.tags
 
-    if isBasicFieldType(field_type):
+    if isBasicFieldType(field_type) and not field_information.hidden:
         data = '""'
-        if form and not successful_add:
+        if form and form.data and not successful_add:
             if field_type != 'file':
                 data = f'"{form.data.get(field_information.model_name)}"'
             else:
                 data = f'"{form.FILES.get(field_information.model_name)}"'
 
         field = f'<label>{field_information.name}</label><br>\n\
-                <input type="{field_type}" value={data if field_type != "checkbox" else True} name="{field_information.model_name}" {"required" if field_information.required else ""}><br><br>\n'
+                <input type="{field_type if not field_information.hidden else "hidden"}" value={data if field_type != "checkbox" else True} name="{field_information.model_name}" {"required" if field_information.required else ""}><br><br>\n'
 
         if field_information.name.lower() in STATIC_FILES_FOR_FIELDS:
             field = get_field_from_static_file(field_information)
-    else:
+    elif not field_information.hidden:
         if field_type == "select":
             field = makeSelectContainer(field_information)
 
@@ -62,6 +61,17 @@ def generateHtmlField(field_information, form=None, *args, **kwargs):
             field = makeListField(field_information)
         else:
             field = ''
+    elif field_information.hidden:
+        data = '""'
+        if form and form.data and not successful_add:
+            if field_type != 'file':
+                data = f'"{form.data.get(field_information.model_name) if not isinstance(form.data.get(field_information.model_name), DBRef) else form.data.get(field_information.model_name).id}"'
+            else:
+                data = f'"{form.FILES.get(field_information.model_name)}"'
+
+        field = f'<input type="hidden" value={data if field_type != "checkbox" else True} name="{field_information.model_name}">\n'
+    else:
+        field = ''
     return mark_safe(field)
 
 
