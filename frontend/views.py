@@ -113,21 +113,20 @@ def store_form(request):
     if request.method == "POST":
         form = StoreForm(request.POST, request)
         if form.is_valid():
-            storeManagerName = Name(**form.storeManagerName.cleaned_data)
-            opsManagerName = Name(**form.opsManagerName.cleaned_data)
-            managerName = Name(**form.managerName.cleaned_data)
-            overnightManagerName = Name(**form.overnightManagerName.cleaned_data)
+            store_manager_name = Name(**form.storeManagerName.cleaned_data)
+            ops_manager_name = Name(**form.opsManagerName.cleaned_data)
+            manager_name = Name(**form.managerName.cleaned_data)
+            overnight_manager_name = Name(**form.overnightManagerName.cleaned_data)
             address = Address(**form.address.cleaned_data)
-            inspectionDueDates = form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
-            installationDueDates = form.installationDueDates.cleaned_data['installationDueDates'].split('|')
-            overnightAccess = form.overnightAccess.cleaned_data['overnightAccess']
+            inspection_due_dates = form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
+            installation_due_dates = form.installationDueDates.cleaned_data['installationDueDates'].split('|')
+            overnight_access = form.overnightAccess.cleaned_data['overnightAccess']
             coordinates = Coordinates(**form.coordinates.cleaned_data)
-            store = Store(**form.cleaned_data, storeManagerName=storeManagerName, opsManagerName=opsManagerName,
-                          managerName=managerName, overnightManagerName=overnightManagerName, address=address,
-                          inspectionDueDates=inspectionDueDates, installationDueDates=installationDueDates,
-                          overnightAccess=overnightAccess,
+            store = Store(**form.cleaned_data, storeManagerName=store_manager_name, opsManagerName=ops_manager_name,
+                          managerName=manager_name, overnightManagerName=overnight_manager_name, address=address,
+                          inspectionDueDates=inspection_due_dates, installationDueDates=installation_due_dates,
+                          overnightAccess=overnight_access,
                           coordinates=coordinates)
-            print('here')
             if try_to_save(model=store, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
@@ -196,6 +195,7 @@ def region_form(request):
 
 ''' Needs to be verified afer conflicts resolved'''
 
+
 @login_required
 def scope_of_work_form(request):
     if request.method == "POST":
@@ -256,11 +256,13 @@ def article_number_state_form(request):
 def article_number_form(request):
     if request.method == "POST":
         form = ArticleNumberForm(request.POST, request)
+
         if form.is_valid():
-            # will need a special form for the list
-            article = ArticleNumber(**form.cleaned_data)
+            description = form.description.cleaned_data['description'].split('|')
+            article = ArticleNumber(**form.cleaned_data, description=description)
             if try_to_save(model=article, form=form, request=request):
                 return HttpResponseRedirect('')
+
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": ArticleNumber.get_field_information(), 'form': form})
     return render(request, 'frontend/form_template_python.html',
@@ -272,7 +274,8 @@ def material_item_form(request):
     if request.method == "POST":
         form = MaterialItemForm(request.POST, request)
         if form.is_valid():
-            item = MaterialItem(**form.cleaned_data)
+            description = form.description.cleaned_data['description'].split('|')
+            item = MaterialItem(**form.cleaned_data, description=description)
             if try_to_save(model=item, form=form, request=request):
                 return HttpResponseRedirect('')
         return render(request, 'frontend/form_template_python.html',
@@ -307,6 +310,20 @@ def location_in_store_form(request):
                       {"field_information_list": LocationInStore.get_field_information(), 'form': form})
     return render(request, 'frontend/form_template_python.html',
                   {"field_information_list": LocationInStore.get_field_information()})
+
+
+@login_required
+def order_material_form(request):
+    if request.method == 'POST':
+        form = OrderMaterialForm(data=request.POST, request=request)
+        if form.is_valid():
+            order = OrderMaterial(**form.cleaned_data)
+            if try_to_save(model=order, form=form, request=request):
+                return HttpResponseRedirect('')
+        return render(request, 'frontend/form_template_python.html',
+                      {"field_information_list": OrderMaterial.get_field_information(), 'form': form})
+    return render(request, 'frontend/form_template_python.html',
+                  {"field_information_list": OrderMaterial.get_field_information()})
 
 
 """"REPORTS"""
@@ -480,4 +497,4 @@ def try_to_save(model, form, request):
         for field in e.errors:
             print(field)
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
-            form.add_error(field_name, field)
+            form.add_error(field_name, 'Something went wrong.')
