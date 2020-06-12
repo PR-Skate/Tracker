@@ -346,8 +346,8 @@
 
         let previousValue, parent, input, newChild, field;
         field = id.split(' ')[1]
+        event.stopPropagation();
         if (!SYSTEM_FIELDS.includes(field)) {
-            event.stopPropagation();
             console.log('INNER');
             parent = document.getElementById(id).offsetParent;
             previousValue = parent.innerText;

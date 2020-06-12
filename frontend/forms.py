@@ -1,3 +1,4 @@
+from bson import DBRef
 from django import forms
 from django.core.validators import FileExtensionValidator
 from django.http import QueryDict
@@ -8,11 +9,14 @@ from Class_Types.Embeded_Documents import *
 import datetime
 
 
-def dict_to_MultiValueDict(dictionary):
+def dict_to_MultiValueDict(dictionary: dict):
     result = {}
 
     for item, value in dictionary.items():
-        result.update({item: value if hasattr(item, '__getitem__') else [value]})
+        if isinstance(value, DBRef):
+            value = str(value.id)
+
+        result.update({item: value if hasattr(value, '__getitem__') and not isinstance(value, str) else [value]})
     return MultiValueDict(result)
 
 
@@ -26,7 +30,7 @@ class BaseForm(forms.Form):
         if 'id' in updated_data.keys() and updated_data.get('id') != '' and request:
             updated_data.update({'lastModifiedUser': request.user.username})
             updated_data.update({'lastModifiedTimestamp': datetime.datetime.now()})
-            super(BaseForm, self).__init__(data=updated_data)
+            super(BaseForm, self).__init__(data=dict_to_MultiValueDict(updated_data))
             self.fields['id'] = forms.CharField(max_length=50, required=False)
             self.fields['lastModifiedUser'] = forms.CharField(max_length=50, required=False)
             self.fields['lastModifiedTimestamp'] = forms.DateTimeField(required=False)
@@ -35,11 +39,11 @@ class BaseForm(forms.Form):
         elif request:
             updated_data.update({'createdUser': request.user.username})
             updated_data.update({'createdTimestamp': datetime.datetime.now()})
-            super(BaseForm, self).__init__(data=updated_data)
+            super(BaseForm, self).__init__(data=dict_to_MultiValueDict(updated_data))
             self.fields['createdUser'] = forms.CharField(max_length=50, required=False)
             self.fields['createdTimestamp'] = forms.DateTimeField(required=False)
         else:
-            super(BaseForm, self).__init__(data=updated_data)
+            super(BaseForm, self).__init__(data=dict_to_MultiValueDict(updated_data))
 
     def to_model(self):
         assert hasattr(self, 'cleaned_data') and self.cleaned_data
@@ -505,7 +509,39 @@ class OrderMaterialForm(BaseForm):
 
 
 class SchedulingWorkForm(BaseForm):
-    # TODO FINISH SCHEDULING FORM
+    GB_Counter = forms.IntegerField(min_value=0)
+    truckDate = forms.DateField()
+    dateScheduled = forms.DateField(required=True)
+    duration = forms.DecimalField(min_value=0.0)
+    endDate = forms.DateField()
+    receivingDate = forms.DateField(required=False)
+    weekOneCallDate = forms.DateField()
+    weekOneContact = forms.BooleanField()
+    weekOneNameOfContact = NameForm()
+    weekFourCallDate = forms.DateField()
+    weekFourContact = forms.BooleanField()
+    weekFourNameOfContact = NameForm()
+    formComplete = forms.BooleanField()
+    fkInstallerID = forms.CharField(max_length=50, required=True)
+    fkSecondInstallerID = forms.CharField(max_length=50, required=False)
+    fkWorkOrderID = forms.CharField(max_length=50, required=True)
 
     class Meta:
         model = SchedulingWork
+        fields = ('GB_Counter', 'truckDate', 'dateScheduled',
+                  'duration', 'endDate', 'receivingDate',
+                  'weekOneCallDate', 'weekOneContact', 'weekOneNameOfContact',
+                  'weekFourCallDate', 'weekFourContact', 'weekFourNameOfContact',
+                  'formComplete', 'fkInstallerID', 'fkSecondInstallerID',
+                  'fkWorkOrderID')
+
+    def __init__(self, data, request):
+        super().__init__(data, request)
+        self.weekOneNameOfContact = NameForm(data={'firstName': data.get('weekOneNameOfContact.firstName'),
+                                                   'lastName': data.get('weekOneNameOfContact.lastName')})
+        self.weekFourNameOfContact = NameForm(data={'firstName': data.get('weekFourNameOfContact.firstName'),
+                                                    'lastName': data.get('weekFourNameOfContact.lastName')})
+
+    def is_valid(self):
+        return forms.BaseForm.is_valid(self) and self.weekOneNameOfContact.is_valid() \
+               and self.weekFourNameOfContact.is_valid()

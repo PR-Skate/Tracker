@@ -8,10 +8,10 @@ from django.utils.safestring import mark_safe
 from mongoengine.dereference import DBRef
 from Class_Types import *
 
-
 STATIC_FILES_FOR_FIELDS = ['state', 'country']
 
 register = template.Library()
+
 
 def to_json(query_set):
     temp = json.loads(query_set.to_json())
