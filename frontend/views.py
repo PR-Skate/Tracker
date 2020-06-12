@@ -22,13 +22,15 @@ def process_view(request, model_class, form_class, id=None):
             if try_to_save(instance=model_instance, form=form, request=request):
                 form.data = dict()
                 return render(request, 'frontend/form_template_python.html',
-                              {"field_information_list": model_class.get_field_information(), 'model_name': model_name, 'form': form})
+                              {"field_information_list": model_class.get_field_information(), 'model_name': model_name,
+                               'form': form})
         return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": model_class.get_field_information(), 'model_name': model_name, 'form': form})
+                      {"field_information_list": model_class.get_field_information(), 'model_name': model_name,
+                       'form': form})
     elif id:
         id = id.strip('#')
         model_instance = model_class.objects.get(id=id)
-        form = form_class(model_instance.get_form_data())
+        form = form_class(request, model_instance.get_form_data())
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": model_class.get_field_information(),
                        'model_name': model_name, 'form': form})
@@ -287,26 +289,6 @@ def generate_table_render(model, request):
     instances = list()
     fields_dictionary = dict()
     for record in records:
-        attributes = dict()
-        for field in fields:
-            field_name = record._reverse_db_field_map.get(field)
-            attributes.update(
-                {field.strip('_'): record.__getattribute__(field_name)})
-            fields_dictionary.update({field.strip('_'): model._fields[field_name].__class__.__name__})
-        instances.append(attributes)
-
-    return render(request, 'frontend/table_template.html',
-                  {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
-                   'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
-
-
-def generate_form_render(model, request):  # TODO JUST WRONG
-    records = model.objects.filter(**request.GET.dict())
-    fields = model.get_fields(get_id=True)
-    instances = list()
-    fields_dictionary = dict()
-    for record in records:
-        print('id: {}'.format(record.id), end='\n')
         attributes = dict()
         for field in fields:
             field_name = record._reverse_db_field_map.get(field)
