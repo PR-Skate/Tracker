@@ -52,6 +52,9 @@ urlpatterns = [
     path('orderMaterialForm', views.order_material_form),
     url(r'^orderMaterialForm/(?P<id>\w+)$', views.order_material_form, name='id'),
 
+    path('schedulingWorkForm', views.scheduling_work_form),
+    url(r'^schedulingWorkForm/(?P<id>\w+)$', views.scheduling_work_form, name='id'),
+
     path('sign-in', views.signin),
     path('logout', views.signout),
     path('customerReport', views.customer_report),

@@ -11,21 +11,21 @@ from Class_Types.base_record import BaseRecord
 
 
 class SchedulingWork(BaseRecord):
-    GB_Counter = IntField(default=0) #GB = Go Back
-    _truckDate = DateTimeField(db_field='truckDate') # MAY BE STORED SOMEWHERE ELSE/DERIVED
-    _dateScheduled = DateTimeField(required=True, db_field='dateScheduled') #startDate
-    _duration = DecimalField(db_field='duration')
-    endDate = DateTimeField()
-    receivingDate = DateField() #OPTIONAL
-    weekOneCallDate = DateField() #CALCULATED
-    weekOneContact = BooleanField(default=False) #OPTIONAL
-    weekOneNameOfContact = EmbeddedDocumentField(Name) #OPTIONAL
-    weekFourCallDate = DateField() #CALCULATED
+    GB_Counter = IntField(default=0)  # GB = Go Back
+    _truckDate = DateField(db_field='truckDate')  # MAY BE STORED SOMEWHERE ELSE/DERIVED
+    _dateScheduled = DateField(required=True, db_field='dateScheduled')  # startDate
+    _duration = DecimalField(db_field='duration', min_value=0.0)
+    endDate = DateField()
+    receivingDate = DateField()  # OPTIONAL
+    weekOneCallDate = DateField()  # CALCULATED
+    weekOneContact = BooleanField(default=False)  # OPTIONAL
+    weekOneNameOfContact = EmbeddedDocumentField(Name)  # OPTIONAL
+    weekFourCallDate = DateField()  # CALCULATED
     weekFourContact = BooleanField(default=False)
-    weekFourNameOfContact = EmbeddedDocumentField(Name) #OPTIONAL
-    formComplete = BooleanField() #OPTIONAL
+    weekFourNameOfContact = EmbeddedDocumentField(Name)  # OPTIONAL
+    formComplete = BooleanField()  # OPTIONAL
     fkInstallerID = ReferenceField(Employee, dbref=True, required=True)
-    fkSecondInstallerID = ReferenceField(Employee, dbref=True) #OPTIONAL
+    fkSecondInstallerID = ReferenceField(Employee, dbref=True)  # OPTIONAL
     fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
     meta = {'collection': 'SchedulingWork'}
 

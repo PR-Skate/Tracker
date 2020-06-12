@@ -1,14 +1,12 @@
 import json
 import re
+
 import mongoengine
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from mongoengine import GridFSProxy
-from mongoengine.errors import *
 
 from .forms import *
 
@@ -16,19 +14,21 @@ from .forms import *
 def process_view(request, model_class, form_class, id=None):
     model_name = model_class.display_string(model_class.__name__)
     if request.method == 'POST':
-        form = form_class(request.POST, request)
+        form = form_class(data=request.POST, request=request)
         if form.is_valid():
             model_instance = form.to_model()
             if try_to_save(instance=model_instance, form=form, request=request):
                 form.data = dict()
                 return render(request, 'frontend/form_template_python.html',
-                              {"field_information_list": model_class.get_field_information(), 'model_name': model_name, 'form': form})
+                              {"field_information_list": model_class.get_field_information(), 'model_name': model_name,
+                               'form': form})
         return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": model_class.get_field_information(), 'model_name': model_name, 'form': form})
+                      {"field_information_list": model_class.get_field_information(), 'model_name': model_name,
+                       'form': form})
     elif id:
         id = id.strip('#')
         model_instance = model_class.objects.get(id=id)
-        form = form_class(model_instance.get_form_data())
+        form = form_class(request=request, data=model_instance.get_form_data())
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": model_class.get_field_information(),
                        'model_name': model_name, 'form': form})
@@ -170,6 +170,11 @@ def order_material_form(request, id=None):
     return process_view(request, model_class=OrderMaterial, form_class=OrderMaterialForm, id=id)
 
 
+@login_required
+def scheduling_work_form(request, id=None):
+    return process_view(request, model_class=SchedulingWork, form_class=SchedulingWorkForm, id=id)
+
+
 """"REPORTS"""
 
 
@@ -300,26 +305,6 @@ def generate_table_render(model, request):
                    'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
 
 
-def generate_form_render(model, request):  # TODO JUST WRONG
-    records = model.objects.filter(**request.GET.dict())
-    fields = model.get_fields(get_id=True)
-    instances = list()
-    fields_dictionary = dict()
-    for record in records:
-        print('id: {}'.format(record.id), end='\n')
-        attributes = dict()
-        for field in fields:
-            field_name = record._reverse_db_field_map.get(field)
-            attributes.update(
-                {field.strip('_'): record.__getattribute__(field_name)})
-            fields_dictionary.update({field.strip('_'): model._fields[field_name].__class__.__name__})
-        instances.append(attributes)
-
-    return render(request, 'frontend/table_template.html',
-                  {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
-                   'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
-
-
 def try_to_save(instance, form, request):
     try:
         if hasattr(instance, 'id'):
@@ -339,7 +324,7 @@ def try_to_save(instance, form, request):
             form.add_error(field_name, 'Must be unique')
         return False
     except Exception as e:
-        for field in e.errors:
+        for field in e:
             print(field)
             field_name = re.sub('.+?(?=index\:\ ){1}(index\:\ )|(\_.*)', '', field)
             form.add_error(field_name, 'Something went wrong.')
