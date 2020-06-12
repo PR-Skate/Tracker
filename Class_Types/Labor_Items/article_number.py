@@ -6,7 +6,7 @@ from Class_Types.base_record import BaseRecord
 
 
 class ArticleNumber(BaseRecord):
-    articleNumber = StringField(max_length=20, required=True)
+    articleNumber = StringField(max_length=20, required=True, unique=True)
     description = ListField(StringField(), max_length=4, required=True)
     usedByInspectionCompanyButNotPrSkate = BooleanField(default=False)
     capital = BooleanField(default=False)

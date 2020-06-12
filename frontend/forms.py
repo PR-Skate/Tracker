@@ -33,8 +33,8 @@ class BaseForm(forms.Form):
             super(BaseForm, self).__init__(data=updated_data)
 
     def to_model(self):
-        assert form.cleaned_data
-        Meta.model(**form.cleaned_data)
+        assert self.cleaned_data
+        return self.Meta.model(**self.cleaned_data)
 
 
 """SUB FORMS"""
@@ -174,6 +174,12 @@ class EmployeeForm(BaseForm):
     def is_valid(self):
         return self.name.is_valid() and self.address.is_valid() and forms.BaseForm.is_valid(self=self)
 
+    def to_model(self):
+        assert self.cleaned_data
+        name = Name(**self.name.cleaned_data)
+        address = Address(**self.address.cleaned_data)
+        return self.Meta.model(**self.cleaned_data, name=name, address=address)
+
 
 class StoreForm(BaseForm):
     storeNumber = forms.CharField(max_length=50, required=True)
@@ -245,6 +251,24 @@ class StoreForm(BaseForm):
                self.inspectionDueDates.is_valid() and self.address.is_valid() and self.overnightAccess.is_valid() \
                and forms.BaseForm.is_valid(self=self) and self.coordinates.is_valid()
 
+    def to_model(self):
+        assert self.cleaned_data
+        store_manager_name = Name(**self.storeManagerName.cleaned_data)
+        ops_manager_name = Name(**self.opsManagerName.cleaned_data)
+        manager_name = Name(**self.managerName.cleaned_data)
+        overnight_manager_name = Name(**self.overnightManagerName.cleaned_data)
+        address = Address(**self.address.cleaned_data)
+        inspection_due_dates = self.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
+        installation_due_dates = self.installationDueDates.cleaned_data['installationDueDates'].split('|')
+        overnight_access = self.overnightAccess.cleaned_data['overnightAccess']
+        coordinates = Coordinates(**self.coordinates.cleaned_data)
+        return self.Meta.model(**self.cleaned_data, storeManagerName=store_manager_name,
+                               opsManagerName=ops_manager_name,
+                               managerName=manager_name, overnightManagerName=overnight_manager_name, address=address,
+                               inspectionDueDates=inspection_due_dates, installationDueDates=installation_due_dates,
+                               overnightAccess=overnight_access,
+                               coordinates=coordinates)
+
 
 class RegionForm(BaseForm):
     regionCode = forms.CharField(max_length=12, required=True)
@@ -269,11 +293,11 @@ class WorkOrderForm(BaseForm):
     statusCode = forms.CharField(required=True, max_length=30)
 
     dateCompleted = forms.DateField(required=True)
-    inspectForStorePath = forms.FileField(required=False, allow_empty_file=True,
+    inspectForStoreFile = forms.FileField(required=False, allow_empty_file=True,
                                           validators=[FileExtensionValidator(['pdf', 'txt'])])
-    detailedReceiptPath = forms.FileField(required=False, allow_empty_file=True,
+    detailedReceiptFile = forms.FileField(required=False, allow_empty_file=True,
                                           validators=[FileExtensionValidator(['pdf', 'txt'])])
-    signageMapPath = forms.FileField(required=False, allow_empty_file=True,
+    signageMapFile = forms.FileField(required=False, allow_empty_file=True,
                                      validators=[FileExtensionValidator(['pdf', 'txt'])])
     partsArrivalDate = forms.DateField()
 

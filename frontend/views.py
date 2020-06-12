@@ -104,31 +104,7 @@ def prep_work_form(request, id=None):
 @login_required
 def store_form(request, id=None):
     return process_view(request, model_class=Store, form_class=StoreForm, id=id)
-def store_form(request):
-    if request.method == "POST":
-        form = StoreForm(request.POST, request)
-        if form.is_valid():
-            store_manager_name = Name(**form.storeManagerName.cleaned_data)
-            ops_manager_name = Name(**form.opsManagerName.cleaned_data)
-            manager_name = Name(**form.managerName.cleaned_data)
-            overnight_manager_name = Name(**form.overnightManagerName.cleaned_data)
-            address = Address(**form.address.cleaned_data)
-            inspection_due_dates = form.inspectionDueDates.cleaned_data['inspectionDueDates'].split('|')
-            installation_due_dates = form.installationDueDates.cleaned_data['installationDueDates'].split('|')
-            overnight_access = form.overnightAccess.cleaned_data['overnightAccess']
-            coordinates = Coordinates(**form.coordinates.cleaned_data)
-            store = Store(**form.cleaned_data, storeManagerName=store_manager_name, opsManagerName=ops_manager_name,
-                          managerName=manager_name, overnightManagerName=overnight_manager_name, address=address,
-                          inspectionDueDates=inspection_due_dates, installationDueDates=installation_due_dates,
-                          overnightAccess=overnight_access,
-                          coordinates=coordinates)
-            print('here')
-            if try_to_save(instance=store, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": Store.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": Store.get_field_information()})
+
 
 
 @login_required
@@ -181,6 +157,7 @@ def article_number_state_form(request):
                       {"field_information_list": ArticleNumberState.get_field_information(), 'form': form})
     return render(request, 'frontend/form_template_python.html',
                   {"field_information_list": ArticleNumberState.get_field_information()})
+
 
 
 @login_required
