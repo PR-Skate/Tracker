@@ -33,7 +33,7 @@ class BaseForm(forms.Form):
             super(BaseForm, self).__init__(data=updated_data)
 
     def to_model(self):
-        assert self.cleaned_data
+        assert hasattr(self, 'cleaned_data') and self.cleaned_data
         return self.Meta.model(**self.cleaned_data)
 
 

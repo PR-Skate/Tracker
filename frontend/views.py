@@ -14,6 +14,7 @@ from .forms import *
 
 
 def process_view(request, model_class, form_class, id=None):
+    model_name = model_class.display_string(model_class.__name__)
     if request.method == 'POST':
         form = form_class(request.POST, request)
         if form.is_valid():
@@ -21,19 +22,19 @@ def process_view(request, model_class, form_class, id=None):
             if try_to_save(instance=model_instance, form=form, request=request):
                 form.data = dict()
                 return render(request, 'frontend/form_template_python.html',
-                              {"field_information_list": model_class.get_field_information(), 'form': form})
+                              {"field_information_list": model_class.get_field_information(), 'model_name': model_name, 'form': form})
         return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": model_class.get_field_information(), 'form': form})
+                      {"field_information_list": model_class.get_field_information(), 'model_name': model_name, 'form': form})
     elif id:
         id = id.strip('#')
         model_instance = model_class.objects.get(id=id)
         form = form_class(model_instance.get_form_data())
         return render(request, 'frontend/form_template_python.html',
                       {"field_information_list": model_class.get_field_information(),
-                       'model_name': model_class.__name__, 'form': form})
+                       'model_name': model_name, 'form': form})
     else:
         return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": model_class.get_field_information()})
+                      {"field_information_list": model_class.get_field_information(), 'model_name': model_name})
 
 
 # Create your views here.
@@ -106,7 +107,6 @@ def store_form(request, id=None):
     return process_view(request, model_class=Store, form_class=StoreForm, id=id)
 
 
-
 @login_required
 def work_order_form(request, id=None):
     return process_view(request, model_class=WorkOrder, form_class=WorkOrderForm, id=id)
@@ -146,18 +146,8 @@ def labor_item_form(request, id=None):
 
 
 @login_required
-def article_number_state_form(request):
-    if request.method == "POST":
-        form = ArticleNumberStateForm(request.POST, request)
-        if form.is_valid():
-            article = ArticleNumberState(**form.cleaned_data)
-            if try_to_save(instance=article, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": ArticleNumberState.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": ArticleNumberState.get_field_information()})
-
+def article_number_state_form(request, id=None):
+    return process_view(request, model_class=ArticleNumberState, form_class=ArticleNumberStateForm, id=id)
 
 
 @login_required
@@ -168,20 +158,6 @@ def article_number_form(request, id=None):
 @login_required
 def material_item_form(request, id=None):
     return process_view(request, model_class=MaterialItem, form_class=MaterialItemForm, id=id)
-
-
-@login_required
-def material_list_form(request):
-    if request.method == "POST":
-        form = MaterialListForm(request.POST, request)
-        if form.is_valid():
-            item = MaterialList(**form.cleaned_data)
-            if try_to_save(instance=item, form=form, request=request):
-                return HttpResponseRedirect('')
-        return render(request, 'frontend/form_template_python.html',
-                      {"field_information_list": MaterialList.get_field_information(), 'form': form})
-    return render(request, 'frontend/form_template_python.html',
-                  {"field_information_list": MaterialList.get_field_information()})
 
 
 @login_required
@@ -306,13 +282,11 @@ def work_order_status_report(request):
 
 
 def generate_table_render(model, request):
-    print(model.__name__)
     records = model.objects.filter(**request.GET.dict())
     fields = model.get_fields(get_id=True)
     instances = list()
     fields_dictionary = dict()
     for record in records:
-        print('id: {}'.format(record.id), end='\n')
         attributes = dict()
         for field in fields:
             field_name = record._reverse_db_field_map.get(field)
