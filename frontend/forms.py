@@ -1,9 +1,19 @@
 from django import forms
 from django.core.validators import FileExtensionValidator
 from django.http import QueryDict
+from django.utils.datastructures import MultiValueDict
+
 from Class_Types import *
 from Class_Types.Embeded_Documents import *
 import datetime
+
+
+def dict_to_MultiValueDict(dictionary):
+    result = {}
+
+    for item, value in dictionary.items():
+        result.update({item: value if hasattr(item, '__getitem__') else [value]})
+    return MultiValueDict(result)
 
 
 class BaseForm(forms.Form):
@@ -13,7 +23,6 @@ class BaseForm(forms.Form):
             updated_data = data.dict()
         else:
             updated_data = data
-
         if 'id' in updated_data.keys() and updated_data.get('id') != '' and request:
             updated_data.update({'lastModifiedUser': request.user.username})
             updated_data.update({'lastModifiedTimestamp': datetime.datetime.now()})
@@ -223,6 +232,10 @@ class StoreForm(BaseForm):
 
     def __init__(self, data, request):
         super().__init__(data, request)
+
+        if not isinstance(data, MultiValueDict):
+            data = dict_to_MultiValueDict(data)
+
         self.storeManagerName = NameForm(data={'firstName': data.get('storeManagerName.firstName'),
                                                'lastName': data.get('storeManagerName.lastName')})
         self.opsManagerName = NameForm(
@@ -489,3 +502,10 @@ class OrderMaterialForm(BaseForm):
     class Meta:
         model = OrderMaterial
         fields = ('quantity', 'fkMaterialItem')
+
+
+class SchedulingWorkForm(BaseForm):
+    # TODO FINISH SCHEDULING FORM
+
+    class Meta:
+        model = SchedulingWork
