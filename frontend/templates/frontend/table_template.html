@@ -131,6 +131,36 @@
         <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.."
                title="Type in a {{ field }}">
     {% endfor %}
+
+
+    {# Alex -> Search filtering <- TODO #}
+    <br><br><label for="">Search (Not yet working. Use the search above)</label><br>
+    {% for field in fields %}
+        <input type="checkbox" id="{{ field }}" name="{{ field }}" onchange="isChecked('{{field }}')">
+                <label>{{ field }}</label><br>
+        <div id="{{ field }}_search"></div>
+    {% endfor %}
+    <input type="submit" value="Search">
+
+    <script>
+        function isChecked(id) {
+          var checkBox = document.getElementById(id);
+          var div = document.getElementById(id + '_search');
+          if (checkBox.checked){
+              input = document.createElement("input");
+              input.type = getFieldType("text");
+              input.name = id + 'Search';
+              input.id = id + 'Search';
+              div.appendChild(input);
+          } else {
+              div.lastChild.remove();
+          }
+        }
+
+    </script>
+
+
+
     <table id="tg-0Xa6r" class="tg">
         <thead>
         <tr>
@@ -325,6 +355,8 @@
             return result
         }
     {% endfor %}
+
+
 
     function test_outer(event, recordId) {
         console.log('OUTER')
