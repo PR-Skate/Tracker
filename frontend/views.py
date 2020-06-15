@@ -302,7 +302,8 @@ def generate_table_render(model, request):
 
     return render(request, 'frontend/table_template.html',
                   {'table_name': model.__name__, 'fields': [x.strip('_') for x in fields], 'instances': instances,
-                   'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary)})
+                   'token': request.user, 'fields_dictionary': json.dumps(fields_dictionary),
+                   "field_information_list": model.get_field_information()})
 
 
 def try_to_save(instance, form, request):

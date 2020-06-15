@@ -154,6 +154,7 @@ def isBasicFieldType(field_type):
     return field_type != "select" and field_type != "subform" and field_type != "list_field"
 
 
+@register.simple_tag
 def getFieldType(field_information=None, type=None):
     fieldTypes = {'IntField': 'number', 'DecimalField': 'number', 'BooleanField': 'checkbox',
                   'ReferenceField': 'select',
@@ -168,3 +169,37 @@ def getFieldType(field_information=None, type=None):
     if type in fieldTypes.keys():
         return fieldTypes.get(type)
     return None
+
+
+# This comment is to force upload to server
+@register.simple_tag
+def getSearchFilters(field_information=None, type=None):
+    fieldType = None
+    if field_information:
+        assert type is None
+        fieldType = getFieldType(field_information=field_information)
+
+    elif type:
+        fieldType = getFieldType(type=type)
+
+    filters = {
+        "number": ['less than', 'greater than', 'is', 'is not'],
+        "checkBox": ['is true', 'is false'],
+        'select': [],
+        'file': [],
+        'date': ['Is', 'Is Not', 'Is Emtpy', 'Is Not Empty', 'Before', 'After', 'Between', 'Yesterday', 'Today',
+                 'Tomorrow', 'Last 7 Days', 'Last 30 Days', 'Last 60 Days', 'Last 90 Days', 'Last 120 Days',
+                 'Last N Days', 'Last Week', 'This Week', 'Next Week', 'Current and Previous Week',
+                 'Current and Next Week', 'Last N weeks', 'Next N Weeks', 'Last Week', 'This Month', 'Next Month',
+                 'Current and Previous Month', 'Current and Next Month', 'Last N Months', 'Next N Months', 'Last Year',
+                 'This Year', 'Next Year', 'Current and Previous Year', 'Current and Next Year', 'Last N Years',
+                 'Next N Years'],
+        'datetime-local': ['before', 'after', 'between', 'on'],
+        'text': ['Is', 'Is not', 'Is Empty', 'Is Not Empty', 'Starts With', 'Ends With', 'Like', 'Contains',
+                 'Not Contains'],
+        'email': ['Is', 'Is not', 'Is Empty', 'Is Not Empty', 'Starts With', 'Ends With', 'Like', 'Contains',
+                  'Not Contains'],
+        'subform': ['I am a sub form'],
+        'list_field': ['Has', 'Does Not Have', 'Is Empty', 'Is Not Empty'],
+    }
+    return filters.get(fieldType)

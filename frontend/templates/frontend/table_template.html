@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,30 +135,50 @@
 
 
     {# Alex -> Search filtering <- TODO #}
+    <script>
+        function isChecked(id) {
+            return document.getElementById(id).checked;
+        }
+
+        function displayFilters(checkBoxID,divID, fieldName, fieldType, searchFilters){
+            var div = document.getElementById(divID);
+            var input;
+            var select;
+            console.log(searchFilters);
+            if (isChecked(checkBoxID)) {
+                select = document.createElement('select');
+                for (i = 0; i < searchFilters.length; i++){
+                    var opt = document.createElement('option');
+                    opt.name = searchFilters[i];
+                    opt.value = searchFilters[i];
+                    opt.innerHTML= searchFilters[i];
+                    select.appendChild(opt);
+                }
+                input = document.createElement('input');
+                input.name = fieldName;
+                input.type = fieldType;
+                div.appendChild(select);
+                div.appendChild(input);
+            } else {
+                while (div.hasChildNodes()){
+                    div.lastChild.remove();
+                }
+            }
+        }
+    </script>
+
+
+    <input type="Search Filter" values="Search Filters" onclick="">
+
     <br><br><label for="">Search (Not yet working. Use the search above)</label><br>
-    {% for field in fields %}
-        <input type="checkbox" id="{{ field }}" name="{{ field }}" onchange="isChecked('{{field }}')">
-                <label>{{ field }}</label><br>
-        <div id="{{ field }}_search"></div>
+    {% for field_information in field_information_list %}
+        <input type="checkbox" value="{{ field_information.name }}" id="{{ field_information.name }}_check" onchange="displayFilters('{{ field_information.name }}_check', '{{ field_information.name }}_div', '{{ field_information.name }}', '{% getFieldType type=field_information.type %}', {% getSearchFilters type=field_information.type %} )">
+        <label>{{ field_information.name }}</label>
+        <div id="{{ field_information.name }}_div"></div>
     {% endfor %}
     <input type="submit" value="Search">
 
-    <script>
-        function isChecked(id) {
-          var checkBox = document.getElementById(id);
-          var div = document.getElementById(id + '_search');
-          if (checkBox.checked){
-              input = document.createElement("input");
-              input.type = getFieldType("text");
-              input.name = id + 'Search';
-              input.id = id + 'Search';
-              div.appendChild(input);
-          } else {
-              div.lastChild.remove();
-          }
-        }
 
-    </script>
 
 
 
@@ -378,8 +399,8 @@
 
         let previousValue, parent, input, newChild, field;
         field = id.split(' ')[1]
-        event.stopPropagation();
         if (!SYSTEM_FIELDS.includes(field)) {
+            event.stopPropagation();
             console.log('INNER');
             parent = document.getElementById(id).offsetParent;
             previousValue = parent.innerText;
