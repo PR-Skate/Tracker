@@ -20,6 +20,7 @@ class Employee(BaseRecord):
     pin = StringField(regex=re.compile('^\d{4}'), max_length=4, required=True)
     rateOfPay = DecimalField()
     active = BooleanField(default=False)
+    durationMultiplier = DecimalField(min_value=0)
     type = StringField(max_length=10, required=True)
     meta = {'collection': 'Employee'}
 

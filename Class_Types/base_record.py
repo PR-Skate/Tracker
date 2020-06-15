@@ -10,7 +10,7 @@ from mongoengine import DateTimeField, DynamicDocument, ReferenceField, Validati
 from PR_Skate.logging import log_methods
 
 
-# @log_methods
+@log_methods
 class BaseRecord(DynamicDocument):
     _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)
     createdTimestamp = DateTimeField(default=datetime.now(), required=False)

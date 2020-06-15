@@ -12,6 +12,7 @@ class PrepWork(BaseRecord):
     downloadMLX = BooleanField(default=False)
     excelInspectUploaded = BooleanField(default=False)
     inspectionPictures = BooleanField(default=False)
+    preWalk = BooleanField(default=False)
     postedSync = BooleanField(default=False)
     formComplete = BooleanField(default=False)
     concretePatchNeeded = BooleanField(default=False)

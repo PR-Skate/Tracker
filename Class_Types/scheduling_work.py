@@ -3,7 +3,7 @@
 import datetime
 
 from mongoengine import IntField, DecimalField, DateTimeField, EmbeddedDocumentField, BooleanField, ReferenceField, \
-    DateField
+    DateField, ListField, StringField
 
 from Class_Types import Employee, WorkOrder
 from Class_Types.Embeded_Documents.embeded_classes import Name
@@ -19,6 +19,7 @@ class SchedulingWork(BaseRecord):
     receivingDate = DateField()  # OPTIONAL
     weekOneCallDate = DateField()  # CALCULATED
     weekOneContact = BooleanField(default=False)  # OPTIONAL
+    notCompleted = ListField(StringField())
     weekOneNameOfContact = EmbeddedDocumentField(Name)  # OPTIONAL
     weekFourCallDate = DateField()  # CALCULATED
     weekFourContact = BooleanField(default=False)
