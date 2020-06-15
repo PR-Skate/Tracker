@@ -18,7 +18,7 @@ class PrepWork(BaseRecord):
     concretePatchNeeded = BooleanField(default=False)
     materialOrderNumberHD = StringField(default='')
     cpn_eta = DateTimeField()
-    inspectionDueDates = DateTimeField()
+    inspectionDueDate = DateTimeField()
     lastDateChecked = DateTimeField(default=datetime.utcnow)
     fkWorkOrderName = ReferenceField(WorkOrder, required=True, dbref=True)
     meta = {'collection': 'PrepWork'}
