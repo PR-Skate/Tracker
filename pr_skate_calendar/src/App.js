@@ -119,8 +119,8 @@ export default class App extends React.PureComponent {
             <DateNavigator />
             <ViewSwitcher />
 
-            <EditRecurrenceMenu />
-            <Appointments className='calendarEvent' />
+            <EditRecurrenceMenu/>
+            <Appointments className='calendarEvent'/>
 
             <AppointmentTooltip
                 showCloseButton
@@ -128,10 +128,15 @@ export default class App extends React.PureComponent {
                 showOpenButton
             />
 
-            <AppointmentForm />
-            <DragDropProvider 
-            allowDrag={({ allDay }) => !allDay}
-            allowResize={() => true}/>
+            <AppointmentForm>
+                appointmentData = {<AppointmentModel>
+                data = props.data
+
+            </AppointmentModel>}
+            </AppointmentForm>
+            <DragDropProvider
+                allowDrag={({allDay}) => !allDay}
+                allowResize={() => true}/>
         </Scheduler>
       </Paper>
     );

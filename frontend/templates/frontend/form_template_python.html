@@ -6,9 +6,30 @@
     <meta charset="UTF-8">
     <title>{{ model_name }} Form</title>
 </head>
+<style type="text/css">
+    .my_content_container a {
+        border-bottom: 1px solid #777777;
+        border-left: 1px solid #000000;
+        border-right: 1px solid #333333;
+        border-top: 1px solid #000000;
+        color: #000000;
+        display: block;
+        height: 2.5em;
+        padding: 0 1em;
+        width: 5em;
+        text-decoration: none;
+    }
+
+    {#  :hover and :active styles left as an exercise for the reader. #}
+</style>
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
 <body onload="lib.checkSignInStatus()">
 {% include 'frontend/helpers/navbar.html' %}
+{% if request.META.HTTP_REFERER and 'Report' in request.META.HTTP_REFERER %}
+    <div class="my_content_container">
+        <a href="{{ request.META.HTTP_REFERER }}">Back to the Report</a>
+    </div>
+{% endif %}
 <h1>{{ model_name }} Form</h1>
 <form action="#" method="POST" name='form' id='form' enctype="multipart/form-data">
     {% csrf_token %}

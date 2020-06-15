@@ -13,13 +13,15 @@ class LocationInStore(BaseRecord):
     bay = StringField(required=True)
     tower = StringField(required=True)
     level = StringField(required=False, allow_null=True, allow_blank=True, blank=True, null=True)
+    other = StringField(required=False)  # only for customers besides home deopt
     plumbingInLocation = BooleanField(default=False)
     plumbingPicturePath = ImageField(default=None)
     plumbingPicturePath2 = ImageField(default=None)
     electricalInLocation = BooleanField(default=False)
     electricalPicturePath = ImageField(default=None)
     electricalPicturePath2 = ImageField(default=None)
-    fkMaterialItems = ListField(ReferenceField(MaterialItem, dbref=True))
+    fkMaterialItems = ListField(ReferenceField(MaterialItem, dbref=True))  # should be a series of drop downs
+    # where the there are no duplicate references
     fkStoreNumber = ReferenceField(document_type=Store, required=True, dbref=True)
     meta = {'collection': 'LocationInStore'}
 

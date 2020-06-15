@@ -13,10 +13,11 @@ class WorkOrder(BaseRecord):
     # constructor:
     workOrderName = StringField(max_length=15, required=True, unique=True)
     dateReceived = DateField(required=True, default=dt.datetime.now())
-    detail = StringField(defualt='')
+    detail = StringField(defualt='')  # multiline
     requestingContact = StringField(required=True)
     priority = StringField(required=True)
-    statusCode = StringField(max_length=30, required=True)
+    statusCode = StringField(max_length=30, required=True)  # choices: Pending Materials, Ready Now, Other
+    requestCode = StringField(max_length=30, required=True)  # choices: P-4, P-48, Other
 
     dateCompleted = DateField(required=True)
     inspectForStoreFile = FileField()

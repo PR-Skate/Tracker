@@ -30,17 +30,9 @@ class Store(BaseRecord):
 
     division = StringField(max_length=50, required=True)
     awardedVendor = StringField(max_length=50, required=True, default='PR Skate')
-    storeManagerName = EmbeddedDocumentField(Name)
-    storeManagerEmail = EmailField()
 
-    opsManagerName = EmbeddedDocumentField(Name)
-    opsManagerEmail = EmailField()
-    managerName = EmbeddedDocumentField(Name)
-    managerEmail = EmailField()
-    overnightManagerName = EmbeddedDocumentField(Name)
+    overnightCrew = StringField(max_length=25)  # choices: Full Time or Part Time
 
-    overnightManagerEmail = EmailField()
-    overnightCrew = StringField(max_length=25)
     overnightAccess = ListField(StringField(max_length=5), choices=(
         ('SUN', 'Sunday'),
         ('MON', 'Monday'),
@@ -53,13 +45,24 @@ class Store(BaseRecord):
     noiseOrdinance = BooleanField(default=False)
     timeCutOff = StringField()
 
-    fkRegionCode = ReferenceField('RegionCode', dbref=True)
-    fkMicroRegionCode = ReferenceField('MicroRegionCode', dbref=True)
+    fkRegionCode = ReferenceField('RegionCode', dbref=False)
+    fkMicroRegionCode = ReferenceField('MicroRegionCode', dbref=False)
     coordinates = EmbeddedDocumentField(Coordinates)
     active = BooleanField(default=False)
-    installationDueDates = ListField(DateField())
-    inspectionDueDates = ListField(DateField())
+    installationDueDates = ListField(DateField())  # Uploaded able
+    inspectionDueDates = ListField(DateField())  # Uploaded able MAYBE NEW TABLES
     fiscalWeek = IntField(min_value=1, max_value=53)
+
+    storeManagerName = EmbeddedDocumentField(Name)
+    storeManagerEmail = EmailField()
+
+    opsManagerName = EmbeddedDocumentField(Name)
+    opsManagerEmail = EmailField()
+    managerName = EmbeddedDocumentField(Name)
+    managerEmail = EmailField()
+    overnightManagerName = EmbeddedDocumentField(Name)
+    overnightManagerEmail = EmailField()
+
     meta = {'collection': 'Store'}
 
     def __str__(self):
