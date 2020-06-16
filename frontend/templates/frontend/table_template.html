@@ -178,10 +178,6 @@
     {% endfor %}
     <input type="submit" value="Search">
 
-
-
-
-
     <table id="tg-0Xa6r" class="tg">
         <thead>
         <tr>
@@ -377,8 +373,6 @@
         }
     {% endfor %}
 
-
-
     function test_outer(event, recordId) {
         console.log('OUTER')
         console.log(window.location.href)
@@ -413,9 +407,9 @@
             input.name = field
             input.value = formatValue(previousValue, field)
             input.id = id
-            input.ondblclick = function () {
-                submit_changes(event, id)
-            };
+            input.addEventListener('dblclick', (event) => {
+              submit_changes(event, input.id);
+            });
 
             newChild = parent.appendChild(input);
             console.log(newChild);
@@ -466,8 +460,8 @@
 
     function submit_changes(event, id) {
         let previousValue, parent, text, input, temp, fieldName, instanceID, data;
-        event.stopPropagation();
-        console.log('INNER');
+        event.stopImmediatePropagation();
+        console.log('Submit');
         input = document.getElementById(id);
         parent = input.offsetParent;
         previousValue = input.value;
@@ -476,10 +470,16 @@
         }
         text = document.createElement("pre");
         text.innerText = previousValue
-        text.ondblclick = function () {
-            editField(event, id)
-        };
         text.id = id
+
+        text.addEventListener('dblclick', (event) => {
+          editField(event, text.id);
+          return false;
+        });
+        {#lib.jquery(text).on('dbclick', (event) => {#}
+        {#  editField(event, text.id);#}
+        {#  return false;#}
+        {#});#}
         parent.appendChild(text);
         temp = JSON.parse(localStorage.getItem('auth_token_dict'));
         instanceID = id.split(' ')[0];
@@ -495,7 +495,7 @@
             },
             "data": data,
         };
-        $.ajax(settings).done(function (response) {
+        lib.jquery.ajax(settings).done(function (response) {
             console.log(response);
         });
         return false;
