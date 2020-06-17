@@ -59,11 +59,6 @@ function checkSignInStatus() {
 }
 
 
-function f() {
-
-}
-
-
 function logout() {
     var temp;
     if (localStorage.getItem('auth_token_dict')) {
@@ -102,11 +97,12 @@ function findValueByPrefix(object, prefix) {
 }
 
 
-function getAuthToken() {
+function getAuthToken(event) {
     var settings = {
         "url": "/login/",
         "type": "POST",
         "timeout": 0,
+        "async": false,
         "headers": {
             "Content-Type": "application/json",
         },

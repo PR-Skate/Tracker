@@ -45,18 +45,18 @@ function remove(containerName) {
 
 
 function checkSignInStatus() {
-	var temp;
-	try {
-		console.log(localStorage.getItem('auth_token_dict'));
-		temp = JSON.parse(localStorage.getItem('auth_token_dict'));
-		console.log(temp.expiry)
-		if (new Date(temp.expiry) < new Date()) {
-			logout()
-		}
-	} catch (e) {
-		localStorage.removeItem('auth_token_dict')
-		logout()
-	}
+    var temp;
+    try {
+        console.log(localStorage.getItem('auth_token_dict'));
+        temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+        console.log(temp.expiry)
+        if (new Date(temp.expiry) < new Date()) {
+            logout()
+        }
+    } catch (e) {
+        localStorage.removeItem('auth_token_dict')
+        logout()
+    }
 }
 
 
@@ -98,11 +98,12 @@ function findValueByPrefix(object, prefix) {
 }
 
 
-function getAuthToken() {
+function getAuthToken(event) {
     var settings = {
         "url": "/login/",
         "type": "POST",
         "timeout": 0,
+        "async": false,
         "headers": {
             "Content-Type": "application/json",
         },
