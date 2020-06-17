@@ -1,10 +1,12 @@
 //DEFINITIONS
-var moment = require('moment');
+var Moment = require('moment');
 require("moment/min/locales.min");
-moment.locale('cs');
-console.log(moment.locale()); // cs
+Moment.locale('cs');
+console.log(Moment.locale()); // cs
 
-var jquery = require('jquery')
+var Jquery = require('jquery')
+
+var Cookies = require('js-cookie')
 
 
 function getCount(parent, getChildrensChildren) {
@@ -75,7 +77,7 @@ function logout() {
                     "Content-Type": "application/json",
                 }
             };
-            jquery.ajax(settings).done(function () {
+            Jquery.ajax(settings).done(function () {
                 console.log("deleted auth token");
             });
         }
@@ -97,21 +99,49 @@ function findValueByPrefix(object, prefix) {
 }
 
 
-function getAuthToken(event) {
+function login(event, token) {
+    event.preventDefault()
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    getAuthToken(username, password, token);
+    token = Cookies.get('csrftoken')
+
+    var settings = {
+        "url": window.location.href,
+        "method": "POST",
+        "async": false,
+        "timeout": 0,
+        "headers": {
+            "Content-Length": " 133",
+            "Cache-Control": " max-age=0",
+            "Upgrade-Insecure-Requests": " 1",
+            "Content-Type": " application/x-www-form-urlencoded",
+            "Accept-Language": " en-US,en;q=0.9",
+        },
+        "data": "csrfmiddlewaretoken=" + token + "&username=" + username + "&password=" + password,
+    };
+    Jquery.ajax(settings).done(function (response) {
+        window.location.href = window.location.href.includes("next=") ? window.location.href.split("next=")[1] : '/'
+    });
+}
+
+function getAuthToken(username, password, token) {
     var settings = {
         "url": "/login/",
         "type": "POST",
         "timeout": 0,
         "async": false,
         "headers": {
-            "Content-Type": "application/json",
+            "X-CSRFToken": token,
+            "Content-Type": "application/json"
         },
         "data": JSON.stringify({
-            "username": document.getElementById("username").value,
-            "password": document.getElementById("password").value
+            "username": username,
+            "password": password
         }),
     };
-    jquery.ajax(settings).done(function (response) {
+    Jquery.ajax(settings).done(function (response) {
         var temp;
         localStorage.setItem("auth_token_dict", JSON.stringify(response));
         console.log("saved auth token");
@@ -125,9 +155,9 @@ function getAuthToken(event) {
 exports.add = add;
 exports.remove = remove;
 exports.getCount = getCount;
-exports.getAuthToken = getAuthToken
+exports.login = login
 exports.findValueByPrefix = findValueByPrefix
 exports.logout = logout
 exports.checkSignInStatus = checkSignInStatus
-exports.moment = moment
-exports.jquery = jquery
+exports.moment = Moment
+exports.jquery = Jquery

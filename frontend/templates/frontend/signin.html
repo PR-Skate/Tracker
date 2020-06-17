@@ -12,7 +12,7 @@
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
 
 <h1>User Sign-In</h1>
-<form onsubmit="lib.getAuthToken()" action="#" method="POST" name='form' id='form'>
+<form onsubmit="lib.login(event,'{{ csrf_token }}')" method="POST" name='form' id='form'>
     {% csrf_token %}
     <label for="">Username</label><br>
     <input id="username" type="text" name="username"><br><br>
@@ -20,10 +20,7 @@
     <label for="">Password</label><br>
     <input id="password" type="password" name="password"><br><br>
 
-    <input type="submit"> {% for message in messages %}
-    <ul>{{ message }}</ul>
-{% endfor %} {{ form.errors }}
-    <p id='fail' style="display:none">ERROR</p>
+    <input type="submit">
 </form>
 </body>
 </html>

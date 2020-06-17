@@ -10,7 +10,6 @@
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
 <body onload="lib.checkSignInStatus()">
 {% include 'frontend/helpers/navbar.html' %}
-{% load static %}
 <h1>Hello Tracker:</h1>
 <h3>Pages:</h3>
 <a href="customerForm">Customer Form</a><br>
@@ -67,8 +66,6 @@
 <a href="/api/Store">Store Form</a><br>
 <a href="/api/WorkOrder">Work Order Form</a><br>
 
-
-<script src="{% static "frontend/main.js" %}"></script>
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
 <button onclick="lib.logout();" id="myButton" class="float-left submit-button">Log Out</button>
 </body>
