@@ -168,7 +168,6 @@
     </script>
 
 
-    <input type="Search Filter" values="Search Filters" onclick="">
 
     <br><br><label for="">Search (Not yet working. Use the search above)</label><br>
     {% for field_information in field_information_list %}
@@ -335,36 +334,34 @@
     function search_rows() {
         display_all_rows()
         {% for field in fields %}
-            filter_{{ field }}()
+            filter_{{ field }}();
         {% endfor %}
     }
 
     function display_all_rows() {
-        let table, tr, i;
+        let table, tableRow, i;
         table = document.getElementById("tg-0Xa6r");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            tr[i].style.display = "";
+        tableRow = table.getElementsByTagName("tr");
+        for (i = 0; i < tableRow.length; i++) {
+            tableRow[i].style.display = "";
         }
     }
 
     {% for field in fields %}
-        function filter_{{ field }}() {
-            let input, filter, table, tr, td, i, txtValue, result;
+        function filter_{{ field }}(func) {
+            let input, filter, table, tableRow, tableData, i, txtValue, result;
             input = document.getElementById("search_{{ field }}");
             filter = input.value.toUpperCase();
             if (filter) {
                 table = document.getElementById("tg-0Xa6r");
-                tr = table.getElementsByTagName("tr");
-                result = [tr.length]
-                for (i = 2; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        txtValue = txtValue.trim().toUpperCase()
-                        let num = txtValue.indexOf(filter)
-                        if (num <= -1) {
-                            tr[i].style.display = "none";
+                tableRow = table.getElementsByTagName("tr");
+                result = [tableRow.length]
+                for (i = 2; i < tableRow.length; i++) {
+                    tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
+                    if (tableData) {
+                        txtValue = tableData.textContent || tableData.innerText;
+                        if (!func(txtValue)) {
+                            tableRow[i].style.display = "none";
                         }
                     }
                 }
@@ -476,10 +473,6 @@
           editField(event, text.id);
           return false;
         });
-        {#lib.jquery(text).on('dbclick', (event) => {#}
-        {#  editField(event, text.id);#}
-        {#  return false;#}
-        {#});#}
         parent.appendChild(text);
         temp = JSON.parse(localStorage.getItem('auth_token_dict'));
         instanceID = id.split(' ')[0];

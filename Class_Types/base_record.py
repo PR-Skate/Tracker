@@ -144,29 +144,30 @@ class BaseRecord(DynamicDocument):
         field_information_list = list()
         base_record_fields = BaseRecord.get_all_fields()
         for field_name, field_class in cls._fields.items():
-            field_name = field_name.strip('_')
-            field_information = FieldInformation()
-            field_information.model_name = field_name
-            field_information.name = cls.display_string(field_name)
-            field_information.type = field_class.__class__.__name__
-            field_information.required = field_class.__getattribute__('required')
-            if field_name == 'id' or field_name in base_record_fields:
-                field_information.hidden = True
-            if isinstance(field_class, ListField):
-                field_information.list_field_type = field_class.__getattribute__('field').__class__.__name__
-                if hasattr(field_class.field, 'choices'):
-                    field_information.list_choices = field_class.__getattribute__('choices')
-            elif isinstance(field_class, ReferenceField) or isinstance(field_class, EmbeddedDocumentField):
-                field_information.model = field_class.__getattribute__('document_type')
-                if not isinstance(field_information.model, str):
-                    if isinstance(field_class, EmbeddedDocumentField):
-                        field_information.sub_form_fields_information = field_information.model.get_field_information(
-                            field_name)
-                    field_information.model = field_information.model.__name__
-                else:
-                    if field_information.model == 'self':
-                        field_information.model = cls.__name__
-            field_information_list.append(field_information)
+            if 'cls' not in field_name:
+                field_name = field_name.strip('_')
+                field_information = FieldInformation()
+                field_information.model_name = field_name
+                field_information.name = cls.display_string(field_name)
+                field_information.type = field_class.__class__.__name__
+                field_information.required = field_class.__getattribute__('required')
+                if field_name == 'id' or field_name in base_record_fields:
+                    field_information.hidden = True
+                if isinstance(field_class, ListField):
+                    field_information.list_field_type = field_class.__getattribute__('field').__class__.__name__
+                    if hasattr(field_class.field, 'choices'):
+                        field_information.list_choices = field_class.__getattribute__('choices')
+                elif isinstance(field_class, ReferenceField) or isinstance(field_class, EmbeddedDocumentField):
+                    field_information.model = field_class.__getattribute__('document_type')
+                    if not isinstance(field_information.model, str):
+                        if isinstance(field_class, EmbeddedDocumentField):
+                            field_information.sub_form_fields_information = field_information.model.get_field_information(
+                                field_name)
+                        field_information.model = field_information.model.__name__
+                    else:
+                        if field_information.model == 'self':
+                            field_information.model = cls.__name__
+                field_information_list.append(field_information)
         return field_information_list
 
     def is_valid_reference_field(self, field):

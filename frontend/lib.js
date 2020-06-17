@@ -45,12 +45,22 @@ function remove(containerName) {
 
 function checkSignInStatus() {
     var temp;
-    console.log(localStorage.getItem('auth_token_dict'));
-    temp = JSON.parse(localStorage.getItem('auth_token_dict'));
-    console.log(temp.expiry)
-    if (new Date(temp.expiry) < new Date()) {
+    try {
+        console.log(localStorage.getItem('auth_token_dict'));
+        temp = JSON.parse(localStorage.getItem('auth_token_dict'));
+        console.log(temp.expiry)
+        if (new Date(temp.expiry) < new Date()) {
+            logout()
+        }
+    } catch (e) {
+        localStorage.removeItem('auth_token_dict')
         logout()
     }
+}
+
+
+function f() {
+
 }
 
 
