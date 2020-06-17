@@ -487,7 +487,7 @@ class PrepWorkForm(BaseForm):
     concretePatchNeeded = forms.BooleanField(required=False)
     materialOrderNumberHD = forms.CharField()
     cpn_eta = forms.DateTimeField()
-    inspectionDueDates = forms.DateTimeField()
+    inspectionDueDate = forms.DateTimeField()
     lastDateChecked = forms.DateTimeField()
     fkWorkOrderName = forms.CharField(required=True)
 

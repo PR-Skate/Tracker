@@ -140,7 +140,7 @@
             return document.getElementById(id).checked;
         }
 
-        function displayFilters(checkBoxID,divID, fieldName, fieldType, searchFilters){
+        function displayFilters(checkBoxID,divID, fieldName, fieldType, searchFilters, field){
             var div = document.getElementById(divID);
             var input;
             var select;
@@ -155,10 +155,13 @@
                     select.appendChild(opt);
                 }
                 input = document.createElement('input');
-                input.name = fieldName;
+                input.name = "search_" + fieldName;
+                input.id = "search_" + fieldName;
                 input.type = fieldType;
+                input.onkeyup = 'search_rows()' ;
                 div.appendChild(select);
                 div.appendChild(input);
+
             } else {
                 while (div.hasChildNodes()){
                     div.lastChild.remove();
@@ -171,11 +174,20 @@
 
     <br><br><label for="">Search (Not yet working. Use the search above)</label><br>
     {% for field_information in field_information_list %}
+
+        {% if getFieldType %}
+            {% makeSelectContainer field_information=field_information %}
+        {% elif field_information.type is 'select' %}
+
+        {% elif pass %}
+
+        {% else %}
+
+        {% endif %}
         <input type="checkbox" value="{{ field_information.name }}" id="{{ field_information.name }}_check" onchange="displayFilters('{{ field_information.name }}_check', '{{ field_information.name }}_div', '{{ field_information.name }}', '{% getFieldType type=field_information.type %}', {% getSearchFilters type=field_information.type %} )">
         <label>{{ field_information.name }}</label>
         <div id="{{ field_information.name }}_div"></div>
     {% endfor %}
-    <input type="submit" value="Search">
 
     <table id="tg-0Xa6r" class="tg">
         <thead>

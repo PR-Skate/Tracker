@@ -12,4 +12,4 @@ class ArticleNumberState(BaseRecord):  # Need Batch Upload
     meta = {'collection': 'ArticleNumberState'}
 
     def __str__(self):
-        return f'{self.state} {self.fkArticleNumber.descritpion}'
+        return f'{self.state} {self.fkArticleNumber.description}'

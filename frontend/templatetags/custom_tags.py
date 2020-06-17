@@ -92,6 +92,7 @@ def get_field_from_static_file(field_information, data=None):
     return field
 
 
+@register.simple_tag
 def makeSelectContainer(field_information, data=None):
     options = [f'<option value="" {"selected" if not data else ""} disabled>{field_information.name}</option>']
     instances = getInstances(field_information)
@@ -105,12 +106,13 @@ def makeSelectContainer(field_information, data=None):
     options_string = "\n".join(options)
 
     selectContainer = f'<label for="{field_information.model_name}">{field_information.name}</label>\n\
-            <select name="{field_information.model_name}" required>n\n\
+            <select name="{field_information.model_name}" class="selectpicker" data-live-search="true" required>n\n\
                  {options_string}\n\
             </select><br><br>'
     return selectContainer
 
 
+@register.simple_tag
 def getInstances(field_information):
     model = globals()[field_information.model]
 
