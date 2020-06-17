@@ -306,6 +306,7 @@ def generate_table_render(model, request):
                    "field_information_list": model.get_field_information()})
 
 
+
 def try_to_save(instance, form, request):
     try:
         if hasattr(instance, 'id'):
