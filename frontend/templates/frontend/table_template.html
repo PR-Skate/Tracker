@@ -147,6 +147,8 @@
             var select;
             if (isChecked(checkBoxID)) {
                 select = document.createElement('select');
+                select.name = 'select_'.concat(fieldName);
+                select.id = 'select_'.concat(fieldName);
                 for (i = 0; i < searchFilters.length; i++){
                     var opt = document.createElement('option');
                     opt.name = searchFilters[i];
@@ -158,6 +160,7 @@
                 input.name = "search_".concat(fieldName);
                 input.id = "search_".concat(fieldName);
                 input.type = fieldType;
+                input.value = '';
                 input.onkeyup = search_rows;
                 div.appendChild(select);
                 div.appendChild(input);
@@ -178,8 +181,6 @@
         <label for="{{ field_information.model_name }}_check">{{ field_information.model_name }}</label>
         <div id="{{ field_information.model_name }}_div"></div>
     {% endfor %}
-
-
 
 
     <table id="tg-0Xa6r" class="tg">
@@ -339,8 +340,8 @@
     // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
     function func(textInput, fieldValue, searchFilter) {
-        if (searchFilter === 'Is Empty' || searchFilter === 'Is Not Empty'){
-            return fieldValue === '';
+        if (searchFilter === 'Is Empty' || searchFilter === 'Is Not Empty' || searchFilter === 'Contains' || searchFilter === 'Not Contains'){
+            return fieldValue.includes(textInput);
         }else if(searchFilter === 'Is' || searchFilter === 'Is Not'){
             return fieldValue === textInput;
         }else if(searchFilter === 'Starts With'){
@@ -349,8 +350,6 @@
             return fieldValue.endsWith(textInput);
         }else if(searchFilter === 'Like'){
             return false;
-        }else if(searchFilter === 'Contains' || searchFilter === 'Not Contains'){
-            return fieldValue.includes(textInput);
         }else{
             //Brute force search (can be optimized)
             return true;
@@ -374,27 +373,31 @@
 
 
     {% for field in field_information_list %}
-        function filter_{{ field.model_name }}(func) {
-            let input, filter, table, tableRow, tableData, i, txtValue, result;
-            input = document.getElementById("search_{{ field.model_name }}");
-            filter = input.value.toUpperCase();
-            console.log(input.value.toUpperCase())
-            console.log(filter)
-            if (filter) {
-                table = document.getElementById("tg-0Xa6r");
-                tableRow = table.getElementsByTagName("tr");
-                result = [tableRow.length]
-                for (i = 2; i < tableRow.length; i++) {
-                    tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
-                    if (tableData) {
-                        txtValue = tableData.textContent || tableData.innerText;
-                        if (!txtValue.includes(filter)) {
-                            tableRow[i].style.display = "none";
+        function filter_{{ field.model_name }}() {
+            let input, filter, table, tableRow, searchParam, tableData, i, txtValue, result, checkBoxID;
+            checkBoxID = document.getElementById("{{ field.model_name }}_check");
+            if (checkBoxID.checked) {
+                input = document.getElementById("search_{{ field.model_name }}");
+                searchParam = (document.getElementById("select_{{ field.model_name }}")) ? document.getElementById("select_{{ field.model_name }}").value : '';
+                filter = input.value.toUpperCase();
+
+                console.log(filter)
+                if (filter) {
+                    table = document.getElementById("tg-0Xa6r");
+                    tableRow = table.getElementsByTagName("tr");
+                    result = [tableRow.length]
+                    for (i = 2; i < tableRow.length; i++) {
+                        tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
+                        if (tableData) {
+                            txtValue = tableData.textContent || tableData.innerText;
+                            if (!func(txtValue, tableData, searchParam)) {
+                                tableRow[i].style.display = "none";
+                            }
                         }
                     }
                 }
+                return result
             }
-            return result
         }
     {% endfor %}
 
