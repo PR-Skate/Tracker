@@ -162,7 +162,7 @@ def getFieldType(field_information=None, type=None):
                   'ReferenceField': 'select',
                   'ImageField': 'file', 'FileField': 'file', 'DateField': 'date', 'DateTimeField': 'datetime-local',
                   'StringField': 'text', 'EmailField': 'email', 'EmbeddedDocumentField': 'subform',
-                  'ListField': 'list_field'
+                  'ListField': 'list_field', 'ObjectIdField': 'text'
                   }
     if field_information:
         assert type is None
@@ -203,5 +203,7 @@ def getSearchFilters(field_information=None, type=None):
                   'Not Contains'],
         'subform': ['I am a sub form'],
         'list_field': ['Has', 'Does Not Have', 'Is Empty', 'Is Not Empty'],
+        'ObjectIdField': ['Is', 'Is not', 'Is Empty', 'Is Not Empty', 'Starts With', 'Ends With', 'Like', 'Contains',
+                          'Not Contains']
     }
     return filters.get(fieldType)
