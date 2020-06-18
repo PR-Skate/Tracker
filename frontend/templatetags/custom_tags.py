@@ -185,7 +185,7 @@ def getSearchFilters(field_information=None, type=None):
         fieldType = getFieldType(type=type)
 
     filters = {
-        "number": ['less than', 'greater than', 'is', 'is not'],
+        "number": ['less than', 'less than or equal to', 'greater than', 'greater than or equal to', 'is', 'is not'],
         "checkBox": ['is true', 'is false'],
         'select': ['Has', 'Does Not Have'],
         'file': [],

@@ -155,30 +155,32 @@ function getAuthToken(username, password, token) {
 //EXPORT
 exports.add = add;
 exports.remove = remove;
-exports.getCount = getCount;
-exports.login = login
-exports.findValueByPrefix = findValueByPrefix
-exports.logout = logout
-exports.checkSignInStatus = checkSignInStatus
-exports.moment = Moment
-exports.jquery = Jquery
-},{"jquery":3,"js-cookie":4,"moment":6,"moment/min/locales.min":5}],2:[function(require,module,exports){
-module.exports = require('./lib')
-
-},{"./lib":1}],3:[function(require,module,exports){
-/*!
- * jQuery JavaScript Library v3.5.1
- * https://jquery.com/
- *
- * Includes Sizzle.js
- * https://sizzlejs.com/
- *
- * Copyright JS Foundation and other contributors
- * Released under the MIT license
- * https://jquery.org/license
- *
- * Date: 2020-05-04T22:49Z
- */
+		exports.getCount = getCount;
+		exports.login = login
+		exports.findValueByPrefix = findValueByPrefix
+		exports.logout = logout
+		exports.checkSignInStatus = checkSignInStatus
+		exports.moment = Moment
+		exports.jquery = Jquery
+	}, {"jquery": 3, "js-cookie": 4, "moment": 6, "moment/min/locales.min": 5}],
+	2: [function (require, module, exports) {
+		module.exports = require('./lib')
+		module.exports = require('./report_search')
+	}, {"./lib": 1, "./report_search": 7}],
+	3: [function (require, module, exports) {
+		/*!
+         * jQuery JavaScript Library v3.5.1
+         * https://jquery.com/
+         *
+         * Includes Sizzle.js
+         * https://sizzlejs.com/
+         *
+         * Copyright JS Foundation and other contributors
+         * Released under the MIT license
+         * https://jquery.org/license
+         *
+         * Date: 2020-05-04T22:49Z
+         */
 ( function( global, factory ) {
 
 	"use strict";
@@ -16867,15 +16869,181 @@ return jQuery;
         DATETIME_LOCAL_MS: 'YYYY-MM-DDTHH:mm:ss.SSS', // <input type="datetime-local" step="0.001" />
         DATE: 'YYYY-MM-DD', // <input type="date" />
         TIME: 'HH:mm', // <input type="time" />
-        TIME_SECONDS: 'HH:mm:ss', // <input type="time" step="1" />
-        TIME_MS: 'HH:mm:ss.SSS', // <input type="time" step="0.001" />
-        WEEK: 'GGGG-[W]WW', // <input type="week" />
-        MONTH: 'YYYY-MM', // <input type="month" />
-    };
+		TIME_SECONDS: 'HH:mm:ss', // <input type="time" step="1" />
+		TIME_MS: 'HH:mm:ss.SSS', // <input type="time" step="0.001" />
+		WEEK: 'GGGG-[W]WW', // <input type="week" />
+		MONTH: 'YYYY-MM', // <input type="month" />
+	};
 
-    return hooks;
+			return hooks;
 
-})));
+		})));
 
-},{}]},{},[2])(2)
+	}, {}],
+	7: [function (require, module, exports) {
+//DEFINITIONS
+		var Moment = require('moment');
+		require("moment/min/locales.min");
+		Moment.locale('cs');
+
+		var Jquery = require('jquery')
+
+		var Cookies = require('js-cookie')
+
+
+//GENERAL OBJECTS
+
+		function objectIsEmpty(arg) {
+			return (
+				arg == null || // Check for null or undefined
+				arg.length === 0 || // Check for empty String (Bonus check for empty Array)
+				(typeof arg === 'object' && Object.keys(arg).length === 0) // Check for empty Object or Array
+			);
+		}
+
+		function objectIsNotEmpty(arg) {
+			return !objectIsEmpty(arg);
+		}
+
+
+//STRINGS
+
+		function stringContains(baseString, inputString) {
+			return baseString.includes(inputString);
+		}
+
+		function stringDoesNotContains(baseString, inputString) {
+			return !stringContains(baseString, inputString);
+		}
+
+		function stringIs(baseString, inputString) {
+			return baseString === inputString;
+		}
+
+		function stringIsNot(baseString, inputString) {
+			return !stringIs(baseString, inputString);
+		}
+
+
+// NUMBERS
+		function stringToNumber(value) {
+			return parseFloat(value);
+		}
+
+		function numberLessThen(baseNumberAsString, inputNumberAsString) {
+			var baseNumber, inputNumber;
+			baseNumber = stringToNumber(baseNumberAsString);
+			inputNumber = stringToNumber(inputNumberAsString);
+			return baseNumber < inputNumber;
+		}
+
+		function numberGreaterThen(baseNumberAsString, inputNumberAsString) {
+			var baseNumber, inputNumber;
+			baseNumber = stringToNumber(baseNumberAsString);
+			inputNumber = stringToNumber(inputNumberAsString);
+			return baseNumber > inputNumber;
+		}
+
+		function numberLessThenOrEqual(baseNumberAsString, inputNumberAsString) {
+			var baseNumber, inputNumber;
+			baseNumber = stringToNumber(baseNumberAsString);
+			inputNumber = stringToNumber(inputNumberAsString);
+			return baseNumber <= inputNumber;
+		}
+
+		function numberGreaterThenOrEqual(baseNumberAsString, inputNumberAsString) {
+			var baseNumber, inputNumber;
+			baseNumber = stringToNumber(baseNumberAsString);
+			inputNumber = stringToNumber(inputNumberAsString);
+			return baseNumber >= inputNumber;
+		}
+
+// DATES
+
+		function stringToDate(value) {
+			var result;
+			result = Moment(value, 'MMMM D, YYYY, H:mm'); // python toString
+			if (result) {
+				return result.toDate();
+			}
+
+			result = Moment(value, 'YYYY-MM-DD'); //HTML input type date
+			if (result) {
+				return result.toDate();
+			}
+		}
+
+		function dateIs(baseDateAsString, inputDateAsString) {
+			var baseDate, inputDate;
+			baseDate = stringToDate(baseDateAsString);
+			inputDate = stringToDate(inputDateAsString);
+
+			return baseDate.getTime() === inputDate.getTime();
+		}
+
+		function dateIsNot(baseDateAsString, inputDateAsString) {
+			return !dateIs(baseDateAsString, inputDateAsString);
+		}
+
+		function dateBefore(baseDateAsString, inputDateAsString) {
+			var baseDate, inputDate;
+			baseDate = stringToDate(baseDateAsString);
+			inputDate = stringToDate(inputDateAsString);
+
+			return baseDate < inputDate;
+		}
+
+		function dateAfter(baseDateAsString, inputDateAsString) {
+			var baseDate, inputDate;
+			baseDate = stringToDate(baseDateAsString);
+			inputDate = stringToDate(inputDateAsString);
+
+			return baseDate > inputDate;
+		}
+
+		function dateBetween(baseDateAsString, inputDatesAsStringsInList) {
+			var baseDate, inputDate, inputDate2;
+			baseDate = stringToDate(baseDateAsString);
+			inputDate = stringToDate(inputDatesAsStringsInList[0]);
+			inputDate2 = stringToDate(inputDatesAsStringsInList[1]);
+			if (inputDate < inputDate2) {
+				return inputDate <= baseDate && baseDate <= inputDate2;
+			} else {
+				return inputDate2 <= baseDate && baseDate <= inputDate;
+			}
+		}
+
+		function dateLastNDays(baseDateAsString, inputNumberAsString) {
+			var baseDate, inputNumber;
+			inputNumber = stringToNumber(inputNumberAsString);
+			baseDate = stringToDate(baseDateAsString);
+			const today = new Date();
+			const edgeDate = new Date(today);
+			edgeDate.setDate(edgeDate - inputNumber);
+			return edgeDate <= baseDate && baseDate <= today;
+		}
+
+		function dateYesterday(baseDateAsString) {
+
+		}
+
+//EXPORT
+		exports.stringContains = stringContains
+		exports.stringDoesNotContains = stringDoesNotContains
+		exports.objectIsEmpty = objectIsEmpty
+		exports.objectIsNotEmpty = objectIsNotEmpty
+		exports.stringIs = stringIs
+		exports.stringIsNot = stringIsNot
+		exports.numberLessThen = numberLessThen
+		exports.numberGreaterThen = numberGreaterThen
+		exports.numberLessThenOrEqual = numberLessThenOrEqual
+		exports.numberGreaterThenOrEqual = numberGreaterThenOrEqual
+		exports.dateIs = dateIsNot
+		exports.dateBefore = dateBefore
+		exports.dateAfter = dateAfter
+		exports.dateBetween = dateBetween
+		exports.dateLastNDays = dateLastNDays
+
+	}, {"jquery": 3, "js-cookie": 4, "moment": 6, "moment/min/locales.min": 5}]
+}, {}, [2])(2)
 });

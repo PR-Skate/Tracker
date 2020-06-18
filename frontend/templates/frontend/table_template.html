@@ -141,19 +141,17 @@
             return document.getElementById(id).checked;
         }
 
-        function displayFilters(checkBoxID,divID, fieldName, fieldType, searchFilters){
+        function displayFilters(checkBoxID, divID, fieldName, fieldType, searchFilters) {
             var div = document.getElementById(divID);
             var input;
             var select;
             if (isChecked(checkBoxID)) {
                 select = document.createElement('select');
-                select.name = 'select_'.concat(fieldName);
-                select.id = 'select_'.concat(fieldName);
-                for (i = 0; i < searchFilters.length; i++){
+                for (i = 0; i < searchFilters.length; i++) {
                     var opt = document.createElement('option');
                     opt.name = searchFilters[i];
                     opt.value = searchFilters[i];
-                    opt.innerHTML= searchFilters[i];
+                    opt.innerHTML = searchFilters[i];
                     select.appendChild(opt);
                 }
                 input = document.createElement('input');
@@ -340,23 +338,26 @@
     // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
     function func(textInput, fieldValue, searchFilter) {
-        if (searchFilter === 'Is Empty' || searchFilter === 'Is Not Empty' || searchFilter === 'Contains' || searchFilter === 'Not Contains'){
+        if (searchFilter === 'Is Empty' || searchFilter === 'Is Not Empty' || searchFilter === 'Contains' || searchFilter === 'Not Contains') {
             return fieldValue.includes(textInput);
-        }else if(searchFilter === 'Is' || searchFilter === 'Is Not'){
+        } else if (searchFilter === 'Is' || searchFilter === 'Is Not') {
             return fieldValue === textInput;
-        }else if(searchFilter === 'Starts With'){
+        } else if (searchFilter === 'Starts With') {
             return fieldValue.startsWith(textInput);
-        }else if(searchFilter === 'Ends With'){
+        } else if (searchFilter === 'Ends With') {
             return fieldValue.endsWith(textInput);
-        }else if(searchFilter === 'Like'){
+        } else if (searchFilter === 'Like') {
             return false;
-        }else{
+        } else if (searchFilter === 'Contains' || searchFilter === 'Not Contains') {
+            return fieldValue.includes(textInput);
+        } else {
             //Brute force search (can be optimized)
             return true;
         }
     }
+
     function search_rows() {
-        display_all_rows()
+        display_all_rows();
         {% for field in field_information_list %}
             filter_{{ field.model_name }}();
         {% endfor %}
@@ -373,15 +374,12 @@
 
 
     {% for field in field_information_list %}
-        function filter_{{ field.model_name }}() {
-            let input, filter, table, tableRow, searchParam, tableData, i, txtValue, result, checkBoxID;
+        function filter_{{ field.model_name }}(func) {
+            let input, filter, table, tableRow, tableData, i, txtValue, result, checkBoxID;
             checkBoxID = document.getElementById("{{ field.model_name }}_check");
             if (checkBoxID.checked) {
                 input = document.getElementById("search_{{ field.model_name }}");
-                searchParam = (document.getElementById("select_{{ field.model_name }}")) ? document.getElementById("select_{{ field.model_name }}").value : '';
                 filter = input.value.toUpperCase();
-
-                console.log(filter)
                 if (filter) {
                     table = document.getElementById("tg-0Xa6r");
                     tableRow = table.getElementsByTagName("tr");
@@ -390,7 +388,7 @@
                         tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
                         if (tableData) {
                             txtValue = tableData.textContent || tableData.innerText;
-                            if (!func(txtValue, tableData, searchParam)) {
+                            if (!func(txtValue, filter)) {
                                 tableRow[i].style.display = "none";
                             }
                         }
@@ -418,11 +416,10 @@
 
     function editField(event, id) {
         const SYSTEM_FIELDS = ['createdUser', 'lastModifiedUser', 'createdTimestamp', 'lastModifiedTimestamp', 'id']
-
+        event.stopPropagation();
         let previousValue, parent, input, newChild, field;
         field = id.split(' ')[1]
         if (!SYSTEM_FIELDS.includes(field)) {
-            event.stopPropagation();
             console.log('INNER');
             parent = document.getElementById(id).offsetParent;
             previousValue = parent.innerText;
@@ -436,11 +433,13 @@
             input.value = formatValue(previousValue, field)
             input.id = id
             input.addEventListener('dblclick', (event) => {
-              submit_changes(event, input.id);
+                submit_changes(event, input.id);
             });
 
             newChild = parent.appendChild(input);
             console.log(newChild);
+        } else {
+            alert("You cannot change a system field.")
         }
         return false;
     }

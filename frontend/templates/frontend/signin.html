@@ -13,7 +13,6 @@
 
 <h1>User Sign-In</h1>
 <form onsubmit="lib.login(event,'{{ csrf_token }}')" method="POST" name='form' id='form'>
-    {% csrf_token %}
     <label for="">Username</label><br>
     <input id="username" type="text" name="username"><br><br>
 
