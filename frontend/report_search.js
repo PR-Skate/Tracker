@@ -26,7 +26,7 @@ function objectIsNotEmpty(arg) {
 //STRINGS
 
 function stringContains(baseString, inputString) {
-    return baseString.includes(inputString);
+    return baseString.includes(inputString.ignoreCase);
 }
 
 function stringDoesNotContains(baseString, inputString) {
@@ -413,5 +413,27 @@ exports.dateLast30Days = dateLast30Days
 exports.dateLast60Days = dateLast60Days
 exports.dateLast90Days = dateLast90Days
 exports.dateLast120Days = dateLast120Days
-
 exports.dateNextNDays = dateNextNDays
+exports.dateLastWeek = dateLastWeek
+exports.dateThisWeek = dateThisWeek
+exports.dateNextWeek = dateNextWeek
+exports.dateCurrentAndPreviousWeek = dateCurrentAndPreviousWeek
+exports.dateCurrentAndNextWeek = dateCurrentAndNextWeek
+exports.dateCurrentAndPreviousMonth = dateCurrentAndPreviousMonth
+exports.dateCurrentAndNextMonth = dateCurrentAndNextMonth
+exports.dateLastNWeeks = dateLastNWeeks
+exports.dateNextNWeeks = dateNextNWeeks
+exports.dateLastWeek = dateLastWeek
+exports.dateThisMonth = dateThisMonth
+exports.dateNextMonth = dateNextMonth
+exports.dateCurrentAndPreviousMonth = dateCurrentAndPreviousMonth
+exports.dateCurrentAndNextMonth = dateCurrentAndNextMonth
+exports.dateLastNYears = dateLastNYears
+exports.dateNextNYears = dateNextNYears
+exports.dateThisYear = dateThisYear
+exports.dateNextYear = dateNextYear
+exports.dateLastYear = dateLastYear
+exports.dateCurrentAndPreviousYear = dateCurrentAndPreviousYear
+exports.dateCurrentAndNextYear = dateCurrentAndNextYear
+exports.dateLastNMonths = dateLastNMonths
+exports.dateNextNMonths = dateNextNMonths

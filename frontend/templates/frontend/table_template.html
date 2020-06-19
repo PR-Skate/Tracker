@@ -349,15 +349,10 @@
     })
 }(document)</script>
 <script>
-    let map = new Map();    //makes map global, so instantiation doesnt happen for each call.
+    let map = new Map();
+    //makes map global, so instantiation doesnt happen for each call.
     function buildMap() {
-        // The map can be dynamically built off of the key values of filter in custom_tags/getSearchFilters.
-        // Dont need to build map with field types not found in the form
-        // ex:
-        //      for (field in field_information_list):
-        //          map.set(field + '_' + searchParam, theFunctionAssociated)
-        //
-
+        console.log('I am building the map')
         {% for field in field_information_list %}
             if ('{% getFieldType type=field.type %}' === 'datetime-local'){
                 build_datetimelocal_map();
@@ -365,15 +360,10 @@
                 build_{% getFieldType type=field.type %}_map();
             }
         {% endfor %}
-        //datetime-local
-        //email
-        //subform
-        //list_field
-        //ObjectIdField
     }
 
     function build_text_map(){
-        console.log('text')
+        console.log('text build called')
         map.set('text_Is', lib.reportSearch.stringIs);
         map.set('text_Is Not', lib.reportSearch.stringIsNot);
 
@@ -385,49 +375,56 @@
     }
 
     function build_date_map(){
-        console.log('date')
+        console.log('date build called')
         map.set('date_Is', lib.reportSearch.dateIs);
-        map.set('date_Is Not', lib.reportSearch.dateIs);              //
+        map.set('date_Is Not', lib.reportSearch.dateIs);
         map.set('date_Is Emtpy', lib.reportSearch.objectIsEmpty);
         map.set('date_Is Not Empty', lib.reportSearch.objectIsEmpty);
         map.set('date_Before', lib.reportSearch.dateBefore);
+
         map.set('date_After', lib.reportSearch.dateAfter);
         map.set('date_Between', lib.reportSearch.dateBetween);
         map.set('date_Yesterday', lib.reportSearch.dateYesterday);
         map.set('date_Today', lib.reportSearch.dateToday);
         map.set('date_Tomorrow', lib.reportSearch.dateTomorrow);
+
         map.set('date_Last 7 Days', lib.reportSearch.dateLast7Days);
         map.set('date_Last 30 Days', lib.reportSearch.dateLast30Days);
         map.set('date_Last 60 Days', lib.reportSearch.dateLast60Days);
         map.set('date_Last 90 Days', lib.reportSearch.dateLast90Days);
         map.set('date_Last 120 Days', lib.reportSearch.dateLast120Days);
+
         map.set('date_Last N Days', lib.reportSearch.dateLastNDays);
         map.set('date_next N Days', lib.reportSearch.dateNextNDays);
         map.set('date_Last Week', lib.reportSearch.dateLastWeek);
         map.set('date_This Week', lib.reportSearch.dateThisWeek);
         map.set('date_Next Week', lib.reportSearch.dateNextWeek);
+
         map.set('date_Current and Previous Week', lib.reportSearch.dateCurrentAndPreviousWeek);
         map.set('date_Current and Next Week', lib.reportSearch.dateCurrentAndNextWeek);
-        {#map.set('date_Last N weeks', lib.reportSearch.dateLastNWeeks );#}
-        {#map.set('date_Next N Weeks', );#}
-        {#map.set('date_Last Week', );#}
-        {#map.set('date_This Month', );#}
-        {#map.set('date_Next Month', );#}
-        {#map.set('date_Current and Previous Month', );#}
-        {#map.set('date_Current and Next Month', );#}
-        {#map.set('date_Last N Months', lib.reportSearch.getDate );#}
-        {#map.set('date_Next N Months', );#}
-        {#map.set('date_Last Year', );#}
-        {#map.set('date_This Year', );#}
-        {#map.set('date_Next Year', );#}
-        {#map.set('date_Current and Previous Year', );#}
-        {#map.set('date_Current and Next Year', );#}
-        {#map.set('date_Last N Years', );#}
-        {#map.set('date_Next N Years', );#}
+        map.set('date_Last N weeks', lib.reportSearch.dateLastNWeeks);
+        map.set('date_Next N Weeks', lib.reportSearch.dateNextNWeeks);
+        map.set('date_Last Week', lib.reportSearch.dateLastWeek);
+
+        map.set('date_This Month', lib.reportSearch.dateThisMonth);
+        map.set('date_Next Month', lib.reportSearch.dateNextMonth);
+        map.set('date_Current and Previous Month', lib.reportSearch.dateCurrentAndPreviousMonth);
+        map.set('date_Current and Next Month', lib.reportSearch.dateCurrentAndNextMonth);
+        map.set('date_Last N Months', lib.reportSearch.dateLastNMonths);
+
+        map.set('date_Next N Months', lib.reportSearch.dateNextNMonths);
+        map.set('date_Last Year', lib.reportSearch.dateLastYear);
+        map.set('date_This Year', lib.reportSearch.dateThisYear);
+        map.set('date_Next Year', lib.reportSearch.dateNextYear);
+        map.set('date_Current and Previous Year', lib.reportSearch.dateCurrentAndPreviousYear);
+
+        map.set('date_Current and Next Year', lib.reportSearch.dateCurrentAndNextYear);
+        map.set('date_Last N Years', lib.reportSearch.dateLastNYears);
+        map.set('date_Next N Years', lib.reportSearch.dateNextNYears);
     }
 
     function build_number_map(){
-        console.log('number')
+        console.log('number build called')
         map.set('number_less than', lib.reportSearch.numberLessThen);
         map.set('number_greater than', lib.reportSearch.numberGreaterThen);
         map.set('number_less than or equal to', lib.reportSearch.numberLessThenOrEqual);
@@ -435,11 +432,34 @@
     }
 
     function build_select_map(){
+        console.log('select build called')
         return 0;
     }
-    ''.includes()
+
+
     function build_datetimelocal_map(){
+        console.log('datetimelocal build called')
      return 0;
+    }
+
+    function build_subform_map(){
+console.log('subform build called')
+        return 0;
+    }
+
+    function build_list_field_map(){
+        console.log('list_field build called')
+        return 0;
+    }
+
+    function build_checkbox_map(){
+        console.log('checkbox build called')
+        return 0;
+    }
+
+    function build_email_map(){
+        console.log('email build called')
+        return 0;
     }
 
     // textInput- The input to search on
