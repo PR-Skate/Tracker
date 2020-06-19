@@ -141,7 +141,17 @@
             return document.getElementById(id).checked;
         }
 
-        function displayFilters(checkBoxID,divID, fieldName, fieldType, searchFilters){
+        function displayInput(selectedValue, fieldName) {
+            const NO_INPUT_SEARCH_KEY_WORDS = ['Is Empty', 'Is Not Empty', 'Yesterday', 'Today', 'Tomorrow']
+            var inputElement = document.getElementById("search_".concat(fieldName));
+            if (NO_INPUT_SEARCH_KEY_WORDS.includes(selectedValue.split("_")[1])) {
+                inputElement.style.display = "none";
+            } else {
+                inputElement.style.display = "";
+            }
+        }
+
+        function displayFilters(checkBoxID, divID, fieldName, fieldType, searchFilters) {
             var div = document.getElementById(divID);
             var input;
             var select;
@@ -149,11 +159,14 @@
                 select = document.createElement('select');
                 select.name = 'select_'.concat(fieldName);
                 select.id = 'select_'.concat(fieldName);
-                for (i = 0; i < searchFilters.length; i++){
+                select.onchange = function () {
+                    return displayInput(select.value, fieldName);
+                }
+                for (var i = 0; i < searchFilters.length; i++) {
                     var opt = document.createElement('option');
                     opt.name = fieldName.concat('_' + searchFilters[i]);
-                    opt.value = fieldName.concat('_' + searchFilters[i]);
-                    opt.innerHTML= searchFilters[i];
+                    opt.value = fieldType.concat('_' + searchFilters[i]);
+                    opt.innerHTML = searchFilters[i];
                     select.appendChild(opt);
                 }
                 input = document.createElement('input');
@@ -337,7 +350,7 @@
 }(document)</script>
 <script>
     let map = new Map();    //makes map global, so instantiation doesnt happen for each call.
-    function buildMap(){
+    function buildMap() {
         // The map can be dynamically built off of the key values of filter in custom_tags/getSearchFilters.
         // Dont need to build map with field types not found in the form
         // ex:
@@ -346,19 +359,19 @@
         //
 
         //number
-        map.set('number_less than', lib.numberLessThen );
-        map.set('number_greater than', lib.numberGreaterThen);
-        map.set('number_less than or equal to', lib.numberLessThenOrEqual);
-        map.set('number_greater than or equal to', lib.numberGreaterThenOrEqual);
+        map.set('number_less than', lib.reportSearch.numberLessThen);
+        map.set('number_greater than', lib.reportSearch.numberGreaterThen);
+        map.set('number_less than or equal to', lib.reportSearch.numberLessThenOrEqual);
+        map.set('number_greater than or equal to', lib.reportSearch.numberGreaterThenOrEqual);
 
         //date
-        map.set('date_Is', lib.dateIs );
-        map.set('date_Is Not', lib.dateIsNot);
+        map.set('date_Is', lib.reportSearch.dateIs);
+        map.set('date_Is Not', lib.reportSearch.dateIsNot);
         {#map.set('date_Is Emtpy',  );#}
         {#map.set('date_Is Not Empty', );#}
-        map.set('date_Before', lib.dateBefore);
-        map.set('date_After', lib.dateAfter);
-        map.set('date_Between', lib.dateBetween );
+        map.set('date_Before', lib.reportSearch.dateBefore);
+        map.set('date_After', lib.reportSearch.dateAfter);
+        map.set('date_Between', lib.reportSearch.dateBetween);
         {#map.set('date_Yesterday', );#}
         {#map.set('date_Today', );#}
         {#map.set('date_Tomorrow', );#}
@@ -367,7 +380,7 @@
         {#map.set('date_Last 60 Days', );#}
         {#map.set('date_Last 90 Days', );#}
         {#map.set('date_Last 120 Days', );#}
-        map.set('date_Last N Days', lib.dateLastNDays );
+        map.set('date_Last N Days', lib.reportSearch.dateLastNDays);
         {#map.set('date_Last Week', );#}
         {#map.set('date_This Week', );#}
         {#map.set('date_Next Week', );#}
@@ -391,14 +404,14 @@
         {#map.set('date_Next N Years', );#}
         //datetime-local
         //text
-        map.set('text_Is', lib.stringIs);
-        map.set('text_Is Not', lib.stringIsNot);
+        map.set('text_Is', lib.reportSearch.stringIs);
+        map.set('text_Is Not', lib.reportSearch.stringIsNot);
 
-        map.set('text_Is Empty', lib.objectIsEmpty);
-        map.set('text_Is Not Empty', lib.objectIsEmpty);
+        map.set('text_Is Empty', lib.reportSearch.objectIsEmpty);
+        map.set('text_Is Not Empty', lib.reportSearch.objectIsNotEmpty);
 
-        map.set('text_Contains', lib.stringContains);
-        map.set('text_Not Contains', lib.stringDoesNotContains);
+        map.set('text_Contains', lib.reportSearch.stringContains);
+        map.set('text_Not Contains', lib.reportSearch.stringDoesNotContains);
         //email
         //subform
         //list_field
@@ -409,7 +422,7 @@
     // textInput- The input to search on
     // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
-    function func(filter, txtValue, searchParam) {
+    function func(searchParam) {
         if (map.size === 0) buildMap();
         return map.get(searchParam);
     }
@@ -421,7 +434,8 @@
         {% for field in field_information_list %}
             checkBoxID = document.getElementById("{{ field.model_name }}_check");
             if (checkBoxID.checked) {
-                filter_{{ field.model_name }}(func);
+                var searchParam = (document.getElementById("select_{{ field.model_name }}")) ? document.getElementById("select_{{ field.model_name }}").value : '';
+                filter_{{ field.model_name }}(func(searchParam));
             }
         {% endfor %}
     }
@@ -440,7 +454,6 @@
         function filter_{{ field.model_name }}(func) {
             let input, filter, table, tableRow, tableData, i, txtValue, searchParam,  result;
                 input = document.getElementById("search_{{ field.model_name }}");
-                searchParam = (document.getElementById("select_{{ field.model_name }}")) ? document.getElementById("select_{{ field.model_name }}").value : '';
                 filter = input.value.toUpperCase();
                 if (filter) {
                     table = document.getElementById("tg-0Xa6r");
@@ -450,13 +463,13 @@
                         tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
                         if (tableData) {
                             txtValue = tableData.textContent || tableData.innerText;
-                            if (!func(filter, txtValue, searchParam)) {
+                            if (!func(txtValue.trim(), filter.trim())) {
                                 tableRow[i].style.display = "none";
                             }
                         }
                     }
                 }
-                return result
+            return result
         }
 
     {% endfor %}

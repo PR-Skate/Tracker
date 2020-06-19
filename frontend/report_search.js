@@ -90,6 +90,36 @@ function stringToDate(value) {
     }
 }
 
+function getStartOfTheWeek(d) {
+    d = new Date(d);
+    var day = d.getDay(),
+        diff = d.getDate() - day;
+    return new Date(d.setDate(diff));
+}
+
+function startOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function endOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+}
+
+function getDateNMonthsAgo(num) {
+    Moment().subtract(num, 'months').toDate()
+}
+
+function getDateNMonthsFuture(num) {
+    const d = new Date();
+    console.log(d.toLocaleDateString());
+    const month = d.getMonth();
+    d.setMonth(d.getMonth() + num);
+    while (d.getMonth() === month) {
+        d.setDate(d.getDate() + 1);
+    }
+    return d
+}
+
 function dateIs(baseDateAsString, inputDateAsString) {
     var baseDate, inputDate;
     baseDate = stringToDate(baseDateAsString);
@@ -140,29 +170,146 @@ function dateLastNDays(baseDateAsString, inputNumberAsString) {
     return edgeDate <= baseDate && baseDate <= today;
 }
 
-function dateYesterday(baseDateAsString) {
+function dateNextNDays(baseDateAsString, inputNumberAsString) {
     var baseDate, inputNumber;
     inputNumber = stringToNumber(inputNumberAsString);
     baseDate = stringToDate(baseDateAsString);
     const today = new Date();
     const edgeDate = new Date(today);
-    edgeDate.setDate(edgeDate - inputNumber);
-    return edgeDate <= baseDate && baseDate <= today;
+    edgeDate.setDate(edgeDate + inputNumber);
+    return today <= baseDate && baseDate <= edgeDate;
 }
 
-//EXPORT
-exports.stringContains = stringContains
-exports.stringDoesNotContains = stringDoesNotContains
+function dateYesterday(baseDateAsString) {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today - 1);
+    return dateIs(baseDateAsString, yesterday.toDateString());
+}
+
+function dateToday() {
+    return dateIs(baseDateAsString, new Date().toDateString());
+}
+
+function dateTomorrow(baseDateAsString) {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today + 1);
+    return dateIs(baseDateAsString, tomorrow.toDateString());
+}
+
+function dateLast7Days(baseDateAsString) {
+    return dateLastNDays(baseDateAsString, 7);
+}
+
+function dateLast30Days(baseDateAsString) {
+    return dateLastNDays(baseDateAsString, 30);
+}
+
+function dateLast60Days(baseDateAsString) {
+    return dateLastNDays(baseDateAsString, 60);
+}
+
+function dateLast90Days(baseDateAsString) {
+    return dateLastNDays(baseDateAsString, 90);
+}
+
+function dateLast120Days(baseDateAsString) {
+    return dateLastNDays(baseDateAsString, 120);
+}
+
+function dateLastNWeeks(baseDateAsString, inputNumberAsString) {
+    var inputNumber = stringToNumber(inputNumberAsString)
+    const today = new Date()
+    const someDayNWeeksAgo = new Date(today)
+    someDayNWeeksAgo.setDate(someDayNWeeksAgo - (7 * inputNumber))
+    const beginningOfNWeek = getStartOfTheWeek(someDayNWeeksAgo)
+    const someDayLastWeek = new Date(today)
+    someDayLastWeek.setDate(someDayLastWeek - 7)
+    const beginningOfLastWeek = getStartOfTheWeek(someDayLastWeek)
+    const endOfLastWeek = new Date(beginningOfLastWeek)
+    endOfLastWeek.setDate(endOfLastWeek + 6)
+    return dateBetween(baseDateAsString, [beginningOfNWeek.toDateString(), endOfLastWeek.toDateString()])
+}
+
+function dateNextNWeeks(baseDateAsString, inputNumberAsString) {
+    var inputNumber = stringToNumber(inputNumberAsString)
+    const today = new Date()
+    const someDayNWeeksFuture = new Date(today)
+    someDayNWeeksFuture.setDate(someDayNWeeksFuture + (7 * inputNumber))
+    const endOfNWeeks = getStartOfTheWeek(someDayNWeeksFuture)
+    endOfNWeeks.setDate(endOfNWeeks + 6)
+    const someDayNextWeek = new Date(today)
+    someDayNextWeek.setDate(someDayNextWeek + 7)
+    const beginningOfNextWeek = getStartOfTheWeek(someDayNextWeek)
+    return dateBetween(baseDateAsString, [beginningOfNextWeek.toDateString(), endOfNWeeks.toDateString()])
+}
+
+function dateLastWeek(baseDateAsString) {
+    return dateLastNWeeks(baseDateAsString, 1)
+}
+
+function dateThisWeek(baseDateAsString) {
+    return dateLastNWeeks(baseDateAsString, 0)
+}
+
+function dateNextWeek(baseDateAsString) {
+    return dateNextNWeeks(baseDateAsString, 1)
+}
+
+function dateCurrentAndPreviousWeek(baseDateAsString) {
+    return dateThisWeek(baseDateAsString) || dateLastWeek(baseDateAsString)
+}
+
+function dateCurrentAndNextWeek(baseDateAsString) {
+    return dateThisWeek(baseDateAsString) || dateNextWeek(baseDateAsString)
+}
+
+function dateLastNMonths(baseDateAsString, inputNumberAsString) {
+    var inputNumber = stringToNumber(inputNumberAsString)
+    const d = new Date();
+    console.log(d.toLocaleDateString());
+    const month = d.getMonth();
+    d.setMonth(d.getMonth() - inputNumber);
+    while (d.getMonth() === month) {
+        d.setDate(d.getDate() - 1);
+    }
+
+    return dateBetween(baseDateAsString, [beginningOfNWeek.toDateString(), endOfLastWeek.toDateString()])
+}
+
+
+//EXPORTS
+
+//OBJECTS
 exports.objectIsEmpty = objectIsEmpty
 exports.objectIsNotEmpty = objectIsNotEmpty
+
+//STRINGS
+exports.stringContains = stringContains
+exports.stringDoesNotContains = stringDoesNotContains
 exports.stringIs = stringIs
 exports.stringIsNot = stringIsNot
+
+//NUMBERS
 exports.numberLessThen = numberLessThen
 exports.numberGreaterThen = numberGreaterThen
 exports.numberLessThenOrEqual = numberLessThenOrEqual
 exports.numberGreaterThenOrEqual = numberGreaterThenOrEqual
+
+//DATES
 exports.dateIs = dateIsNot
 exports.dateBefore = dateBefore
 exports.dateAfter = dateAfter
 exports.dateBetween = dateBetween
+exports.dateToday = dateToday
+exports.dateYesterday = dateYesterday
+exports.dateTomorrow = dateTomorrow
 exports.dateLastNDays = dateLastNDays
+exports.dateLast7Days = dateLast7Days
+exports.dateLast30Days = dateLast30Days
+exports.dateLast60Days = dateLast60Days
+exports.dateLast90Days = dateLast90Days
+exports.dateLast120Days = dateLast120Days
+
+exports.dateNextNDays = dateNextNDays
