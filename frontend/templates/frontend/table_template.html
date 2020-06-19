@@ -338,43 +338,50 @@
 <script>
     let map = new Map();    //makes map global, so instantiation doesnt happen for each call.
     function buildMap(){
+        //number
+        map.set('number_less than', lib.numberLessThen );
+        map.set('number_greater than', lib.numberGreaterThen);
+        map.set('number_less than or equal to', lib.numberLessThenOrEqual);
+        map.set('number_greater than or equal to', lib.numberGreaterThenOrEqual);
+
+        //date
         map.set('date_Is', lib.dateIs );
-        map.set('date_Is Not', lib.dateIsNot );
-        map.set('date_Is Emtpy', );
-        map.set('date_Is Not Empty', );
-        map.set('date_Before', );
-        map.set('date_After', );
-        map.set('date_Between', );
-        map.set('date_Yesterday', );
-        map.set('date_Today', );
-        map.set('date_Tomorrow', );
-        map.set('date_Last 7 Days', );
-        map.set('date_Last 30 Days', );
-        map.set('date_Last 60 Days', );
-        map.set('date_Last 90 Days', );
-        map.set('date_Last 120 Days', );
-        map.set('date_Last N Days', );
-        map.set('date_Last Week', );
-        map.set('date_This Week', );
-        map.set('date_Next Week', );
-        map.set('date_Current and Previous Week', );
-        map.set('date_Current and Next Week', );
-        map.set('date_Last N weeks', );
-        map.set('date_Next N Weeks', );
-        map.set('date_Last Week', );
-        map.set('date_This Month', );
-        map.set('date_Next Month', );
-        map.set('date_Current and Previous Month', );
-        map.set('date_Current and Next Month', );
-        map.set('date_Last N Months', );
-        map.set('date_Next N Months', );
-        map.set('date_Last Year', );
-        map.set('date_This Year', );
-        map.set('date_Next Year', );
-        map.set('date_Current and Previous Year', );
-        map.set('date_Current and Next Year', );
-        map.set('date_Last N Years', );
-        map.set('date_Next N Years', );
+        map.set('date_Is Not', lib.dateIsNot);
+        {#map.set('date_Is Emtpy',  );#}
+        {#map.set('date_Is Not Empty', );#}
+        map.set('date_Before', lib.dateBefore);
+        map.set('date_After', lib.dateAfter);
+        map.set('date_Between', lib.dateBetween );
+        {#map.set('date_Yesterday', );#}
+        {#map.set('date_Today', );#}
+        {#map.set('date_Tomorrow', );#}
+        {#map.set('date_Last 7 Days', );#}
+        {#map.set('date_Last 30 Days', );#}
+        {#map.set('date_Last 60 Days', );#}
+        {#map.set('date_Last 90 Days', );#}
+        {#map.set('date_Last 120 Days', );#}
+        map.set('date_Last N Days', lib.dateLastNDays );
+        {#map.set('date_Last Week', );#}
+        {#map.set('date_This Week', );#}
+        {#map.set('date_Next Week', );#}
+        {#map.set('date_Current and Previous Week', );#}
+        {#map.set('date_Current and Next Week', );#}
+        {#map.set('date_Last N weeks', );#}
+        {#map.set('date_Next N Weeks', );#}
+        {#map.set('date_Last Week', );#}
+        {#map.set('date_This Month', );#}
+        {#map.set('date_Next Month', );#}
+        {#map.set('date_Current and Previous Month', );#}
+        {#map.set('date_Current and Next Month', );#}
+        {#map.set('date_Last N Months', );#}
+        {#map.set('date_Next N Months', );#}
+        {#map.set('date_Last Year', );#}
+        {#map.set('date_This Year', );#}
+        {#map.set('date_Next Year', );#}
+        {#map.set('date_Current and Previous Year', );#}
+        {#map.set('date_Current and Next Year', );#}
+        {#map.set('date_Last N Years', );#}
+        {#map.set('date_Next N Years', );#}
         //datetime-local
         //text
         map.set('text_Is', lib.stringIs);
