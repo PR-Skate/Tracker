@@ -338,6 +338,13 @@
 <script>
     let map = new Map();    //makes map global, so instantiation doesnt happen for each call.
     function buildMap(){
+        // The map can be dynamically built off of the key values of filter in custom_tags/getSearchFilters.
+        // Dont need to build map with field types not found in the form
+        // ex:
+        //      for (field in field_information_list):
+        //          map.set(field + '_' + searchParam, theFunctionAssociated)
+        //
+
         //number
         map.set('number_less than', lib.numberLessThen );
         map.set('number_greater than', lib.numberGreaterThen);
