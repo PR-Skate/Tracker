@@ -128,10 +128,10 @@
         }
     }</style>
 <div class="tg- wrap">
-    {% for field in fields %}
-        <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.."
-               title="Type in a {{ field }}">
-    {% endfor %}
+{#    {% for field in fields %}#}
+{#        <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.."#}
+{#               title="Type in a {{ field }}">#}
+{#    {% endfor %}#}
 
 
 
@@ -141,17 +141,19 @@
             return document.getElementById(id).checked;
         }
 
-        function displayFilters(checkBoxID, divID, fieldName, fieldType, searchFilters) {
+        function displayFilters(checkBoxID,divID, fieldName, fieldType, searchFilters){
             var div = document.getElementById(divID);
             var input;
             var select;
             if (isChecked(checkBoxID)) {
                 select = document.createElement('select');
-                for (i = 0; i < searchFilters.length; i++) {
+                select.name = 'select_'.concat(fieldName);
+                select.id = 'select_'.concat(fieldName);
+                for (i = 0; i < searchFilters.length; i++){
                     var opt = document.createElement('option');
-                    opt.name = searchFilters[i];
-                    opt.value = searchFilters[i];
-                    opt.innerHTML = searchFilters[i];
+                    opt.name = fieldName.concat('_' + searchFilters[i]);
+                    opt.value = fieldName.concat('_' + searchFilters[i]);
+                    opt.innerHTML= searchFilters[i];
                     select.appendChild(opt);
                 }
                 input = document.createElement('input');
@@ -159,7 +161,7 @@
                 input.id = "search_".concat(fieldName);
                 input.type = fieldType;
                 input.value = '';
-                input.onkeyup = search_rows;
+                input.onchange = search_rows;
                 div.appendChild(select);
                 div.appendChild(input);
 
@@ -334,32 +336,79 @@
     })
 }(document)</script>
 <script>
+    let map = new Map();    //makes map global, so instantiation doesnt happen for each call.
+    function buildMap(){
+        map.set('date_Is', lib.dateIs );
+        map.set('date_Is Not', lib.dateIsNot );
+        map.set('date_Is Emtpy', );
+        map.set('date_Is Not Empty', );
+        map.set('date_Before', );
+        map.set('date_After', );
+        map.set('date_Between', );
+        map.set('date_Yesterday', );
+        map.set('date_Today', );
+        map.set('date_Tomorrow', );
+        map.set('date_Last 7 Days', );
+        map.set('date_Last 30 Days', );
+        map.set('date_Last 60 Days', );
+        map.set('date_Last 90 Days', );
+        map.set('date_Last 120 Days', );
+        map.set('date_Last N Days', );
+        map.set('date_Last Week', );
+        map.set('date_This Week', );
+        map.set('date_Next Week', );
+        map.set('date_Current and Previous Week', );
+        map.set('date_Current and Next Week', );
+        map.set('date_Last N weeks', );
+        map.set('date_Next N Weeks', );
+        map.set('date_Last Week', );
+        map.set('date_This Month', );
+        map.set('date_Next Month', );
+        map.set('date_Current and Previous Month', );
+        map.set('date_Current and Next Month', );
+        map.set('date_Last N Months', );
+        map.set('date_Next N Months', );
+        map.set('date_Last Year', );
+        map.set('date_This Year', );
+        map.set('date_Next Year', );
+        map.set('date_Current and Previous Year', );
+        map.set('date_Current and Next Year', );
+        map.set('date_Last N Years', );
+        map.set('date_Next N Years', );
+        //datetime-local
+        //text
+        map.set('text_Is', lib.stringIs);
+        map.set('text_Is Not', lib.stringIsNot);
+
+        map.set('text_Is Empty', lib.objectIsEmpty);
+        map.set('text_Is Not Empty', lib.objectIsEmpty);
+
+        map.set('text_Contains', lib.stringContains);
+        map.set('text_Not Contains', lib.stringDoesNotContains);
+        //email
+        //subform
+        //list_field
+        //ObjectIdField
+    }
+
+
     // textInput- The input to search on
     // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
-    function func(textInput, fieldValue, searchFilter) {
-        if (searchFilter === 'Is Empty' || searchFilter === 'Is Not Empty' || searchFilter === 'Contains' || searchFilter === 'Not Contains') {
-            return fieldValue.includes(textInput);
-        } else if (searchFilter === 'Is' || searchFilter === 'Is Not') {
-            return fieldValue === textInput;
-        } else if (searchFilter === 'Starts With') {
-            return fieldValue.startsWith(textInput);
-        } else if (searchFilter === 'Ends With') {
-            return fieldValue.endsWith(textInput);
-        } else if (searchFilter === 'Like') {
-            return false;
-        } else if (searchFilter === 'Contains' || searchFilter === 'Not Contains') {
-            return fieldValue.includes(textInput);
-        } else {
-            //Brute force search (can be optimized)
-            return true;
-        }
+    function func(filter, txtValue, searchParam) {
+        if (map.size === 0) buildMap();
+        return map.get(searchParam);
     }
 
+
     function search_rows() {
-        display_all_rows();
+        display_all_rows()
+        var checkBoxID;
         {% for field in field_information_list %}
-            filter_{{ field.model_name }}();
+            checkBoxID = document.getElementById("{{ field.model_name }}_check");
+            if (checkBoxID.checked) {
+                filter_{{ field.model_name }}(func);
+            }
         {% endfor %}
     }
 
@@ -375,10 +424,9 @@
 
     {% for field in field_information_list %}
         function filter_{{ field.model_name }}(func) {
-            let input, filter, table, tableRow, tableData, i, txtValue, result, checkBoxID;
-            checkBoxID = document.getElementById("{{ field.model_name }}_check");
-            if (checkBoxID.checked) {
+            let input, filter, table, tableRow, tableData, i, txtValue, searchParam,  result;
                 input = document.getElementById("search_{{ field.model_name }}");
+                searchParam = (document.getElementById("select_{{ field.model_name }}")) ? document.getElementById("select_{{ field.model_name }}").value : '';
                 filter = input.value.toUpperCase();
                 if (filter) {
                     table = document.getElementById("tg-0Xa6r");
@@ -388,15 +436,15 @@
                         tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
                         if (tableData) {
                             txtValue = tableData.textContent || tableData.innerText;
-                            if (!func(txtValue, filter)) {
+                            if (!func(filter, txtValue, searchParam)) {
                                 tableRow[i].style.display = "none";
                             }
                         }
                     }
                 }
                 return result
-            }
         }
+
     {% endfor %}
 
     function test_outer(event, recordId) {
@@ -416,10 +464,11 @@
 
     function editField(event, id) {
         const SYSTEM_FIELDS = ['createdUser', 'lastModifiedUser', 'createdTimestamp', 'lastModifiedTimestamp', 'id']
-        event.stopPropagation();
+
         let previousValue, parent, input, newChild, field;
         field = id.split(' ')[1]
         if (!SYSTEM_FIELDS.includes(field)) {
+            event.stopPropagation();
             console.log('INNER');
             parent = document.getElementById(id).offsetParent;
             previousValue = parent.innerText;
@@ -433,13 +482,11 @@
             input.value = formatValue(previousValue, field)
             input.id = id
             input.addEventListener('dblclick', (event) => {
-                submit_changes(event, input.id);
+              submit_changes(event, input.id);
             });
 
             newChild = parent.appendChild(input);
             console.log(newChild);
-        } else {
-            alert("You cannot change a system field.")
         }
         return false;
     }

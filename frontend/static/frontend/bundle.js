@@ -17034,10 +17034,12 @@ return jQuery;
 		exports.objectIsNotEmpty = objectIsNotEmpty
 		exports.stringIs = stringIs
 		exports.stringIsNot = stringIsNot
+
 		exports.numberLessThen = numberLessThen
 		exports.numberGreaterThen = numberGreaterThen
 		exports.numberLessThenOrEqual = numberLessThenOrEqual
 		exports.numberGreaterThenOrEqual = numberGreaterThenOrEqual
+
 		exports.dateIs = dateIsNot
 		exports.dateBefore = dateBefore
 		exports.dateAfter = dateAfter
