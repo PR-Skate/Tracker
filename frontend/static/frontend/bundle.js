@@ -16988,18 +16988,27 @@ function endOfMonth(date) {
 }
 
 function getDateNMonthsAgo(num) {
-    Moment().subtract(num, 'months').toDate()
+    return Moment().subtract(num, 'month').toDate()
 }
 
 function getDateNMonthsFuture(num) {
-    const d = new Date();
-    console.log(d.toLocaleDateString());
-    const month = d.getMonth();
-    d.setMonth(d.getMonth() + num);
-    while (d.getMonth() === month) {
-        d.setDate(d.getDate() + 1);
-    }
-    return d
+    return Moment().add(num, 'month').toDate()
+}
+
+function startOfYear(date) {
+    return new Date(date.getFullYear(), 1, 1);
+}
+
+function endOfYear(date) {
+    return new Date(date.getFullYear() + 1, 1, 0);
+}
+
+function getDateNYearsAgo(num) {
+    return Moment().subtract(num, 'year').toDate()
+}
+
+function getDateNYearsFuture(num) {
+    return Moment().add(num, 'year').toDate()
 }
 
 function dateIs(baseDateAsString, inputDateAsString) {
@@ -17100,6 +17109,26 @@ function dateLast120Days(baseDateAsString) {
     return dateLastNDays(baseDateAsString, 120);
 }
 
+function dateNext7Days(baseDateAsString) {
+    return dateNextNDays(baseDateAsString, 7);
+}
+
+function dateNext30Days(baseDateAsString) {
+    return dateNextNDays(baseDateAsString, 30);
+}
+
+function dateNext60Days(baseDateAsString) {
+    return dateNextNDays(baseDateAsString, 60);
+}
+
+function dateNext90Days(baseDateAsString) {
+    return dateNextNDays(baseDateAsString, 90);
+}
+
+function dateNext120Days(baseDateAsString) {
+    return dateNextNDays(baseDateAsString, 120);
+}
+
 function dateLastNWeeks(baseDateAsString, inputNumberAsString) {
     var inputNumber = stringToNumber(inputNumberAsString)
     const today = new Date()
@@ -17132,7 +17161,10 @@ function dateLastWeek(baseDateAsString) {
 }
 
 function dateThisWeek(baseDateAsString) {
-    return dateLastNWeeks(baseDateAsString, 0)
+    var startOfThisWeek = getStartOfTheWeek(new Date())
+    var endOfThisWeek = getStartOfTheWeek(new Date())
+    endOfThisWeek.setDate(endOfThisWeek + 6)
+    return dateBetween(baseDateAsString, [startOfThisWeek.toString, endOfThisWeek.toString])
 }
 
 function dateNextWeek(baseDateAsString) {
@@ -17148,18 +17180,88 @@ function dateCurrentAndNextWeek(baseDateAsString) {
 }
 
 function dateLastNMonths(baseDateAsString, inputNumberAsString) {
-    var inputNumber = stringToNumber(inputNumberAsString)
-    const d = new Date();
-    console.log(d.toLocaleDateString());
-    const month = d.getMonth();
-    d.setMonth(d.getMonth() - inputNumber);
-    while (d.getMonth() === month) {
-        d.setDate(d.getDate() - 1);
-    }
+    var inputNumber = stringToNumber(inputNumberAsString);
+    var someDateNMonthsAgo = getDateNMonthsAgo(inputNumber);
+    var beginningOfNMonths = startOfMonth(someDateNMonthsAgo);
+    var someDateLastMonth = getDateNMonthsAgo(1);
+    var endOfLastMonth = endOfMonth(someDateLastMonth);
 
-    return dateBetween(baseDateAsString, [beginningOfNWeek.toDateString(), endOfLastWeek.toDateString()])
+    return dateBetween(baseDateAsString, [beginningOfNMonths.toDateString(), endOfLastMonth.toDateString()])
 }
 
+function dateNextNMonths(baseDateAsString, inputNumberAsString) {
+    var inputNumber = stringToNumber(inputNumberAsString);
+    var someDateNextMonth = getDateNMonthsFuture(1);
+    var beginningOfNextMonth = startOfMonth(someDateNextMonth);
+    var someDateNextNMonths = getDateNMonthsFuture(inputNumber);
+    var endOfNextNMonths = endOfMonth(someDateNextNMonths);
+
+    return dateBetween(baseDateAsString, [beginningOfNextMonth.toDateString(), endOfNextNMonths.toDateString()])
+}
+
+function dateThisMonth(baseDateAsString) {
+    var startOfThisMonth = startOfMonth(new Date())
+    var endOfThisMonth = endOfMonth(new Date())
+    return dateBetween(baseDateAsString, [startOfThisMonth.toDateString(), endOfThisMonth.toDateString()])
+}
+
+function dateNextMonth(baseDateAsString) {
+    return dateNextNMonths(baseDateAsString, 1)
+}
+
+function dateLastMonth(baseDateAsString) {
+    return dateLastNMonths(baseDateAsString, 1)
+}
+
+function dateCurrentAndPreviousMonth(baseDateAsString) {
+    return dateThisMonth(baseDateAsString) || dateLastMonth(baseDateAsString)
+}
+
+function dateCurrentAndNextMonth(baseDateAsString) {
+    return dateThisMonth(baseDateAsString) || dateNextMonth(baseDateAsString)
+}
+
+function dateLastNYears(baseDateAsString, inputNumberAsString) {
+    var inputNumber = stringToNumber(inputNumberAsString);
+    var someDateNYearsAgo = getDateNYearsAgo(inputNumber);
+    var beginningOfNYears = startOfYear(someDateNYearsAgo);
+    var someDateLastYear = getDateNYearsAgo(1);
+    var endOfLastYear = endOfYear(someDateLastYear);
+
+    return dateBetween(baseDateAsString, [beginningOfNYears.toDateString(), endOfLastYear.toDateString()])
+}
+
+function dateNextNYears(baseDateAsString, inputNumberAsString) {
+    var inputNumber = stringToNumber(inputNumberAsString);
+    var someDateNextYear = getDateNYearsFuture(1);
+    var beginningOfNextYear = startOfYear(someDateNextYear);
+    var someDateNextNYears = getDateNYearsFuture(inputNumber);
+    var endOfNextNYears = endOfYear(someDateNextNYears);
+
+    return dateBetween(baseDateAsString, [beginningOfNextYear.toDateString(), endOfNextNYears.toDateString()])
+}
+
+function dateThisYear(baseDateAsString) {
+    var startOfThisYear = startOfYear(new Date())
+    var endOfThisYear = endOfYear(new Date())
+    return dateBetween(baseDateAsString, [startOfThisYear.toDateString(), endOfThisYear.toDateString()])
+}
+
+function dateNextYear(baseDateAsString) {
+    return dateNextNYears(baseDateAsString, 1)
+}
+
+function dateLastYear(baseDateAsString) {
+    return dateLastNYears(baseDateAsString, 1)
+}
+
+function dateCurrentAndPreviousYear(baseDateAsString) {
+    return dateThisYear(baseDateAsString) || dateLastYear(baseDateAsString)
+}
+
+function dateCurrentAndNextYear(baseDateAsString) {
+    return dateThisYear(baseDateAsString) || dateNextYear(baseDateAsString)
+}
 
 //EXPORTS
 
@@ -17184,6 +17286,8 @@ exports.dateIs = dateIsNot
 exports.dateBefore = dateBefore
 exports.dateAfter = dateAfter
 exports.dateBetween = dateBetween
+
+// DAYS
 exports.dateToday = dateToday
 exports.dateYesterday = dateYesterday
 exports.dateTomorrow = dateTomorrow
@@ -17193,8 +17297,39 @@ exports.dateLast30Days = dateLast30Days
 exports.dateLast60Days = dateLast60Days
 exports.dateLast90Days = dateLast90Days
 exports.dateLast120Days = dateLast120Days
-
 exports.dateNextNDays = dateNextNDays
+exports.dateNext7Days = dateNext7Days
+exports.dateNext30Days = dateNext30Days
+exports.dateNext60Days = dateNext60Days
+exports.dateNext90Days = dateNext90Days
+exports.dateNext120Days = dateNext120Days
+
+// WEEKS
+exports.dateLastNWeeks = dateLastNWeeks
+exports.dateNextNWeeks = dateNextNWeeks
+exports.dateLastWeek = dateLastWeek
+exports.dateThisWeek = dateThisWeek
+exports.dateNextWeek = dateNextWeek
+exports.dateCurrentAndPreviousWeek = dateCurrentAndPreviousWeek
+exports.dateCurrentAndNextWeek = dateCurrentAndNextWeek
+
+// MONTHS
+exports.dateLastNMonths = dateLastNMonths
+exports.dateNextNMonths = dateNextNMonths
+exports.dateThisWeek = dateThisWeek
+exports.dateLastWeek = dateLastWeek
+exports.dateNextWeek = dateNextWeek
+exports.dateCurrentAndPreviousMonth = dateCurrentAndPreviousMonth
+exports.dateCurrentAndNextMonth = dateCurrentAndNextMonth
+
+// YEARS
+exports.dateLastNYears = dateLastNYears
+exports.dateNextNYears = dateNextNYears
+exports.dateThisYear = dateThisYear
+exports.dateLastYear = dateLastYear
+exports.dateNextYear = dateNextYear
+exports.dateCurrentAndPreviousYear = dateCurrentAndPreviousYear
+exports.dateCurrentAndNextYear = dateCurrentAndNextYear
 
 },{"jquery":3,"js-cookie":4,"moment":6,"moment/min/locales.min":5}]},{},[2])(2)
 });
