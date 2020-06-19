@@ -141,7 +141,13 @@ function dateLastNDays(baseDateAsString, inputNumberAsString) {
 }
 
 function dateYesterday(baseDateAsString) {
-
+    var baseDate, inputNumber;
+    inputNumber = stringToNumber(inputNumberAsString);
+    baseDate = stringToDate(baseDateAsString);
+    const today = new Date();
+    const edgeDate = new Date(today);
+    edgeDate.setDate(edgeDate - inputNumber);
+    return edgeDate <= baseDate && baseDate <= today;
 }
 
 //EXPORT
