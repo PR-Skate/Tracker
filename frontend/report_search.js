@@ -311,5 +311,10 @@ exports.dateLast30Days = dateLast30Days
 exports.dateLast60Days = dateLast60Days
 exports.dateLast90Days = dateLast90Days
 exports.dateLast120Days = dateLast120Days
-
 exports.dateNextNDays = dateNextNDays
+exports.dateLastWeek = dateLastWeek
+exports.dateThisWeek = dateThisWeek
+exports.dateNextWeek = dateNextWeek
+exports.dateCurrentAndPreviousWeek = dateCurrentAndPreviousWeek
+exports.dateCurrentAndNextWeek = dateCurrentAndNextWeek
+exports.dateLastNMonths = dateLastNMonths
