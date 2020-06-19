@@ -135,16 +135,16 @@ function getAuthToken(username, password, token) {
         "async": false,
         "headers": {
             "X-CSRFToken": token,
-            "Content-Type": "application/json"
-        },
-        "data": JSON.stringify({
-            "username": username,
-            "password": password
-        }),
-    };
-    Jquery.ajax(settings).done(function (response) {
-        var temp;
-        localStorage.setItem("auth_token_dict", JSON.stringify(response));
+			"Content-Type": "application/json"
+		},
+		"data": JSON.stringify({
+			"username": username,
+			"password": password
+		}),
+	};
+	Jquery.ajax(settings).done(function (response) {
+		var temp;
+		localStorage.setItem("auth_token_dict", JSON.stringify(response));
 		console.log("saved auth token");
 		temp = localStorage.getItem("auth_token_dict")
 		console.log(temp);
@@ -327,7 +327,8 @@ function getAuthToken(username, password, token) {
 		exports.numberGreaterThen = numberGreaterThen
 		exports.numberLessThenOrEqual = numberLessThenOrEqual
 		exports.numberGreaterThenOrEqual = numberGreaterThenOrEqual
-		exports.dateIs = dateIsNot
+		exports.dateIs = dateIs
+		exports.dateIsNot = dateIsNot
 		exports.dateBefore = dateBefore
 		exports.dateAfter = dateAfter
 		exports.dateBetween = dateBetween
@@ -362,16 +363,16 @@ function getAuthToken(username, password, token) {
 				// is present, execute the factory and get jQuery.
 				// For environments that do not have a `window` with a `document`
 				// (such as Node.js), expose a factory as module.exports.
-		// This accentuates the need for the creation of a real `window`.
-		// e.g. var jQuery = require("jquery")(window);
-		// See ticket #14549 for more info.
-		module.exports = global.document ?
-			factory( global, true ) :
-			function( w ) {
-				if ( !w.document ) {
-					throw new Error( "jQuery requires a window with a document" );
-				}
-				return factory( w );
+				// This accentuates the need for the creation of a real `window`.
+				// e.g. var jQuery = require("jquery")(window);
+				// See ticket #14549 for more info.
+				module.exports = global.document ?
+					factory(global, true) :
+					function (w) {
+						if (!w.document) {
+							throw new Error("jQuery requires a window with a document");
+						}
+						return factory(w);
 			};
 	} else {
 		factory( global );
@@ -17024,16 +17025,16 @@ return jQuery;
     hooks.monthsShort = listMonthsShort;
     hooks.weekdaysMin = listWeekdaysMin;
     hooks.defineLocale = defineLocale;
-    hooks.updateLocale = updateLocale;
-    hooks.locales = listLocales;
-    hooks.weekdaysShort = listWeekdaysShort;
-    hooks.normalizeUnits = normalizeUnits;
-    hooks.relativeTimeRounding = getSetRelativeTimeRounding;
-    hooks.relativeTimeThreshold = getSetRelativeTimeThreshold;
-    hooks.calendarFormat = getCalendarFormat;
-    hooks.prototype = proto;
+			hooks.updateLocale = updateLocale;
+			hooks.locales = listLocales;
+			hooks.weekdaysShort = listWeekdaysShort;
+			hooks.normalizeUnits = normalizeUnits;
+			hooks.relativeTimeRounding = getSetRelativeTimeRounding;
+			hooks.relativeTimeThreshold = getSetRelativeTimeThreshold;
+			hooks.calendarFormat = getCalendarFormat;
+			hooks.prototype = proto;
 
-    // currently HTML5 input type only supports 24-hour formats
+			// currently HTML5 input type only supports 24-hour formats
 			hooks.HTML5_FMT = {
 				DATETIME_LOCAL: 'YYYY-MM-DDTHH:mm', // <input type="datetime-local" />
 				DATETIME_LOCAL_SECONDS: 'YYYY-MM-DDTHH:mm:ss', // <input type="datetime-local" step="1" />
