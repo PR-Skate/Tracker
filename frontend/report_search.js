@@ -196,7 +196,7 @@ function dateYesterday(baseDateAsString) {
     return dateIs(baseDateAsString, yesterday.toDateString());
 }
 
-function dateToday() {
+function dateToday(baseDateAsString) {
     return dateIs(baseDateAsString, new Date().toDateString());
 }
 
@@ -381,6 +381,229 @@ function dateCurrentAndNextYear(baseDateAsString) {
     return dateThisYear(baseDateAsString) || dateNextYear(baseDateAsString)
 }
 
+
+/** Date-time */
+function dateTimeIs(baseDateTimeAsString, inputDateTimeAsString){
+ return dateIs(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeIsNot(baseDateTimeAsString, inputDateTimeAsString){
+    return !dateIs(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeBefore(baseDateTimeAsString, inputDateTimeAsString){
+    return dateBefore(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeAfter(baseDateTimeAsString, inputDateTimeAsString){
+    return dateAfter(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeBetween(baseDateTimeAsString, inputDateTimeAsString){
+    return dateBetween(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeLastNDays (baseDateTimeAsString, inputDateTimeAsString){
+    return dateLastNDays(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+
+function dateTimeNextNDays(baseDateTimeAsString, inputDateTimeAsString){
+    return dateNextNDays(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeYesterday (baseDateTimeAsString){
+    return dateYesterday(baseDateTimeAsString);
+}
+
+function dateTimeToday (baseDateTimeAsString){
+    return dateToday(baseDateTimeAsString);
+}
+
+function dateTimeTomorrow (baseDateTimeAsString, inputDateTimeAsString){
+    return dateTomorrow(baseDateTimeAsString, inputDateTimeAsString);
+}
+
+function dateTimeLast7Days (baseDateTimeAsString){
+     return dateLast7Days(baseDateTimeAsString);
+}
+
+function dateTimeLast30Days (baseDateTimeAsString){
+     return dateLast30Days(baseDateTimeAsString);
+}
+
+function dateTimeLast60Days (baseDateTimeAsString){
+     return dateLast60Days(baseDateTimeAsString);
+}
+
+function dateTimeLast90Days (baseDateTimeAsString){
+     return dateLast90Days(baseDateTimeAsString);
+}
+
+function dateTimeLast120Days (baseDateTimeAsString){
+     return dateLast120Days(baseDateTimeAsString);
+}
+
+function dateTimeNext7Days (baseDateTimeAsString){
+     return dateNext7Days(baseDateTimeAsString);
+}
+
+function dateTimeNext30Days (baseDateTimeAsString){
+     return dateNext30Days(baseDateTimeAsString);
+}
+
+function dateTimeNext60Days (baseDateTimeAsString){
+     return dateNext60Days(baseDateTimeAsString);
+}
+
+function dateTimeNext90Days (baseDateTimeAsString){
+     return dateNext90Days(baseDateTimeAsString);
+}
+
+function dateTimeNext120Days (baseDateTimeAsString){
+     return dateNext120Days(baseDateTimeAsString);
+}
+
+function dateTimeLastNWeeks(baseDateAsString, inputNumberAsString) {
+    return dateLastWeek(baseDateAsString, inputNumberAsString);
+}
+
+function dateTimeNextNWeeks(baseDateAsString, inputNumberAsString) {
+    return dateNextWeek(baseDateAsString, inputNumberAsString);
+}
+
+function dateTimeLastWeek(baseDateAsString) {
+    return dateLastWeek(baseDateAsString);
+}
+
+function dateTimeThisWeek(baseDateAsString) {
+    return dateThisWeek(baseDateAsString);
+}
+
+function dateTimeNextWeek(baseDateAsString) {
+    return dateNextWeek(baseDateAsString);
+}
+
+function dateTimeCurrentAndPreviousWeek(baseDateAsString){
+    return dateCurrentAndPreviousWeek(baseDateAsString);
+}
+
+function dateTimeCurrentAndNextWeek(baseDateAsString){
+    return dateCurrentAndNextWeek(baseDateAsString);
+}
+
+function dateTimeLastNMonths(baseDateAsString, inputNumberAsString) {
+    return dateLastNMonths(baseDateAsString, inputNumberAsString);
+}
+
+function dateTimeNextNMonths(baseDateAsString, inputNumberAsString) {
+    return dateNextNMonths(baseDateAsString, inputNumberAsString);
+}
+
+function dateTimeThisMonth(baseDateAsString) {
+    return dateThisMonth(baseDateAsString);
+}
+
+function dateTimeNextMonth(baseDateAsString) {
+    return dateNextMonth(baseDateAsString)
+}
+
+function dateTimeLastMonth(baseDateAsString) {
+    return dateLastMonth(baseDateAsString)
+}
+
+function dateTimeCurrentAndPreviousMonth(baseDateAsString) {
+    return dateCurrentAndPreviousMonth(baseDateAsString);
+}
+
+function dateTimeCurrentAndNextMonth(baseDateAsString) {
+    return dateCurrentAndPreviousMonth(baseDateAsString);
+}
+
+function dateTimeLastNYears(baseDateAsString, inputNumberAsString) {
+    return dateLastNYears(baseDateAsString, inputNumberAsString);
+}
+
+function dateTimeNextNYears(baseDateAsString, inputNumberAsString) {
+    return dateNextNYears(baseDateAsString, inputNumberAsString);
+}
+
+function dateTimeThisYear(baseDateAsString) {
+    return dateThisYear(baseDateAsString);
+}
+
+function dateTimeNextYear(baseDateAsString) {
+    return dateNextYear (baseDateAsString);
+}
+
+function dateTimeLastYear(baseDateAsString) {
+    return dateLastYear(baseDateAsString);
+}
+
+function dateTimeCurrentAndPreviousYear(baseDateAsString) {
+    return dateCurrentAndPreviousYear(baseDateAsString);
+}
+
+function dateTimeCurrentAndNextYear(baseDateAsString) {
+    return dateCurrentAndNextYear(baseDateAsString);
+}
+
+function dateTimeOn(baseDateAsString, inputDateTimeAsString){
+    let date = new Date(baseDateAsString);
+    let input = new Date(inputDateTimeAsString);
+
+    return date.getDate() === input.getDate();
+}
+
+function dateTimeAt(baseDateAsString, inputDateTimeAsString){
+    let date = new Date(baseDateAsString);
+    let input = new Date(inputDateTimeAsString);
+
+    return date.getTime() === input.getTime();
+}
+//List      has, does not have, is empty, is not empty
+function listContains(){
+    if (list.forEach(checkElement(item, index, value))) return true;
+
+    return false;
+}
+
+//todo: This may need to be fixed. Should return false if an element exists. Otherwise, the list does not contain the search value.
+//How does this differ between dates, datetimes, numbers, etc ?
+function listDoesNotContain(list){
+    if (list.forEach(checkElement(item, index, value))) return false;
+
+    return  true;
+}
+
+
+function listIsEmpty(list){
+return list != null || list.length === 0
+}
+
+
+function listIsNotEmpty(list){
+    return list != null && list.length > 0
+}
+
+function checkElement(item, index, value){
+    return item === value
+}
+
+//Checkbox
+function checkboxIsTrue(value){
+    return value;
+}
+
+function checkboxIsFalse(value){
+    return !value;
+}
+
+
+
+
+
+
 //EXPORTS
 
 //OBJECTS
@@ -400,7 +623,8 @@ exports.numberLessThenOrEqual = numberLessThenOrEqual
 exports.numberGreaterThenOrEqual = numberGreaterThenOrEqual
 
 //DATES
-exports.dateIs = dateIsNot
+exports.dateIs = dateIs
+exports.dateIsNot = dateIsNot
 exports.dateBefore = dateBefore
 exports.dateAfter = dateAfter
 exports.dateBetween = dateBetween
@@ -437,3 +661,55 @@ exports.dateCurrentAndPreviousYear = dateCurrentAndPreviousYear
 exports.dateCurrentAndNextYear = dateCurrentAndNextYear
 exports.dateLastNMonths = dateLastNMonths
 exports.dateNextNMonths = dateNextNMonths
+
+//Date-time
+exports.dateTimeIs = dateTimeIs
+exports.dateTimeIsNot = dateTimeIsNot
+exports.dateTimeBefore = dateTimeBefore
+exports.dateTimeAfter = dateTimeAfter
+exports.dateTimeBetween = dateTimeBetween
+exports.dateTimeToday = dateTimeToday
+exports.dateTimeYesterday = dateTimeYesterday
+exports.dateTimeTomorrow = dateTimeTomorrow
+exports.dateTimeLastNDays = dateTimeLastNDays
+exports.dateTimeLast7Days = dateTimeLast7Days
+exports.dateTimeLast30Days = dateTimeLast30Days
+exports.dateTimeLast60Days = dateTimeLast60Days
+exports.dateTimeLast90Days = dateTimeLast90Days
+exports.dateTimeLast120Days = dateTimeLast120Days
+exports.dateTimeNextNDays = dateTimeNextNDays
+exports.dateTimeLastWeek = dateTimeLastWeek
+exports.dateTimeThisWeek = dateTimeThisWeek
+exports.dateTimeNextWeek = dateTimeNextWeek
+exports.dateTimeCurrentAndPreviousWeek = dateTimeCurrentAndPreviousWeek
+exports.dateTimeCurrentAndNextWeek = dateTimeCurrentAndNextWeek
+exports.dateTimeCurrentAndPreviousMonth = dateTimeCurrentAndPreviousMonth
+exports.dateTimeCurrentAndNextMonth = dateTimeCurrentAndNextMonth
+exports.dateTimeLastNWeeks = dateTimeLastNWeeks
+exports.dateTimeNextNWeeks = dateTimeNextNWeeks
+exports.dateTimeLastWeek = dateTimeLastWeek
+exports.dateTimeThisMonth = dateTimeThisMonth
+exports.dateTimeNextMonth = dateTimeNextMonth
+exports.dateTimeCurrentAndPreviousMonth = dateTimeCurrentAndPreviousMonth
+exports.dateTimeCurrentAndNextMonth = dateTimeCurrentAndNextMonth
+exports.dateTimeLastNYears = dateTimeLastNYears
+exports.dateTimeNextNYears = dateTimeNextNYears
+exports.dateTimeThisYear = dateTimeThisYear
+exports.dateTimeNextYear = dateTimeNextYear
+exports.dateTimeLastYear = dateTimeLastYear
+exports.dateTimeCurrentAndPreviousYear = dateTimeCurrentAndPreviousYear
+exports.dateTimeCurrentAndNextYear = dateTimeCurrentAndNextYear
+exports.dateTimeLastNMonths = dateTimeLastNMonths
+exports.dateTimeNextNMonths = dateTimeNextNMonths
+exports.dateTimeOn = dateTimeOn
+exports.dateTimeAt = dateTimeAt
+
+//List
+exports.listContains = listContains
+exports.listDoesNotContain = listDoesNotContain
+exports.listIsEmpty = listIsEmpty
+exports.listIsNotEmpty = listIsNotEmpty
+
+//Checkbox
+exports.checkboxIsTrue = checkboxIsTrue
+exports.checkboxIsFalse = checkboxIsFalse
