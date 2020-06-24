@@ -423,6 +423,58 @@
         map.set('date_Next N Years', lib.reportSearch.dateNextNYears);
     }
 
+    function build_datetimelocal_map(){
+        console.log('datetime-local build called');
+
+        map.set('datetime-local_Is', lib.reportSearch.dateTimeIs);
+        map.set('datetime-local_Is Not', lib.reportSearch.dateTimeIs);
+        map.set('datetime-local_Is Emtpy', lib.reportSearch.objectIsEmpty);
+        map.set('datetime-local_Is Not Empty', lib.reportSearch.objectIsEmpty);
+        map.set('datetime-local_Before', lib.reportSearch.dateTimeBefore);
+
+        map.set('datetime-local_After', lib.reportSearch.dateTimeAfter);
+        map.set('datetime-local_Between', lib.reportSearch.dateTimeBetween);
+        map.set('datetime-local_Yesterday', lib.reportSearch.dateTimeYesterday);
+        map.set('datetime-local_Today', lib.reportSearch.dateTimeToday);
+        map.set('datetime-local_Tomorrow', lib.reportSearch.dateTimeTomorrow);
+
+        map.set('datetime-local_Last 7 Days', lib.reportSearch.dateTimeLast7Days);
+        map.set('datetime-local_Last 30 Days', lib.reportSearch.dateTimeLast30Days);
+        map.set('datetime-local_Last 60 Days', lib.reportSearch.dateTimeLast60Days);
+        map.set('datetime-local_Last 90 Days', lib.reportSearch.dateTimeLast90Days);
+        map.set('datetime-local_Last 120 Days', lib.reportSearch.dateTimeLast120Days);
+
+        map.set('datetime-local_Last N Days', lib.reportSearch.dateTimeLastNDays);
+        map.set('datetime-local_next N Days', lib.reportSearch.dateTimeNextNDays);
+        map.set('datetime-local_Last Week', lib.reportSearch.dateTimeLastWeek);
+        map.set('datetime-local_This Week', lib.reportSearch.dateTimeThisWeek);
+        map.set('datetime-local_Next Week', lib.reportSearch.dateTimeNextWeek);
+
+        map.set('datetime-local_Current and Previous Week', lib.reportSearch.dateTimeCurrentAndPreviousWeek);
+        map.set('datetime-local_Current and Next Week', lib.reportSearch.dateTimeCurrentAndNextWeek);
+        map.set('datetime-local_Last N weeks', lib.reportSearch.dateTimeLastNWeeks);
+        map.set('datetime-local_Next N Weeks', lib.reportSearch.dateTimeNextNWeeks);
+        map.set('datetime-local_Last Week', lib.reportSearch.dateTimeLastWeek);
+
+        map.set('datetime-local_This Month', lib.reportSearch.dateTimeThisMonth);
+        map.set('datetime-local_Next Month', lib.reportSearch.dateTimeNextMonth);
+        map.set('datetime-local_Current and Previous Month', lib.reportSearch.dateTimeCurrentAndPreviousMonth);
+        map.set('datetime-local_Current and Next Month', lib.reportSearch.dateTimeCurrentAndNextMonth);
+        map.set('datetime-local_Last N Months', lib.reportSearch.dateTimeLastNMonths);
+
+        map.set('datetime-local_Next N Months', lib.reportSearch.dateTimeNextNMonths);
+        map.set('datetime-local_Last Year', lib.reportSearch.dateTimeLastYear);
+        map.set('datetime-local_This Year', lib.reportSearch.dateTimeThisYear);
+        map.set('datetime-local_Next Year', lib.reportSearch.dateTimeNextYear);
+        map.set('datetime-local_Current and Previous Year', lib.reportSearch.dateTimeCurrentAndPreviousYear);
+
+        map.set('datetime-local_Current and Next Year', lib.reportSearch.dateTimeCurrentAndNextYear);
+        map.set('datetime-local_Last N Years', lib.reportSearch.dateTimeLastNYears);
+        map.set('datetime-local_Next N Years', lib.reportSearch.dateTimeNextNYears);
+        map.set('datetime-local_on', lib.reportSearch.dateTimeOn);
+        map.set('datetime-local_at', lib.reportSearch.dateTimeAt)
+    }
+
     function build_number_map(){
         console.log('number build called')
         map.set('number_less than', lib.reportSearch.numberLessThen);
@@ -433,35 +485,34 @@
 
     function build_select_map(){
         console.log('select build called')
-        return 0;
     }
 
-
-    function build_datetimelocal_map(){
-        console.log('datetimelocal build called')
-     return 0;
-    }
 
     function build_subform_map(){
-console.log('subform build called')
-        return 0;
+        console.log('subform build called')
     }
 
     function build_list_field_map(){
         console.log('list_field build called')
-        return 0;
     }
 
     function build_checkbox_map(){
         console.log('checkbox build called')
-        return 0;
+        map.set('checkBox_is true', lib.reportSearch.checkboxIsTrue);
+        map.set('checkBox_is false', lib.reportSearch.checkboxIsFalse);
     }
 
     function build_email_map(){
         console.log('email build called')
-        return 0;
     }
 
+    function build_list_map(){
+        console.log('list build called')
+        map.set('list_field_Has', lib.reportSearch.listContains)
+        map.set('list_field_Does Not Have', lib.reportSearch.listDoesNotContain)
+        map.set('list_field_Is Empty', lib.reportSearch.listIsEmpty)
+        map.set('list_field_Is Not Empty', lib.reportSearch.listIsNotEmpty)
+    }
     // textInput- The input to search on
     // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
@@ -514,7 +565,6 @@ console.log('subform build called')
                 }
             return result
         }
-
     {% endfor %}
 
     function test_outer(event, recordId) {
@@ -562,7 +612,7 @@ console.log('subform build called')
     }
 
     function formatValue(value, field) {
-        var fieldDictionary, fieldType;
+        let fieldDictionary, fieldType;
         fieldDictionary = {{ fields_dictionary | safe }}
             fieldType = fieldDictionary[field]
         switch (fieldType) {
