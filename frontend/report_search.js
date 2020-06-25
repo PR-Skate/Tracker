@@ -26,11 +26,19 @@ function objectIsNotEmpty(arg) {
 //STRINGS
 
 function stringContains(baseString, inputString) {
-    return baseString.includes(inputString.ignoreCase);
+    return baseString.includes(inputString);
 }
 
 function stringDoesNotContains(baseString, inputString) {
     return !stringContains(baseString, inputString);
+}
+
+function stringContainsIgnoreCase(baseString, inputString) {
+    return baseString.toUpperCase().includes(inputString.toUpperCase());
+}
+
+function stringDoesNotContainsIgnoreCase(baseString, inputString) {
+    return !stringContainsIgnoreCase(baseString, inputString);
 }
 
 function stringIs(baseString, inputString) {
@@ -600,10 +608,6 @@ function checkboxIsFalse(value){
 }
 
 
-
-
-
-
 //EXPORTS
 
 //OBJECTS
@@ -613,6 +617,8 @@ exports.objectIsNotEmpty = objectIsNotEmpty
 //STRINGS
 exports.stringContains = stringContains
 exports.stringDoesNotContains = stringDoesNotContains
+exports.stringContainsIgnoreCase = stringContainsIgnoreCase
+exports.stringDoesNotContainsIgnoreCase = stringDoesNotContainsIgnoreCase
 exports.stringIs = stringIs
 exports.stringIsNot = stringIsNot
 
@@ -628,6 +634,8 @@ exports.dateIsNot = dateIsNot
 exports.dateBefore = dateBefore
 exports.dateAfter = dateAfter
 exports.dateBetween = dateBetween
+
+// DAYS
 exports.dateToday = dateToday
 exports.dateYesterday = dateYesterday
 exports.dateTomorrow = dateTomorrow
@@ -638,29 +646,38 @@ exports.dateLast60Days = dateLast60Days
 exports.dateLast90Days = dateLast90Days
 exports.dateLast120Days = dateLast120Days
 exports.dateNextNDays = dateNextNDays
+exports.dateNext7Days = dateNext7Days
+exports.dateNext30Days = dateNext30Days
+exports.dateNext60Days = dateNext60Days
+exports.dateNext90Days = dateNext90Days
+exports.dateNext120Days = dateNext120Days
+
+// WEEKS
+exports.dateLastNWeeks = dateLastNWeeks
+exports.dateNextNWeeks = dateNextNWeeks
 exports.dateLastWeek = dateLastWeek
 exports.dateThisWeek = dateThisWeek
 exports.dateNextWeek = dateNextWeek
 exports.dateCurrentAndPreviousWeek = dateCurrentAndPreviousWeek
 exports.dateCurrentAndNextWeek = dateCurrentAndNextWeek
-exports.dateCurrentAndPreviousMonth = dateCurrentAndPreviousMonth
-exports.dateCurrentAndNextMonth = dateCurrentAndNextMonth
-exports.dateLastNWeeks = dateLastNWeeks
-exports.dateNextNWeeks = dateNextNWeeks
+
+// MONTHS
+exports.dateLastNMonths = dateLastNMonths
+exports.dateNextNMonths = dateNextNMonths
+exports.dateThisWeek = dateThisWeek
 exports.dateLastWeek = dateLastWeek
-exports.dateThisMonth = dateThisMonth
-exports.dateNextMonth = dateNextMonth
+exports.dateNextWeek = dateNextWeek
 exports.dateCurrentAndPreviousMonth = dateCurrentAndPreviousMonth
 exports.dateCurrentAndNextMonth = dateCurrentAndNextMonth
+
+// YEARS
 exports.dateLastNYears = dateLastNYears
 exports.dateNextNYears = dateNextNYears
 exports.dateThisYear = dateThisYear
-exports.dateNextYear = dateNextYear
 exports.dateLastYear = dateLastYear
+exports.dateNextYear = dateNextYear
 exports.dateCurrentAndPreviousYear = dateCurrentAndPreviousYear
 exports.dateCurrentAndNextYear = dateCurrentAndNextYear
-exports.dateLastNMonths = dateLastNMonths
-exports.dateNextNMonths = dateNextNMonths
 
 //Date-time
 exports.dateTimeIs = dateTimeIs

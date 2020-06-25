@@ -548,13 +548,13 @@
         function filter_{{ field.model_name }}(func) {
             let input, filter, table, tableRow, tableData, i, txtValue, searchParam,  result;
                 input = document.getElementById("search_{{ field.model_name }}");
-                filter = input.value.toUpperCase();
-                if (filter) {
-                    table = document.getElementById("tg-0Xa6r");
-                    tableRow = table.getElementsByTagName("tr");
-                    result = [tableRow.length]
-                    for (i = 2; i < tableRow.length; i++) {
-                        tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
+            filter = input.value;
+            if (filter) {
+                table = document.getElementById("tg-0Xa6r");
+                tableRow = table.getElementsByTagName("tr");
+                result = [tableRow.length]
+                for (i = 2; i < tableRow.length; i++) {
+                    tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
                         if (tableData) {
                             txtValue = tableData.textContent || tableData.innerText;
                             if (!func(txtValue.trim(), filter.trim())) {
