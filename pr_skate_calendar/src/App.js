@@ -158,8 +158,9 @@ export default class App extends React.PureComponent {
           </Scheduler>
           </Paper>
           <Router>
-            <Link to="/CalendarForm">Calendar Form</Link>
-            <Route path="./components/CalendarForm" component={CalendarForm}/>
+            <Route path="/components/CalendarForm">
+              <CalendarForm />
+            </Route>
           </Router>
           </div>
     );
