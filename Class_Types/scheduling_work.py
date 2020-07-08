@@ -12,7 +12,7 @@ from Class_Types.base_record import BaseRecord
 
 class SchedulingWork(BaseRecord):
     GB_Counter = IntField(default=0)  # GB = Go Back
-    _truckDate = DateField(db_field='truckDate')  # MAY BE STORED SOMEWHERE ELSE/DERIVED
+    _truckDate = DateField(db_field='truckDate')  # MAYBE STORED SOMEWHERE ELSE/DERIVED
     _dateScheduled = DateField(required=True, db_field='dateScheduled')  # startDate
     _duration = DecimalField(db_field='duration', min_value=0.0)
     endDate = DateField()

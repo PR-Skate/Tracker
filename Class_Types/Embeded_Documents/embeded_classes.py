@@ -174,3 +174,9 @@ class Name(BaseEmbeddedDocument):
 
     def __str__(self):
         return str(self.lastName + '\n' + self.firstName).strip()
+
+
+class ReportField(BaseEmbeddedDocument):
+    originalModel = StringField(max_length=50, required=True)
+    fieldName = StringField(max_length=150, required=True)
+    displayName = StringField(max_length=150, required=True)
