@@ -9,6 +9,10 @@
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
 <body onload="lib.checkSignInStatus()">
 {% include 'frontend/helpers/navbar.html' %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
 <style type="text/css">
     .tg {
         border-collapse: collapse;
@@ -128,12 +132,6 @@
         }
     }</style>
 <div class="tg- wrap">
-{#    {% for field in fields %}#}
-{#        <input type="text" id="search_{{ field }}" onkeyup="search_rows()" placeholder="Search for {{ field }}.."#}
-{#               title="Type in a {{ field }}">#}
-{#    {% endfor %}#}
-
-
 
     {# Alex -> Search filtering <- TODO #}
     <script>
@@ -150,6 +148,7 @@
                 inputElement.style.display = "";
             }
         }
+
 
         function displayFilters(checkBoxID, divID, fieldName, fieldType, searchFilters) {
             var div = document.getElementById(divID);
@@ -175,11 +174,28 @@
                 input.type = fieldType;
                 input.value = '';
                 input.onchange = search_rows;
+
+                if (fieldType === "datetime-local") {
+                    input.type = 'text';
+                    $(function () {
+                        $('input[name=' + input.name + ']').daterangepicker({
+                            singleDatePicker: true,
+                            timePicker: true,
+                            showDropdowns: true,
+                            minYear: 1901,
+                            maxYear: parseInt(moment().format('YYYY'), 10),
+                            locale: {
+                                format: 'M/DD hh:mm A'
+                            },
+                        });
+                    });
+                }
+
                 div.appendChild(select);
                 div.appendChild(input);
 
             } else {
-                while (div.hasChildNodes()){
+                while (div.hasChildNodes()) {
                     div.lastChild.remove();
                 }
             }
@@ -513,6 +529,7 @@
         map.set('list_field_Is Empty', lib.reportSearch.listIsEmpty)
         map.set('list_field_Is Not Empty', lib.reportSearch.listIsNotEmpty)
     }
+
     // textInput- The input to search on
     // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
