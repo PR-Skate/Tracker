@@ -1,8 +1,5 @@
 //DEFINITIONS
 var Moment = require('moment');
-require("moment/min/locales.min");
-Moment.locale('cs');
-console.log(Moment.locale()); // cs
 
 var Jquery = require('jquery')
 

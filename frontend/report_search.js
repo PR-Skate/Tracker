@@ -1,7 +1,5 @@
 //DEFINITIONS
 var Moment = require('moment');
-require("moment/min/locales.min");
-Moment.locale('cs');
 
 var Jquery = require('jquery')
 
@@ -86,17 +84,17 @@ function numberGreaterThenOrEqual(baseNumberAsString, inputNumberAsString) {
 // DATES
 
 function stringToDate(value) {
+    moment.locale('en')
     var result;
-    result = Moment(value, 'MMMM D, YYYY, H:mm'); // python toString
-    if (result) {
-        return result.toDate();
-    }
-
-    result = Moment(value, 'YYYY-MM-DD'); //HTML input type date
-    if (result) {
+    var dateFormats = ['MMMM D, YYYY, H:mm A', 'YYYY-MM-DD', 'MM-DD-YYYY hh:mm A']
+    result = Moment(value, dateFormats, true); // python toString
+    console.log(result.parsingFlags())
+    if (result.isValid()) {
         return result.toDate();
     }
 }
+
+console.log(stringToDate("June 6, 2020, 12:56 a.m."));
 
 function getStartOfTheWeek(d) {
     d = new Date(d);
@@ -730,3 +728,5 @@ exports.listIsNotEmpty = listIsNotEmpty
 //Checkbox
 exports.checkboxIsTrue = checkboxIsTrue
 exports.checkboxIsFalse = checkboxIsFalse
+
+exports.stringToDate = stringToDate

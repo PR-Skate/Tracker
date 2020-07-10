@@ -10,3 +10,4 @@ test3.py
 frontend/node_modules/
 *.log
 /PR_Skate/logging/logs/
+/frontend/test.js

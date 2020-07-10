@@ -185,7 +185,7 @@
                             minYear: 1901,
                             maxYear: parseInt(moment().format('YYYY'), 10),
                             locale: {
-                                format: 'M/DD hh:mm A'
+                                format: 'MM-DD-YYYY hh:mm A'
                             },
                         });
                     });
@@ -443,7 +443,7 @@
         console.log('datetime-local build called');
 
         map.set('datetime-local_Is', lib.reportSearch.dateTimeIs);
-        map.set('datetime-local_Is Not', lib.reportSearch.dateTimeIs);
+        map.set('datetime-local_Is Not', lib.reportSearch.dateTimeIsNot);
         map.set('datetime-local_Is Emtpy', lib.reportSearch.objectIsEmpty);
         map.set('datetime-local_Is Not Empty', lib.reportSearch.objectIsEmpty);
         map.set('datetime-local_Before', lib.reportSearch.dateTimeBefore);
