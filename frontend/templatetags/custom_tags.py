@@ -157,7 +157,7 @@ def isBasicFieldType(field_type):
 
 
 @register.simple_tag
-def getFieldType(field_information=None, type=None):
+def getFieldType(field_information=None, type=None, func_name=False):
     fieldTypes = {'IntField': 'number', 'DecimalField': 'number', 'BooleanField': 'checkbox',
                   'ReferenceField': 'select',
                   'ImageField': 'file', 'FileField': 'file', 'DateField': 'date', 'DateTimeField': 'datetime-local',
@@ -169,7 +169,10 @@ def getFieldType(field_information=None, type=None):
         type = field_information.type
 
     if type in fieldTypes.keys():
-        return fieldTypes.get(type)
+        if not func_name:
+            return fieldTypes.get(type)
+        else:
+            return fieldTypes.get(type).replace('-', '_')
     return None
 
 

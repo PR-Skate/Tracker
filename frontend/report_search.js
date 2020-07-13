@@ -84,7 +84,6 @@ function numberGreaterThenOrEqual(baseNumberAsString, inputNumberAsString) {
 // DATES
 
 function stringToDate(value) {
-    moment.locale('en')
     var result;
     var dateFormats = ['MMMM D, YYYY, H:mm A', 'YYYY-MM-DD', 'MM-DD-YYYY hh:mm A']
     result = Moment(value, dateFormats, true); // python toString

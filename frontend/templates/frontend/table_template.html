@@ -144,6 +144,7 @@
             var inputElement = document.getElementById("search_".concat(fieldName));
             if (NO_INPUT_SEARCH_KEY_WORDS.includes(selectedValue.split("_")[1])) {
                 inputElement.style.display = "none";
+                search_rows()
             } else {
                 inputElement.style.display = "";
             }
@@ -366,19 +367,18 @@
 }(document)</script>
 <script>
     let map = new Map();
+
     //makes map global, so instantiation doesnt happen for each call.
-    function buildMap() {
+    function buildMap(fieldType) {
         console.log('I am building the map')
         {% for field in field_information_list %}
-            if ('{% getFieldType type=field.type %}' === 'datetime-local'){
-                build_datetimelocal_map();
-            }else{
-                build_{% getFieldType type=field.type %}_map();
+            if ('{% getFieldType type=field.type %}' === fieldType) {
+                build_{% getFieldType type=field.type func_name=True %}_map();
             }
         {% endfor %}
     }
 
-    function build_text_map(){
+    function build_text_map() {
         console.log('text build called')
         map.set('text_Is', lib.reportSearch.stringIs);
         map.set('text_Is Not', lib.reportSearch.stringIsNot);
@@ -439,7 +439,7 @@
         map.set('date_Next N Years', lib.reportSearch.dateNextNYears);
     }
 
-    function build_datetimelocal_map(){
+    function build_datetime_local_map() {
         console.log('datetime-local build called');
 
         map.set('datetime-local_Is', lib.reportSearch.dateTimeIs);
@@ -522,7 +522,7 @@
         console.log('email build called')
     }
 
-    function build_list_map(){
+    function build_list_map() {
         console.log('list build called')
         map.set('list_field_Has', lib.reportSearch.listContains)
         map.set('list_field_Does Not Have', lib.reportSearch.listDoesNotContain)
@@ -530,11 +530,16 @@
         map.set('list_field_Is Not Empty', lib.reportSearch.listIsNotEmpty)
     }
 
-    // textInput- The input to search on
-    // fieldValue- The value of the field in the table
     // searchFilter- The type of search filter to apply (less than, contains, does not contain, etc.)
-    function func(searchParam) {
-        if (map.size === 0) buildMap();
+    function getSearchFunction(fieldType, searchParam) {
+        var doBuildMap = true;
+        for (let key of map.keys()) {
+            if (key.toString().includes(fieldType)) {
+                doBuildMap = false;
+                break;
+            }
+        }
+        if (doBuildMap) buildMap(fieldType);
         return map.get(searchParam);
     }
 
@@ -546,7 +551,7 @@
             checkBoxID = document.getElementById("{{ field.model_name }}_check");
             if (checkBoxID.checked) {
                 var searchParam = (document.getElementById("select_{{ field.model_name }}")) ? document.getElementById("select_{{ field.model_name }}").value : '';
-                filter_{{ field.model_name }}(func(searchParam));
+                filter_{{ field.model_name }}(getSearchFunction('{% getFieldType type=field.type %}', searchParam));
             }
         {% endfor %}
     }
@@ -562,9 +567,9 @@
 
 
     {% for field in field_information_list %}
-        function filter_{{ field.model_name }}(func) {
-            let input, filter, table, tableRow, tableData, i, txtValue, searchParam,  result;
-                input = document.getElementById("search_{{ field.model_name }}");
+        function filter_{{ field.model_name }}(searchFunction) {
+            let input, filter, table, tableRow, tableData, i, txtValue, searchParam, result;
+            input = document.getElementById("search_{{ field.model_name }}");
             filter = input.value;
             if (filter) {
                 table = document.getElementById("tg-0Xa6r");
@@ -572,14 +577,14 @@
                 result = [tableRow.length]
                 for (i = 2; i < tableRow.length; i++) {
                     tableData = tableRow[i].getElementsByTagName("td")[{{ forloop.counter0 }}];
-                        if (tableData) {
-                            txtValue = tableData.textContent || tableData.innerText;
-                            if (!func(txtValue.trim(), filter.trim())) {
-                                tableRow[i].style.display = "none";
-                            }
+                    if (tableData) {
+                        txtValue = tableData.textContent || tableData.innerText;
+                        if (!searchFunction(txtValue.trim(), filter.trim())) {
+                            tableRow[i].style.display = "none";
                         }
                     }
                 }
+            }
             return result
         }
     {% endfor %}
