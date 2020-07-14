@@ -155,6 +155,7 @@
             var div = document.getElementById(divID);
             var input;
             var select;
+            var list;
             if (isChecked(checkBoxID)) {
                 select = document.createElement('select');
                 select.name = 'select_'.concat(fieldName);
@@ -169,12 +170,29 @@
                     opt.innerHTML = searchFilters[i];
                     select.appendChild(opt);
                 }
+                list = document.createElement('ul');
                 input = document.createElement('input');
                 input.name = "search_".concat(fieldName);
                 input.id = "search_".concat(fieldName);
                 input.type = fieldType;
                 input.value = '';
-                input.onchange = search_rows;
+
+                list.id = fieldName.concat("_search_list");
+
+                input.addEventListener("keypress", function (e) {
+                    if (e.code === 'Enter') {
+                        search_rows();
+                    }
+                })
+                list.addEventListener('keypress', function (e) {
+                    if (e.code === 'Enter') {
+                        var listElement = document.createElement("li");
+                        console.log(input.value);
+                        listElement.innerText = input.value;
+                        input.value = '';
+                        list.appendChild(listElement);
+                    }
+                })
 
                 if (fieldType === "datetime-local") {
                     input.type = 'text';
@@ -192,8 +210,11 @@
                     });
                 }
 
+
+                list.appendChild(input)
+
                 div.appendChild(select);
-                div.appendChild(input);
+                div.appendChild(list);
 
             } else {
                 while (div.hasChildNodes()) {
@@ -377,6 +398,7 @@
             }
         {% endfor %}
     }
+
 
     function build_text_map() {
         console.log('text build called')
@@ -568,9 +590,9 @@
 
     {% for field in field_information_list %}
         function filter_{{ field.model_name }}(searchFunction) {
-            let input, filter, table, tableRow, tableData, i, txtValue, searchParam, result;
-            input = document.getElementById("search_{{ field.model_name }}");
-            filter = input.value;
+            let inputListElement, filter, table, tableRow, tableData, i, txtValue, searchParamList, result;
+            inputListElement = document.getElementById("{{ field.model_name }}_search_list");
+            searchParamList = inputListElement.childNodes;
             if (filter) {
                 table = document.getElementById("tg-0Xa6r");
                 tableRow = table.getElementsByTagName("tr");
