@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-In</title>
-
 </head>
-<body onload="lib.logout()">
-{% include 'frontend/helpers/navbar.html' %}
 <script type="module" src="{% static "frontend/bundle.js" %}"></script>
+<body onload="lib.logout">
+{% include 'frontend/helpers/navbar.html' %}
+
 
 <h1>User Sign-In</h1>
 <form onsubmit="lib.login(event,'{{ csrf_token }}')" method="POST" name='form' id='form'>

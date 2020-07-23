@@ -17,6 +17,10 @@ from mongoengine import connect
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, "static"), ]
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -136,3 +140,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/sign-in'
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)

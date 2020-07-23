@@ -38,7 +38,6 @@ pyparsing                          #TODO add comment
 python-dateutil                    #TODO add comment
 pytz                               #TODO add comment
 requests                           #TODO add comment
-SecureMongoEngine                  #TODO add comment
 six                                #TODO add comment
 snowballstemmer                    #TODO add comment
 sphinxcontrib-applehelp            #TODO add comment
@@ -58,5 +57,4 @@ geojson                            #TODO add comment
 django-rest-knox                   #TODO add comment
 cryptography                       #TODO add comment
 djangorestframework-simplejwt      #TODO add comment
-pycrypto                           #TODO add comment
 PyJWT                              #TODO add comment
