@@ -6,7 +6,7 @@ from .article_number import BaseRecord, ArticleNumber
 
 
 class ArticleNumberState(BaseRecord):  # Need Batch Upload
-    state = StringField(max_length=2, min_length=2, required=True)
+    state = StringField(max_length=2, min_length=2, required=True, unique_with="fkArticleNumber")
     price = DecimalField(required=True)
     fkArticleNumber = ReferenceField(ArticleNumber, required=True, dbref=True)
     meta = {'collection': 'ArticleNumberState'}
