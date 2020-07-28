@@ -26,8 +26,8 @@ class WorkOrder(BaseRecord):
     partsArrivalDate = DateField()
 
     targetStartDate = DateField(required=True)
-    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True, dbref=True)
-    fkStoreNumber = ReferenceField('Store', required=True, dbref=True)
+    fkWorkOrderStatus = ReferenceField('WorkOrderStatus', required=True, dbref=False)
+    fkStoreNumber = ReferenceField('Store', required=True, dbref=False)
     meta = {'collection': 'WorkOrder'}
 
     def to_file(self):

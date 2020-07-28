@@ -20,9 +20,9 @@ class LocationInStore(BaseRecord):
     electricalInLocation = BooleanField(default=False)
     electricalPicturePath = ImageField(default=None)
     electricalPicturePath2 = ImageField(default=None)
-    fkMaterialItems = ListField(ReferenceField(MaterialItem, dbref=True))  # should be a series of drop downs
+    fkMaterialItems = ListField(ReferenceField(MaterialItem, dbref=False))  # should be a series of drop downs
     # where the there are no duplicate references
-    fkStoreNumber = ReferenceField(document_type=Store, required=True, dbref=True)
+    fkStoreNumber = ReferenceField(document_type=Store, required=True, dbref=False)
     meta = {'collection': 'LocationInStore'}
 
     def __str__(self):

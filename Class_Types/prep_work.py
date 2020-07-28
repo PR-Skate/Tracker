@@ -18,7 +18,7 @@ class PrepWork(BaseRecord):
     cpn_eta = DateTimeField()
     inspectionDueDate = DateTimeField()
     lastDateChecked = DateTimeField(default=datetime.utcnow)
-    fkWorkOrderName = ReferenceField(WorkOrder, required=True, dbref=True)
+    fkWorkOrderName = ReferenceField(WorkOrder, required=True, dbref=False)
     meta = {'collection': 'PrepWork'}
 
     def __str__(self):

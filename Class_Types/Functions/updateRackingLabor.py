@@ -4,7 +4,7 @@ from Class_Types.ScopeOfWork.scope_of_work import ScopeOfWork as ScpWrkStts
 from Class_Types.Functions.getPrices import getPrices
 
 def updateRackingLabor(wo):
-    execptions = ["900039800", "900039801", "900039795", "Overhead Signage", "Equipment Rentals",
+    exceptions = ["900039800", "900039801", "900039795", "Overhead Signage", "Equipment Rentals",
                   "End Cap - Wayfinding", "Emergency Inspection", "900039797", "900039798", "Refusal of Service",
                   "900039813", "900039796", "Install Paint Cages", "900039792"]
     workOrder = WrkOrdr.objects.get(workOrderName=wo)

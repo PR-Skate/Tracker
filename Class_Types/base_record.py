@@ -12,9 +12,9 @@ from PR_Skate.logging import log_methods
 
 # @log_methods
 class BaseRecord(DynamicDocument):
-    _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=True)
+    _createdUser = ReferenceField('Employee', required=True, db_field='createdUser', dbref=False)
     createdTimestamp = DateTimeField(default=datetime.now(), required=False)
-    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=True, required=False, blank=True,
+    _lastModifiedUser = ReferenceField('Employee', db_field='lastModifiedUser', dbref=False, required=False, blank=True,
                                        null=True)
     lastModifiedTimestamp = DateTimeField(default=datetime.now(), required=False)
     meta = {'allow_inheritance': True, 'abstract': True}

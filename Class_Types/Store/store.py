@@ -23,7 +23,7 @@ class Store(BaseRecord):
 
     # constructor:
     storeNumber = StringField(max_length=50, required=True)
-    fkCustomer = ReferenceField('Customer', required=True, dbref=True)
+    fkCustomer = ReferenceField('Customer', required=True, dbref=False)
     address = EmbeddedDocumentField(Address, required=True)
     phoneNumber = StringField(max_length=20, required=True)
     region = StringField(max_length=50, required=True)

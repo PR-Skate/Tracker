@@ -6,7 +6,7 @@ from .material_item import BaseRecord, MaterialItem
 
 
 class MaterialList(BaseRecord):
-    fkMaterialItem = ListField(ReferenceField(MaterialItem, dbref=True))
+    fkMaterialItem = ListField(ReferenceField(MaterialItem, dbref=False))
     meta = {'collection': 'MaterialList'}
 
     def __str__(self):

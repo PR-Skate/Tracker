@@ -22,22 +22,22 @@ class ScopeOfWork(BaseRecord):
     SOWPicturePath = ImageField(required=True)
     wrongLocation = BooleanField(default=False)
     ConcretePatchNeeded = BooleanField(default=False)
-    fkRightSOWID = ReferenceField('self', default=None, dbref=True)  # pop-up to fill out blank form
-    fkStatusID = ReferenceField(ScopeOfWorkStatus, required=True, dbref=True)
+    fkRightSOWID = ReferenceField('self', default=None, dbref=False)  # pop-up to fill out blank form
+    fkStatusID = ReferenceField(ScopeOfWorkStatus, required=True, dbref=False)
     materialsOrderByInspector = StringField()  # multiline
     completedPicturePath = ImageField(default=None)
     dateFieldEditedStatus = DateField(default=None)
     timeFieldEditedStatus = DateTimeField(default=None)
     approvedBilling = BooleanField(default=False)
-    fkInstallerID = ReferenceField(Employee, default=None, dbref=True)
+    fkInstallerID = ReferenceField(Employee, default=None, dbref=False)
     fkRequireMaterials = ReferenceField(OrderMaterial, default=None,
-                                        dbref=True)  # should also update the material list in store location
-    fkLocationInStoreID = ReferenceField(LocationInStore, default=None, dbref=True)
-    fkLocationInStoreChangedID = ReferenceField(LocationInStore, default=None, dbref=True)
-    fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=True)
-    fkInitialLaborID = ReferenceField(LaborItem, required=True, dbref=True)
-    fkExtraLaborID = ReferenceField(LaborItem, default=None, dbref=True)
-    fkCorrectLaborID = ReferenceField(LaborItem, default=None, dbref=True)
+                                        dbref=False)  # should also update the material list in store location
+    fkLocationInStoreID = ReferenceField(LocationInStore, default=None, dbref=False)
+    fkLocationInStoreChangedID = ReferenceField(LocationInStore, default=None, dbref=False)
+    fkWorkOrderID = ReferenceField(WorkOrder, required=True, dbref=False)
+    fkInitialLaborID = ReferenceField(LaborItem, required=True, dbref=False)
+    fkExtraLaborID = ReferenceField(LaborItem, default=None, dbref=False)
+    fkCorrectLaborID = ReferenceField(LaborItem, default=None, dbref=False)
     meta = {'collection': 'ScopeOfWork'}
 
     def __str__(self):

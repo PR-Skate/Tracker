@@ -8,7 +8,7 @@ from .article_number_state import BaseRecord, ArticleNumberState
 class LaborItem(BaseRecord):
     quantity = IntField(min_value=1)
     extraLaborPhoto = ImageField()
-    fkArticleNumberState = ReferenceField(ArticleNumberState, dbref=True)
+    fkArticleNumberState = ReferenceField(ArticleNumberState, dbref=False)
     meta = {'collection': 'LaborItem'}
 
     def __str__(self):

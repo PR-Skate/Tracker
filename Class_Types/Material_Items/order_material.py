@@ -7,7 +7,7 @@ from .material_item import BaseRecord, MaterialItem
 
 class OrderMaterial(BaseRecord):
     quantity = IntField(min_value=1, required=True)
-    fkMaterialItem = ReferenceField(MaterialItem, dbref=True)
+    fkMaterialItem = ReferenceField(MaterialItem, dbref=False)
     meta = {'collection': 'OrderMaterial'}
 
     def __str__(self):
