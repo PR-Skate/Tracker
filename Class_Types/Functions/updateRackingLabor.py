@@ -38,7 +38,5 @@ def updateRackingLabor(wo):
 
 
 
-
-
 if __name__ == '__main__':
     updateRackingLabor("myWO")
