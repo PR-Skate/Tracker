@@ -1,6 +1,8 @@
 from Class_Types.Work_Order.work_order import WorkOrder as WrkOrdr
 from Class_Types.Labor_Items.article_number import ArticleNumber as AtclNum
-from Class_Types.ScopeOfWork.scope_of_work import ScopeOfWork as ScpWrkStts
+from Class_Types.Labor_Items.labor_item import LaborItem as LbrItm
+from Class_Types.ScopeOfWork.scope_of_work import ScopeOfWork as ScpWrk
+from Class_Types.ScopeOfWork.scope_of_work_status import ScopeOfWorkStatus as ScpWrkStts
 from Class_Types.Functions.getPrices import getPrices
 
 def updateRackingLabor(wo):
@@ -19,6 +21,21 @@ def updateRackingLabor(wo):
         if biggestGB < sow.GB_Counter:
             biggestGB = sow.GB_Counter
         biggestItem = ""
+        for lineItem in LbrItm.objects:
+            if lineItem.fkArticleNumberStateID.articlenumber not in items:
+                items[lineItem.fkArticleNumberStateID.articlenumber] = 0.0
+            biggestItemList = biggestItem.split(",")
+            if lineItem.fkArticleNumberStateID.articlenumber in exceptions:
+                items[lineItem.fkArticleNumberStateID.articlenumber] = items.get(lineItem.fkArticleNumberStateID
+                                                                                 .articlenumber) + lineItem.quantity *
+                prices.get(lineItem.fkArticleNumberStateID.articlenumber) #fine here...
+            elif biggestItem == "" or biggestItemList[0] * prices.get(biggestItemList[0]) < lineItem.quantity *  #deluge uses .toLong() function, not sure if it's needed in python
+                prices.get(lineItem.fkArticleNumberStateID.articlenumber): #...but not here?
+                biggestItem = lineItem.fkArticleNumberStateID.articlenumber + "," + lineItem.quantity
+        for lineItem in ScpWrk.fkExtraLaborID.objects: #line 60
+
+
+
 
 
 
